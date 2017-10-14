@@ -9,7 +9,7 @@ After recruiting events, hiring managers don't have standardized criteria for re
 
 For example, one recruiter had to sort through a lot of resumes while trying to understand what previous recruiters meant by their annotations. As a solution to this problem, the recruiter would use our application to see resumes annotated through a unified ranking criteria.
 
-[Here](https://drive.google.com/open?id=0B2FyRSw68u7URms2eHdiaVF0VUE) you can read all the feedback that we received from the recruiters.
+[Here](https://drive.google.com/drive/folders/0B2FyRSw68u7UajNBdHc2UFpmWms?usp=sharing) you can read all the feedback that we received from the recruiters.
 
 #####  Solution:
 Allow recruiters to collect, annotate and categorize digital copies of the resumes.
