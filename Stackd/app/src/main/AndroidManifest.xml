@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.StackActivity"></activity>
+        <activity android:name="com.stackd.stackd.EditActivity"></activity>
     </application>
 
 </manifest>
