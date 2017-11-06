@@ -1,23 +1,18 @@
 package com.stackd.stackd.activities;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import com.stackd.stackd.R;
-import com.stackd.stackd.adapters.ResumeImageAdapter;
-
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import com.stackd.stackd.R;
+import com.stackd.stackd.adapters.ResumeImageAdapter;
 
 public class StackActivity extends AppCompatActivity {
 
@@ -70,6 +65,17 @@ public class StackActivity extends AppCompatActivity {
             alertBox.show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     *  Called when the camera button is clicked. Should open a camera actvity.
+     * @param v the button that was clicked
+     */
+    public void onCameraBtnClick(View v){
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(this).
+                setMessage("Opening camera activity").
+                setTitle("Open camera");
+        alertBox.show();
     }
 }
 
