@@ -9,10 +9,10 @@ import io.reactivex.annotations.NonNull;
 
 @Entity(tableName = "recruiter",
         foreignKeys = @ForeignKey(
-                entity = Company.class,
+                entity = CompanyEntity.class,
                 parentColumns = "id",
                 childColumns = "cid"))
-public class Recruiter {
+public class RecruiterEntity {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;

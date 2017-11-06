@@ -15,14 +15,14 @@ import java.util.Date;
                 unique = true)},
         /* Foreign key constraints */
         foreignKeys = {@ForeignKey(
-                entity = Recruiter.class,
+                entity = RecruiterEntity.class,
                 parentColumns = "id",
                 childColumns = "rcid"),
                 @ForeignKey(
-                        entity = Resume.class,
+                        entity = ResumeEntity.class,
                         parentColumns = "id",
                         childColumns = "reid")})
-public class Review {
+public class ReviewEntity {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;

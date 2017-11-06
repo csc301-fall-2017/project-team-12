@@ -16,10 +16,10 @@ import io.reactivex.annotations.NonNull;
                 unique = true)},
         /* Foreign key constraints */
         foreignKeys = @ForeignKey(
-                entity = Recruiter.class,
+                entity = RecruiterEntity.class,
                 parentColumns = "id",
                 childColumns = "rid"))
-public class Resume {
+public class ResumeEntity {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;

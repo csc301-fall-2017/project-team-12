@@ -12,14 +12,14 @@ import io.reactivex.annotations.NonNull;
                 unique = true),
         /* Foreign key constraints */
         foreignKeys = {@ForeignKey(
-                entity = Company.class,
+                entity = CompanyEntity.class,
                 parentColumns = "id",
                 childColumns = "cid"),
                 @ForeignKey(
-                        entity = Tag.class,
+                        entity = TagEntity.class,
                         parentColumns = "id",
                         childColumns = "tid")})
-public class CompanyTag {
+public class CompanyTagEntity {
 
     private Long cid;
     private Long tid;
