@@ -1,6 +1,6 @@
 package com.stackd.stackd.model;
 
-import java.util.List;
+import com.stackd.stackd.db.entities.TagEntity;
 
 /**
  * Created by Musa on 11/6/2017.
@@ -12,7 +12,6 @@ public interface ICompany {
      */
     String getName();
     void setName(String name);
-    List<ITag> getTags();
+    TagEntity[] getTags();
     void addTag(ITag tag);
-    String getExportDestination();
 }

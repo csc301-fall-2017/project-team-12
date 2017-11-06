@@ -27,6 +27,11 @@ public class CompanyTagEntity {
     private Long cid;
     private Long tid;
 
+    public CompanyTagEntity(Long cid, Long tid) {
+        this.cid = cid;
+        this.tid = tid;
+    }
+
 
     public Long getCid() {
         return cid;

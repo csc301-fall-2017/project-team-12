@@ -10,6 +10,5 @@ public interface ITag {
      */
     Long getId();
     String getName();
-    void setName();
 
 }
