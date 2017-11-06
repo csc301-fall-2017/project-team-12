@@ -69,7 +69,7 @@ public class StackActivity extends AppCompatActivity {
 
     /**
      *  Called when the camera button is clicked. Should open a camera actvity.
-     * @param v the button that was clicked
+     * @param v the button that was clicked.
      */
     public void onCameraBtnClick(View v){
         AlertDialog.Builder alertBox = new AlertDialog.Builder(this).

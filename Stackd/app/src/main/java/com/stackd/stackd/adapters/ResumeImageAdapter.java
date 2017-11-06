@@ -4,23 +4,18 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.stackd.stackd.R;
 
-import static android.R.attr.width;
-
 /**
- * Created by angeloaustria on 2017-10-31.
+ * Adapter for GridView of resumes.
  */
-
 public class ResumeImageAdapter extends BaseAdapter {
     private Context mContext;
 
@@ -42,23 +37,26 @@ public class ResumeImageAdapter extends BaseAdapter {
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
+        LayoutInflater inflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        ViewHolder holder;
         if (convertView == null) {
-            // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(340, 340));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            //imageView.setPadding(8, 8, 8, 8);
+            // if it's not recycled, initialize some attribute
+            convertView = inflater.inflate(R.layout.resume_item, parent, false);
+
+            holder = new ViewHolder();
+            holder.resumeTitle = (TextView) convertView.findViewById(R.id.resume_title);
+            holder.resumeImg = (ImageView) convertView.findViewById(R.id.resume_img);
+            convertView.setTag(holder);
         } else {
-            imageView = (ImageView) convertView;
+            holder = (ViewHolder)convertView.getTag();
         }
 
-
-        //imageView.setImageResource(mThumbIds[position]);
-
-        imageView.setImageBitmap(
+        holder.resumeTitle.setText("Angelo Austria");
+        holder.resumeImg.setImageBitmap(
                 decodeSampledBitmapFromResource(mContext.getResources(), mThumbIds[position], 100, 100));
-        return imageView;
+        return convertView;
     }
 
     // references to our images
@@ -94,7 +92,7 @@ public class ResumeImageAdapter extends BaseAdapter {
             R.drawable.resume_angelo_gabriel_austria
     };
 
-    public static int calculateInSampleSize(
+    private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -117,7 +115,7 @@ public class ResumeImageAdapter extends BaseAdapter {
         return inSampleSize;
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+    private static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
                                                          int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -131,5 +129,13 @@ public class ResumeImageAdapter extends BaseAdapter {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    /**
+     * ViewHolder class. Stores title and description TextViews.
+     */
+    private static class ViewHolder {
+        TextView resumeTitle;
+        ImageView resumeImg;
     }
 }
