@@ -30,7 +30,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.stackd.stackd.EditActivity;
 import com.stackd.stackd.R;
 
 import java.util.ArrayList;

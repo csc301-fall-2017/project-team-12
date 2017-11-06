@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.stackd.stackd.EditActivity"></activity>
+        <activity android:name="com.stackd.stackd.activities.EditActivity"></activity>
     </application>
 
 </manifest>

@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface CompanyDao {
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public Long insertCompany(Company company);
 
     @Delete

@@ -5,18 +5,21 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
-import static android.arch.persistence.room.ForeignKey.RESTRICT;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "recruiter",
-        indices = @Index(
+        indices = {@Index(
                 value = "username",
                 unique = true),
+                @Index("cid")},
+
         /* Foreign key constraints */
         foreignKeys = @ForeignKey(
                 entity = Company.class,
                 parentColumns = "id",
                 childColumns = "cid",
-                onDelete = RESTRICT))
+                onDelete = CASCADE))
 public class Recruiter {
 
     @PrimaryKey(autoGenerate = true)

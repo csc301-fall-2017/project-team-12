@@ -5,25 +5,29 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.IntRange;
-import static android.arch.persistence.room.ForeignKey.RESTRICT;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 import java.util.Date;
 
 @Entity(tableName = "review",
         indices = {@Index(
                 value = {"rcid", "reid"},
-                unique = true)},
+                unique = true),
+                @Index(value = "reid"),
+                @Index(value = "rcid")},
+
         /* Foreign key constraints */
         foreignKeys = {@ForeignKey(
                 entity = Recruiter.class,
                 parentColumns = "id",
                 childColumns = "rcid",
-                onDelete = RESTRICT),
+                onDelete = CASCADE),
                 @ForeignKey(
                         entity = Resume.class,
                         parentColumns = "id",
                         childColumns = "reid",
-                        onDelete = RESTRICT)})
+                        onDelete = CASCADE)})
 public class Review {
 
     @PrimaryKey(autoGenerate = true)
