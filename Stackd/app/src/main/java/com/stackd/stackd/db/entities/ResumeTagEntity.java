@@ -16,16 +16,16 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
         /* Foreign key constraints */
         foreignKeys = {@ForeignKey(
-                entity = Resume.class,
+                entity = ResumeEntity.class,
                 parentColumns = "id",
                 childColumns = "rid",
                 onDelete = CASCADE),
                 @ForeignKey(
-                        entity = Tag.class,
+                        entity = TagEntity.class,
                         parentColumns = "id",
                         childColumns = "tid",
                         onDelete = CASCADE)})
-public class ResumeTag {
+public class ResumeTagEntity {
 
     @PrimaryKey
     private Long id;

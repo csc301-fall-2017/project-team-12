@@ -1,7 +1,5 @@
 package com.stackd.stackd.model;
 
-import com.stackd.stackd.db.entities.Tag;
-
 import java.util.List;
 
 /**

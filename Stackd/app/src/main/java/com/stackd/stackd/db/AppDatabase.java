@@ -13,22 +13,23 @@ import com.stackd.stackd.db.daos.ResumeDao;
 import com.stackd.stackd.db.daos.ResumeTagDao;
 import com.stackd.stackd.db.daos.ReviewDao;
 import com.stackd.stackd.db.daos.TagDao;
-import com.stackd.stackd.db.entities.Company;
-import com.stackd.stackd.db.entities.CompanyTag;
-import com.stackd.stackd.db.entities.Recruiter;
-import com.stackd.stackd.db.entities.Resume;
-import com.stackd.stackd.db.entities.ResumeTag;
-import com.stackd.stackd.db.entities.Review;
-import com.stackd.stackd.db.entities.Tag;
+import com.stackd.stackd.db.entities.CompanyEntity;
+import com.stackd.stackd.db.entities.CompanyTagEntity;
+import com.stackd.stackd.db.entities.RecruiterEntity;
+import com.stackd.stackd.db.entities.ResumeEntity;
+import com.stackd.stackd.db.entities.ResumeTagEntity;
+import com.stackd.stackd.db.entities.ReviewEntity;
+import com.stackd.stackd.db.entities.TagEntity;
 
+import com.stackd.stackd.db.entities.TagEntity;
 import com.stackd.stackd.helpers.Converters;
 
 @Database(version = 1,
-        entities = {Company.class, CompanyTag.class,
-                Resume.class, ResumeTag.class,
-                Tag.class,
-                Recruiter.class,
-                Review.class},
+        entities = {CompanyEntity.class, CompanyTagEntity.class,
+                ResumeEntity.class, ResumeTagEntity.class,
+                TagEntity.class,
+                RecruiterEntity.class,
+                ReviewEntity.class},
         exportSchema = true)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
