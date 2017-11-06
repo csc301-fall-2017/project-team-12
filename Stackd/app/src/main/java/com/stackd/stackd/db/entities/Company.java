@@ -1,11 +1,11 @@
 package com.stackd.stackd.db.entities;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
-import io.reactivex.annotations.NonNull;
-
-@Entity(tableName = "company")
+@Entity(tableName = "company",
+        indices = @Index(value = "name", unique = true))
 public class Company {
 
     @PrimaryKey(autoGenerate = true)

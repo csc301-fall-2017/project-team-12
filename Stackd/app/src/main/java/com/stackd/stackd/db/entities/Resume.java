@@ -5,10 +5,9 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import static android.arch.persistence.room.ForeignKey.RESTRICT;
 
 import java.util.Date;
-
-import io.reactivex.annotations.NonNull;
 
 @Entity(tableName = "resume",
         indices = {@Index(
@@ -18,7 +17,8 @@ import io.reactivex.annotations.NonNull;
         foreignKeys = @ForeignKey(
                 entity = Recruiter.class,
                 parentColumns = "id",
-                childColumns = "rid"))
+                childColumns = "rid",
+                onDelete = RESTRICT))
 public class Resume {
 
     @PrimaryKey(autoGenerate = true)

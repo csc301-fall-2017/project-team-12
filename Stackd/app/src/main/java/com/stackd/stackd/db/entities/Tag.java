@@ -5,7 +5,9 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Index;
 
 @Entity(tableName = "tag",
-        indices = {@Index(value = "name", unique = true)})
+        indices = {@Index(
+                value = "name",
+                unique = true)})
 public class Tag {
 
     @PrimaryKey(autoGenerate = true)

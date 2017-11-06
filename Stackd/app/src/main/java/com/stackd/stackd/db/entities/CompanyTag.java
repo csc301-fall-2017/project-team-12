@@ -3,8 +3,7 @@ package com.stackd.stackd.db.entities;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
-
-import io.reactivex.annotations.NonNull;
+import static android.arch.persistence.room.ForeignKey.RESTRICT;
 
 @Entity(tableName = "company_tag",
         indices = @Index(
@@ -14,11 +13,13 @@ import io.reactivex.annotations.NonNull;
         foreignKeys = {@ForeignKey(
                 entity = Company.class,
                 parentColumns = "id",
-                childColumns = "cid"),
+                childColumns = "cid",
+                onDelete = RESTRICT),
                 @ForeignKey(
                         entity = Tag.class,
                         parentColumns = "id",
-                        childColumns = "tid")})
+                        childColumns = "tid",
+                        onDelete = RESTRICT)})
 public class CompanyTag {
 
     private Long cid;

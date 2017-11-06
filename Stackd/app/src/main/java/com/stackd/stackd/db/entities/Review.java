@@ -5,7 +5,7 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
+import static android.arch.persistence.room.ForeignKey.RESTRICT;
 
 import java.util.Date;
 
@@ -17,11 +17,13 @@ import java.util.Date;
         foreignKeys = {@ForeignKey(
                 entity = Recruiter.class,
                 parentColumns = "id",
-                childColumns = "rcid"),
+                childColumns = "rcid",
+                onDelete = RESTRICT),
                 @ForeignKey(
                         entity = Resume.class,
                         parentColumns = "id",
-                        childColumns = "reid")})
+                        childColumns = "reid",
+                        onDelete = RESTRICT)})
 public class Review {
 
     @PrimaryKey(autoGenerate = true)

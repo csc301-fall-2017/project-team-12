@@ -3,15 +3,20 @@ package com.stackd.stackd.db.entities;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
-
-import io.reactivex.annotations.NonNull;
+import static android.arch.persistence.room.ForeignKey.RESTRICT;
 
 @Entity(tableName = "recruiter",
+        indices = @Index(
+                value = "username",
+                unique = true),
+        /* Foreign key constraints */
         foreignKeys = @ForeignKey(
                 entity = Company.class,
                 parentColumns = "id",
-                childColumns = "cid"))
+                childColumns = "cid",
+                onDelete = RESTRICT))
 public class Recruiter {
 
     @PrimaryKey(autoGenerate = true)
@@ -23,6 +28,9 @@ public class Recruiter {
 
     @ColumnInfo(name = "last_name")
     private String lastName;
+
+    private String username;
+    private String password;
 
 
     public Long getId() {
@@ -55,5 +63,21 @@ public class Recruiter {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
