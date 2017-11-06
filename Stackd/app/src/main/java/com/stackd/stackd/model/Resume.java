@@ -7,10 +7,8 @@ import java.util.List;
  */
 
 public interface Resume {
-    List<Resume> gitAllResumes();
-    List<Resume> gitResumesByTag(Tag tag);
-    List<Resume> getResume(String recruiterOrDate);
     boolean hasTag(Tag tag);
-    void insertResume(Resume resume);
     void addReview(int recId, int resId, String date, String comment, int rating);
+    void addTag(Tag tag);
+    List<Tag> getResumeTags();
 }
