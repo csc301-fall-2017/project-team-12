@@ -21,12 +21,14 @@ public class StackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stack);
 
+        // initialize the grid view and its adapter
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ResumeImageAdapter(this));
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                // dummy result, should open the review activity for the given resume
                 Toast.makeText(StackActivity.this, "" + position,
                         Toast.LENGTH_SHORT).show();
             }
@@ -46,7 +48,7 @@ public class StackActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.mybutton) {
-            // do something here
+            // dummy alert box, should export all resumes to cvs file
             AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
             alertBox.setMessage("Are you sure you want to export resumes?");
             alertBox.setTitle("Export");
@@ -68,10 +70,11 @@ public class StackActivity extends AppCompatActivity {
     }
 
     /**
-     *  Called when the camera button is clicked. Should open a camera actvity.
+     *  Called when the camera button is clicked. Should open a camera activity.
      * @param v the button that was clicked.
      */
     public void onCameraBtnClick(View v){
+        // dummy alert
         AlertDialog.Builder alertBox = new AlertDialog.Builder(this).
                 setMessage("Opening camera activity").
                 setTitle("Open camera");

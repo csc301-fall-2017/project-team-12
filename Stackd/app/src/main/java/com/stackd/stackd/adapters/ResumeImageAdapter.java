@@ -35,14 +35,16 @@ public class ResumeImageAdapter extends BaseAdapter {
         return 0;
     }
 
-    // create a new ImageView for each item referenced by the Adapter
+    // return a view for the item at the position given.
+    // Returns a view containing an ImageView and TextvView. ImageView is the picture of the resume
+    // TextView is the title of the resume.
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         ViewHolder holder;
         if (convertView == null) {
-            // if it's not recycled, initialize some attribute
+            // if it's not recycled, initialize a new view holder
             convertView = inflater.inflate(R.layout.resume_item, parent, false);
 
             holder = new ViewHolder();
