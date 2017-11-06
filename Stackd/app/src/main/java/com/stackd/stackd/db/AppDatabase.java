@@ -20,6 +20,7 @@ import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.ResumeTag;
 import com.stackd.stackd.db.entities.Review;
 import com.stackd.stackd.db.entities.Tag;
+
 import com.stackd.stackd.helpers.Converters;
 
 @Database(version = 1,
