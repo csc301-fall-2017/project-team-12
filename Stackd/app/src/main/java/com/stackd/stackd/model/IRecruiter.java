@@ -7,17 +7,20 @@ import java.util.List;
  * Created by Musa on 11/6/2017.
  */
 
-public interface Recruiter {
+public interface IRecruiter {
+    /**
+     * Attributes of one row from the recruiter table
+     */
     Long getId();
     Long getCid();
     String getFirstName();
     void setFirstName(String firstName);
     String getLastName();
     void setLastName(String lastName);
-    List<Resume> getAllResumes();
-    List<Resume> getResumesByTag(Tag tag);
-    List<Resume> getResume(String recruiterOrDate);
-    List<Tag> getCompanyTags();
+    List<IResume> getAllResumes();
+    List<IResume> getResumesByTag(ITag tag);
+    List<IResume> getResume(String recruiterOrDate);
+    List<ITag> getCompanyTags();
     void insertResume(File resume, String data);
     void addRating(int rating); // 0: No, 1: Maybe, 2: Yes
     void addComment(String comment);

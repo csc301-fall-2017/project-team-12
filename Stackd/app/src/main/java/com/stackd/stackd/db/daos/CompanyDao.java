@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.stackd.stackd.db.entities.Company;
+import com.stackd.stackd.db.entities.CompanyEntity;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ import java.util.List;
 public interface CompanyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public Long insertCompany(Company company);
+    public Long insertCompany(CompanyEntity company);
 
     @Delete
-    public void removeCompany(Company company);
+    public void removeCompany(CompanyEntity company);
 
     @Query("SELECT * FROM company")
-    public Company[] getAllCompanies();
+    public CompanyEntity[] getAllCompanies();
 
     @Query("SELECT * FROM company WHERE name = :companyName")
-    public Company[] getCompany(String companyName);
+    public CompanyEntity[] getCompany(String companyName);
 }

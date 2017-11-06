@@ -3,10 +3,12 @@ package com.stackd.stackd.db.entities;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 
 import io.reactivex.annotations.NonNull;
 
-@Entity(tableName = "company_tag",
+@Entity( tableName = "company_tag",
+        primaryKeys = {"cid", "tid"},
         indices = @Index(
                 value = {"cid", "tid"},
                 unique = true),
@@ -19,6 +21,7 @@ import io.reactivex.annotations.NonNull;
                         entity = TagEntity.class,
                         parentColumns = "id",
                         childColumns = "tid")})
+
 public class CompanyTagEntity {
 
     private Long cid;

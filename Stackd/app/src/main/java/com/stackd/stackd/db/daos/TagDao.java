@@ -5,14 +5,14 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.stackd.stackd.db.entities.Tag;
+import com.stackd.stackd.db.entities.TagEntity;
 
 @Dao
 public interface TagDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertTag(Tag tag);
+    public void insertTag(TagEntity tag);
 
     @Query("SELECT * FROM tag WHERE id = :id")
-    public Tag[] getTagsById(Long id);
+    public TagEntity[] getTagsById(Long id);
 }
