@@ -9,6 +9,7 @@ import android.content.Context;
 import com.stackd.stackd.db.daos.CompanyDao;
 import com.stackd.stackd.db.daos.CompanyTagDao;
 import com.stackd.stackd.db.daos.RecruiterDao;
+import com.stackd.stackd.db.daos.RecruiterResumeDao;
 import com.stackd.stackd.db.daos.ResumeDao;
 import com.stackd.stackd.db.daos.ResumeTagDao;
 import com.stackd.stackd.db.daos.ReviewDao;
@@ -16,6 +17,7 @@ import com.stackd.stackd.db.daos.TagDao;
 import com.stackd.stackd.db.entities.CompanyEntity;
 import com.stackd.stackd.db.entities.CompanyTagEntity;
 import com.stackd.stackd.db.entities.RecruiterEntity;
+import com.stackd.stackd.db.entities.RecruiterResumeEntity;
 import com.stackd.stackd.db.entities.ResumeEntity;
 import com.stackd.stackd.db.entities.ResumeTagEntity;
 import com.stackd.stackd.db.entities.ReviewEntity;
@@ -29,7 +31,8 @@ import com.stackd.stackd.helpers.Converters;
                 ResumeEntity.class, ResumeTagEntity.class,
                 TagEntity.class,
                 RecruiterEntity.class,
-                ReviewEntity.class},
+                ReviewEntity.class,
+                RecruiterResumeEntity.class},
         exportSchema = true)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -39,6 +42,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ResumeDao resumeDao();
     public abstract ResumeTagDao resumeTagDao();
     public abstract RecruiterDao recruiterDao();
+    public abstract RecruiterResumeDao recruiterResumeDao();
     public abstract ReviewDao reviewDao();
     public abstract TagDao tagDao();
 

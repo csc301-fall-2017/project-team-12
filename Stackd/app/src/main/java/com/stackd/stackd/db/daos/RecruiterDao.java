@@ -19,8 +19,8 @@ public interface RecruiterDao {
     public RecruiterEntity[] getAllRecruiters();
 
     @Query("SELECT * FROM recruiter WHERE id = :id")
-    public RecruiterEntity[] getRecruiter(Long id);
+    public RecruiterEntity getRecruiter(Long id);
 
     @Query("SELECT * FROM recruiter WHERE first_name = :firstName AND last_name = :lastName")
-    public RecruiterEntity[] getRecruiterByName(String firstName, String lastName);
+    public RecruiterEntity getRecruiterByName(String firstName, String lastName);
 }
