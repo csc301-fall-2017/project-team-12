@@ -54,7 +54,7 @@ Planned meetings:
 * All work is done in **subteams**. Subteams are formed for each task, and members are assigned to a team based on personal interest and skill set.
 * **Trello Board**: our main organization tool for assigning tasks and keeping track of our progress. For each task, a card on Trello will be created. Every card will have a subteam assigned to it, as described above. All cards will be in one of the following lists: to be done, in progress, testing, review and done. All cards will start in the "to be done" list and move along the pipeline, as subteams make progress on the tasks. Task priority is discussed on individual basis. Tasks are pretty general (for example, "implement log in activity"), so one subteam will probably work on the same task for the entire iteration.
 * **Slack**: main communication channel. All discussion regarding the project should be there. We will create new threads per discussion to have an organized discussion process. We will have a separate channel for each subteam. 
-* **Facebok Messenger**: used as a notification tool for group meetings. We chose this over doing everything in Slack, because everybody checks Messenger often, which may not be true for Slack. 
+* **Facebook Messenger**: used as a notification tool for group meetings. We chose this over doing everything in Slack, because everybody checks Messenger often, which may not be true for Slack. 
 * **Meeting minutes**: we keep track of what is discussed during our meetings so that important points mentioned during meetings are not forgotten, and we can refer to them later. During our meetings people raise a lot of good points but it's hard to remember them all. Meeting minutes help us remember a good idea and possibly discuss it more.
 
 #### Git / GitHub workflow
@@ -83,7 +83,7 @@ To implement these user stories we will complete the following tasks:
 * Formalize the structure/architecture of our activities, database, and other abstractions. We need to decide what kind of database we will be using (SQL/NoSQL), what information it needs to store, design database schema, queries needed, etc., come up with classes and methods needed to abstract away database access. Based on the mock up we need to decide which Android activities we need and what they should do
 * Split our team into smaller subteams to work on different parts of the application. 
 
-* Implement a basic prototype of our app, ready for the end of iteration demo. All main features should be functional, but database will be local, instead of remote, some features might be mocked up. To achieve that, multiple subteams will implement activites, classes and database as described above.
+* Implement a basic prototype of our app, ready for the end of iteration demo. All main features should be functional, but database will be local, instead of remote, some features might be mocked up. To achieve that, multiple subteams will implement activities, classes and database as described above.
 
 
 #### Artifacts
@@ -97,7 +97,7 @@ To implement these user stories we will complete the following tasks:
 * Completed UI for activities: Login, Stack, Review and Camera
 	* This represents the core interface/flow of our app, so we cannot have our product demo without having UIs for all of these activities. 
 * Implementation of basic functionality for Login, Stack, Review and Camera activities. 
-	* Login activity will be present, as users (recruiters) are important part of our app, but the log in process will be mocked up. Everything else will be implemented at least on some basic level, as all of these activites are essential for our app. A recruiter should be able to view resumes, add new ones and put notes/tags on them.
+	* Login activity will be present, as users (recruiters) are important part of our app, but the log in process will be mocked up. Everything else will be implemented at least on some basic level, as all of these activities are essential for our app. A recruiter should be able to view resumes, add new ones and put notes/tags on them.
 * Implementation of basic functionality for database, connect app to a local/mock database on the device.
 	*  All resumes, recruiter profiles and their notes/tags have to be stored in an organized manner, so implementing database is crucial. However, for this deliverable it is not necessary to place a database on a remote server, it will suffice to have a database locally. 
 
@@ -106,3 +106,6 @@ To implement these user stories we will complete the following tasks:
 
 * Complete a short video, presenting our product (as specified in the requirements for this deliverable).
 	* We will film a video presenting the problem of resume collection/organization at career fairs and show how our app solves this problem. Besides being a required artifact for this deliverable, it will help us see how our product would be used in practice. 
+
+
+
