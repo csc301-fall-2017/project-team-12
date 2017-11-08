@@ -21,8 +21,12 @@ public class Company {
     private List<Recruiter> recruiters;
     private List<Resume> resumes;
 
+    public Company() {
+
+    }
+
     public Company(Long comId, String name){
-        this.id = id;
+        this.id = comId;
         this.name = name;
         this.tags = new ArrayList<>();
         this.resumes = new ArrayList<>();
