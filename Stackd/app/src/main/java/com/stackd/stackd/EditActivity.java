@@ -25,7 +25,7 @@ public class EditActivity extends AppCompatActivity {
 
         // Initialize the resume
         resume = new Resume();
-        resume.setDate( new SimpleDateFormat("DD-MM-YYYY"));
+        //resume.setDate( new SimpleDateFormat("DD-MM-YYYY"));
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
