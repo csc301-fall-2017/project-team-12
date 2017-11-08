@@ -37,6 +37,8 @@ import com.stackd.stackd.helpers.Converters;
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
+    static final String DATABASE_NAME = "sample_database";
+
     public abstract CompanyDao companyDao();
     public abstract CompanyTagDao companyTagDao();
     public abstract ResumeDao resumeDao();

@@ -5,6 +5,8 @@ import android.content.Context;
 import com.stackd.stackd.db.AppDatabase;
 import com.stackd.stackd.db.entities.RecruiterEntity;
 import com.stackd.stackd.db.entities.ResumeEntity;
+import com.stackd.stackd.db.entities.ReviewEntity;
+import com.stackd.stackd.db.entities.TagEntity;
 
 import java.io.File;
 import java.util.List;
@@ -39,7 +41,7 @@ public class Recruiter implements IRecruiter {
 
     @Override
     public String getLastName() {
-        return null;
+        return recruiter.getLastName();
     }
 
     @Override
@@ -49,31 +51,26 @@ public class Recruiter implements IRecruiter {
 
     @Override
     public ResumeEntity[] getResumesByTag(ITag tag) {
-        return null;
+        return db.resumeTagDao().getResumesByTag(tag.getId());
     }
 
     @Override
-    public ResumeEntity[] getResume(String recruiterOrDate) {
-        return null;
+    public TagEntity[] getCompanyTags(Long cid) {
+        return db.companyTagDao().getCompanyTags(cid);
     }
 
     @Override
-    public List<ITag> getCompanyTags() {
-        return null;
+    public void insertResume(ResumeEntity resume) {
+        db.resumeDao().insertResume(resume);
     }
 
-    @Override
-    public void insertResume(File resume, String data) {
-
-    }
-
-    @Override
-    public void addRating(int rating) {
-
-    }
-
-    @Override
-    public void addComment(String comment) {
-
-    }
+//    @Override
+//    public void addRating(int rating) {
+//
+//    }
+//
+//    @Override
+//    public void addComment(String comment) {
+//
+//    }
 }

@@ -1,5 +1,8 @@
 package com.stackd.stackd.model;
 
+import com.stackd.stackd.db.entities.ResumeEntity;
+import com.stackd.stackd.db.entities.TagEntity;
+
 import java.io.File;
 import java.util.List;
 
@@ -14,15 +17,14 @@ public interface IRecruiter {
     Long getId();
     Long getCid();
     String getFirstName();
-    void setFirstName(String firstName);
     String getLastName();
-    void setLastName(String lastName);
-    List<IResume> getAllResumes();
-    List<IResume> getResumesByTag(ITag tag);
-    List<IResume> getResume(String recruiterOrDate);
-    List<ITag> getCompanyTags();
-    void insertResume(File resume, String data);
-    void addRating(int rating); // 0: No, 1: Maybe, 2: Yes
-    void addComment(String comment);
+    ResumeEntity[] getAllResumes();
+    ResumeEntity[] getResumesByTag(ITag tag);
+    //ResumeEntity[] getResume(String recruiterOrDate);
+    TagEntity[] getCompanyTags(Long cid);
+    void insertResume(ResumeEntity resume);
+    // TODO: Should these two be in resume insetad?
+    //void addRating(int rating); // 0: No, 1: Maybe, 2: Yes
+    //void addComment(String comment);
 
 }
