@@ -37,8 +37,6 @@ import com.stackd.stackd.helpers.Converters;
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
-    static final String DATABASE_NAME = "sample_database";
-
     public abstract CompanyDao companyDao();
     public abstract CompanyTagDao companyTagDao();
     public abstract ResumeDao resumeDao();
@@ -48,13 +46,13 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ReviewDao reviewDao();
     public abstract TagDao tagDao();
 
-    private static String name = "StackdDB";
+    private static final String DATABASE_NAME = "StackdDB";
     private static AppDatabase db;
 
     public static AppDatabase getAppDatabase(Context context) {
         if( db == null) {
             db = Room.databaseBuilder(context.getApplicationContext(),
-                    AppDatabase.class, AppDatabase.name).build();
+                    AppDatabase.class, AppDatabase.DATABASE_NAME).build();
         }
         return db;
     }
