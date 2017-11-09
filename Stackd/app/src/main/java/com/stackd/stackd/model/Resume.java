@@ -2,8 +2,12 @@ package com.stackd.stackd.model;
 
 import android.arch.persistence.room.ColumnInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import com.stackd.stackd.model.Tag;
+
 
 /**
  * Created by lana on 11/8/17.
@@ -19,12 +23,12 @@ public class Resume {
     private String url;
     private String recruiterComments;
     private int rating;
-    private ArrayList<Tag> tagList;
+    private List<Tag> tagList;
 
 
-    public Resume(Long id, Long rid) {
-        this.id = id;
-        this.rid = rid;
+    public Resume(Long recId) {
+        this.id = null; // ID will be set by the data base
+        this.rid = recId;
         this.url = "";
         this.candidateName = "";
         this.collectionDate = null;
@@ -53,7 +57,7 @@ public class Resume {
         return collectionDate;
     }
 
-    public void setCollectionDate(Date collectionDate) {
+    public void setCollectionDate(SimpleDateFormat collectionDate) {
         this.collectionDate = collectionDate;
     }
 
@@ -81,11 +85,11 @@ public class Resume {
         this.rating = rating;
     }
 
-    public ArrayList<Tag> getTagList() {
+    public List<Tag> getTagList() {
         return tagList;
     }
 
-    public void setTagList(ArrayList<Tag> tagList) {
+    public void setTagList(List<Tag> tagList) {
         this.tagList = tagList;
     }
 
