@@ -1,26 +1,20 @@
 package com.stackd.stackd.db.daos;
 
+public class RecruiterDao {
+    private static RecruiterDao recruiterDao = null;
+    //TODO: add the data in the jsonString
+    private final String jsonString = "";
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
+    private RecruiterDao() {
 
-import com.stackd.stackd.db.entities.RecruiterEntity;
-import com.stackd.stackd.db.entities.ResumeEntity;
+    }
 
-@Dao
-public interface RecruiterDao {
+    public static RecruiterDao getRecruiterDao() {
+        if (recruiterDao == null) {
+            recruiterDao = new RecruiterDao();
+            return recruiterDao;
+        }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertRecruiter(RecruiterEntity recruiter);
-
-    @Query("SELECT * FROM recruiter")
-    public RecruiterEntity[] getAllRecruiters();
-
-    @Query("SELECT * FROM recruiter WHERE id = :id")
-    public RecruiterEntity getRecruiter(Long id);
-
-    @Query("SELECT * FROM recruiter WHERE first_name = :firstName AND last_name = :lastName")
-    public RecruiterEntity getRecruiterByName(String firstName, String lastName);
+        return recruiterDao;
+    }
 }

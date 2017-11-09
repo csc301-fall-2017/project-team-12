@@ -1,5 +1,9 @@
 package com.stackd.stackd.db;
 
+import com.stackd.stackd.db.daos.CompanyDao;
+import com.stackd.stackd.db.daos.RecruiterDao;
+import com.stackd.stackd.db.daos.ResumeDao;
+import com.stackd.stackd.db.daos.TagDao;
 import com.stackd.stackd.model.Company;
 import com.stackd.stackd.model.Recruiter;
 import com.stackd.stackd.model.Resume;
@@ -15,21 +19,32 @@ import java.util.List;
  */
 
 public class App {
-//    private CompanyDao companyDao;
-//    private RecruiterDao recruiterDao;
     private static App app = null;
+    private CompanyDao companyDao;
+    private RecruiterDao recruiterDao;
+    private ResumeDao resumeDao;
+    private TagDao tagDao;
     //TODO: set these during authentication
     public static Company company = new Company();
     public static Recruiter recruiter = null; //new Recruiter();
 
     private App(Long compnyID, Long recruiterId) {
+        // Instantiate Daos:
+        this.companyDao = CompanyDao.getCompanyDao();
+        this.recruiterDao = RecruiterDao.getRecruiterDao();
+        this.resumeDao = ResumeDao.getResumeDao();
+        this.tagDao = TagDao.getTagDao();
+
         company.setId(compnyID);
+
         //TODO, continue setting company & recriuter
+
     }
 
     public static App getApp(Long companyId, Long recruiterId) {
         if (app == null) {
-            return new App(companyId, recruiterId);
+            app = new App(companyId, recruiterId);
+            return app;
         } else {
             return app;
         }
