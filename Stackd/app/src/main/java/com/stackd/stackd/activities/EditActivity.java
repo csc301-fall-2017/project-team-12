@@ -8,7 +8,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.stackd.stackd.R;
-import com.stackd.stackd.helpers.Resume;
+import com.stackd.stackd.model.Resume;
 import java.text.DateFormat;
 
 import java.text.SimpleDateFormat;
@@ -26,12 +26,12 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
 
         // Initialize the resume
-        resume = new Resume();
+        resume = new Resume(new Long(1), new Long(2));// TODO: retrrive id  from other screen
         //resume.setDate( new SimpleDateFormat("DD-MM-YYYY"));
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
-
+        final ArrayList<String> tags = new ArrayList<>();
         // Retrieve the company's list of tags TODO: call getTags from DOA, SCROLL
         ArrayList<String> tagList =  new ArrayList<>();
         tagList.add("PEY");
@@ -45,7 +45,7 @@ public class EditActivity extends AppCompatActivity {
             cb.setTextColor(Color.WHITE);
             cb.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    resume.addTags((String) cb.getText());
+                    tags.add((String) cb.getText());
                 }
             });
             tagListLayout.addView(cb);

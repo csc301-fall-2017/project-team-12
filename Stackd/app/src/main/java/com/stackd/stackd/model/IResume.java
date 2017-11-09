@@ -10,8 +10,6 @@ public interface IResume {
     /**
      * Attributes of one row from the resume table
      */
-    boolean hasTag(ITag tag);
     void addReview(int recId, int resId, String date, String comment, int rating);
     void addTag(ITag tag);
-    List<ITag> getResumeTags();
 }

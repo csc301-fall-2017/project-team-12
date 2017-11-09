@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by lana on 11/6/17.
+ * TODO: Observes the App, so that it updates the fields when necessary
  */
 
 public class Company {

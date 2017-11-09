@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b28f077c2db644621c9ac2f758a12f4e",
+    "identityHash": "bc8a43119c2ed9741cc7afddf813b7a9",
     "entities": [
       {
         "tableName": "company",
@@ -379,11 +379,98 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "recruiter_resume",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recId` INTEGER, `resId` INTEGER, `date` TEXT, PRIMARY KEY(`recId`, `resId`), FOREIGN KEY(`resId`) REFERENCES `resume`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`recId`) REFERENCES `recruiter`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "recId",
+            "columnName": "recId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "resId",
+            "columnName": "resId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "recId",
+            "resId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_recruiter_resume_recId_resId",
+            "unique": false,
+            "columnNames": [
+              "recId",
+              "resId"
+            ],
+            "createSql": "CREATE  INDEX `index_recruiter_resume_recId_resId` ON `${TABLE_NAME}` (`recId`, `resId`)"
+          },
+          {
+            "name": "index_recruiter_resume_recId",
+            "unique": false,
+            "columnNames": [
+              "recId"
+            ],
+            "createSql": "CREATE  INDEX `index_recruiter_resume_recId` ON `${TABLE_NAME}` (`recId`)"
+          },
+          {
+            "name": "index_recruiter_resume_resId",
+            "unique": false,
+            "columnNames": [
+              "resId"
+            ],
+            "createSql": "CREATE  INDEX `index_recruiter_resume_resId` ON `${TABLE_NAME}` (`resId`)"
+          },
+          {
+            "name": "index_recruiter_resume_date",
+            "unique": false,
+            "columnNames": [
+              "date"
+            ],
+            "createSql": "CREATE  INDEX `index_recruiter_resume_date` ON `${TABLE_NAME}` (`date`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "resume",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "resId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "recruiter",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b28f077c2db644621c9ac2f758a12f4e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"bc8a43119c2ed9741cc7afddf813b7a9\")"
     ]
   }
 }
