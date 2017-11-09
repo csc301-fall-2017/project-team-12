@@ -7,13 +7,8 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.stackd.stackd.db.daos.CompanyDao;
-import com.stackd.stackd.db.daos.CompanyTagDao;
 import com.stackd.stackd.db.daos.RecruiterDao;
-import com.stackd.stackd.db.daos.RecruiterResumeDao;
 import com.stackd.stackd.db.daos.ResumeDao;
-import com.stackd.stackd.db.daos.ResumeTagDao;
-import com.stackd.stackd.db.daos.ReviewDao;
-import com.stackd.stackd.db.daos.TagDao;
 import com.stackd.stackd.db.entities.CompanyEntity;
 import com.stackd.stackd.db.entities.CompanyTagEntity;
 import com.stackd.stackd.db.entities.RecruiterEntity;
@@ -23,7 +18,6 @@ import com.stackd.stackd.db.entities.ResumeTagEntity;
 import com.stackd.stackd.db.entities.ReviewEntity;
 import com.stackd.stackd.db.entities.TagEntity;
 
-import com.stackd.stackd.db.entities.TagEntity;
 import com.stackd.stackd.helpers.Converters;
 
 @Database(version = 1,

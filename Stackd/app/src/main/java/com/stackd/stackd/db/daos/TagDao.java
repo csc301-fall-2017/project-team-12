@@ -1,18 +1,21 @@
 package com.stackd.stackd.db.daos;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
+public class TagDao {
 
-import com.stackd.stackd.db.entities.TagEntity;
+    private static TagDao tagDao = null;
+    //TODO: add the data in the jsonString
+    private final String jsonString = "";
 
-@Dao
-public interface TagDao {
+    private TagDao() {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertTag(TagEntity tag);
+    }
 
-    @Query("SELECT * FROM tag WHERE id = :id")
-    public TagEntity[] getTagsById(Long id);
+    public static TagDao getTagDao() {
+        if (tagDao == null) {
+            tagDao = new TagDao();
+            return tagDao;
+        }
+
+        return tagDao;
+    }
 }

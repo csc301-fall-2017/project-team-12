@@ -1,18 +1,21 @@
 package com.stackd.stackd.db.daos;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
+public class ResumeDao {
 
-import com.stackd.stackd.db.entities.ResumeEntity;
+    private static ResumeDao resumeDao = null;
+    //TODO: add the data in the jsonString
+    private final String jsonString = "";
 
-@Dao
-public interface ResumeDao {
+    private ResumeDao() {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertResume(ResumeEntity resume);
+    }
 
-    @Query("SELECT * FROM resume")
-    public ResumeEntity[] getAllResumes();
+    public static ResumeDao getResumeDao() {
+        if (resumeDao == null) {
+            resumeDao = new ResumeDao();
+            return resumeDao;
+        }
+
+        return resumeDao;
+    }
 }
