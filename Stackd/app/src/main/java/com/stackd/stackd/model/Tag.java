@@ -8,7 +8,7 @@ import com.stackd.stackd.db.AppDatabase;
  * Created by lana on 11/6/17.
  */
 
-public class Tag implements ITag {
+public class Tag  {
 
     Long id;
     String name;

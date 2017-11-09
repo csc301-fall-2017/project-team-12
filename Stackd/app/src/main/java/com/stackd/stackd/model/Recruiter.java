@@ -15,7 +15,7 @@ import java.util.List;
  * Created by user on 11/6/2017.
  */
 
-public class Recruiter implements IRecruiter {
+public class Recruiter  {
     private RecruiterEntity recruiter;
     private AppDatabase db;
 
