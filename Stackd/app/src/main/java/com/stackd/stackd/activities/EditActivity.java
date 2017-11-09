@@ -3,6 +3,7 @@ package com.stackd.stackd.activities;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,7 +40,9 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
 
         // Fields needed from other screens
-        final String resume_url = "";
+        Uri uri=Uri.parse("R.drawable.resume_template");
+
+        final String resume_url = uri.toString();
         final String candidate_name = "";
 
         File imgFile = new  File(resume_url);

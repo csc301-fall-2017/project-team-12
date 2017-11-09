@@ -20,7 +20,7 @@ public class App {
     private static App app = null;
     //TODO: set these during authentication
     public static Company company = new Company();
-    public static Recruiter recruiter = new Recruiter();
+    public static Recruiter recruiter = null; //new Recruiter();
 
     private App(Long compnyID, Long recruiterId) {
         company.setId(compnyID);

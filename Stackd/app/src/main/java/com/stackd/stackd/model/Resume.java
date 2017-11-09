@@ -19,7 +19,7 @@ public class Resume {
     private Long rid;
 
     private String candidateName;
-    private Date collectionDate;
+    private SimpleDateFormat collectionDate;
     private String url;
     private String recruiterComments;
     private int rating;
@@ -53,7 +53,7 @@ public class Resume {
         this.candidateName = candidateName;
     }
 
-    public Date getCollectionDate() {
+    public SimpleDateFormat getCollectionDate() {
         return collectionDate;
     }
 
