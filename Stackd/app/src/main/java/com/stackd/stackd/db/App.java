@@ -54,7 +54,8 @@ public class App {
         return null;
     }
 
-    public List<Tag> getTags(Long companyId){
+    public List<Tag> getCompanyTags(){
+        // TODO: use the App.company ID
         return null;
     }
 
