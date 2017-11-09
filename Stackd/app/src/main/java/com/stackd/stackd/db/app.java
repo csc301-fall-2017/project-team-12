@@ -2,6 +2,10 @@ package com.stackd.stackd.db;
 
 import com.stackd.stackd.model.Company;
 import com.stackd.stackd.model.Recruiter;
+import com.stackd.stackd.model.Resume;
+import com.stackd.stackd.model.Tag;
+
+import java.util.List;
 
 /**
  * A global class for the whole app resposible for getting the required data
@@ -35,5 +39,30 @@ public class App {
         return null;
     }
 
+    public List<Tag> getTags(Long companyId){
+        return null;
+    }
 
+    public void addTag(Long companyId, Tag tag) {
+
+    }
+
+    public Recruiter getRecruiter(Long recruiterId) {
+        return null;
+    }
+
+    public List<Resume> getResumesWithTag(Tag tag) {
+        return null;
+    }
+
+    public void insertResume(Resume resume) {
+
+    }
+
+    public void addReview(int recId, int resId, String date, int rating) {
+
+    }
+
+    
 }
+
