@@ -11,17 +11,11 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-<<<<<<< HEAD
         // Exports the schemas as a json file
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation":
                                      "$projectDir/src/main/java/com/stackd/stackd/db/schemas".toString()]
-=======
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
->>>>>>> master
             }
         }
     }
