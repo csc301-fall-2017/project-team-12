@@ -33,8 +33,8 @@ public class StackActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 // dummy result, should open the review activity for the given resume
-                Toast.makeText(StackActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(StackActivity.this, EditActivity.class);
+                startActivity(i);
             }
         });
     }

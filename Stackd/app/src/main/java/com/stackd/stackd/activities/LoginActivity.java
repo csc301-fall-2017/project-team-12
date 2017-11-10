@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.Intent;
 
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -31,7 +30,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.stackd.stackd.EditActivity;
 import com.stackd.stackd.R;
 
 import java.util.ArrayList;
@@ -148,10 +146,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-
-
-        Intent intent = new Intent(LoginActivity.this, EditActivity.class);
-        startActivity(intent);
 
         if (mAuthTask != null) {
             return;
