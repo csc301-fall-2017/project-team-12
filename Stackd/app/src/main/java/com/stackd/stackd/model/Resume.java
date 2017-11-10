@@ -1,13 +1,7 @@
 package com.stackd.stackd.model;
 
-import android.arch.persistence.room.ColumnInfo;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import com.stackd.stackd.model.Tag;
-
 
 /**
  * Created by lana on 11/8/17.

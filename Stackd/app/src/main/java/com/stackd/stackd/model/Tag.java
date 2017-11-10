@@ -1,34 +1,35 @@
 package com.stackd.stackd.model;
 
-import android.content.Context;
-
-import com.stackd.stackd.db.AppDatabase;
-
 /**
  * Created by lana on 11/6/17.
  */
 
 public class Tag  {
 
-    Long id;
-    String name;
-    AppDatabase db;
-    Context context;
+    private long id;
+    private String name;
 
-    public Tag(Context context, Long id, String name){
+    public Tag() {
+
+    }
+    public Tag(long id, String name){
         this.id = id;
         this.name = name;
-        this.context = context;
-        this.db = AppDatabase.getAppDatabase(context);
     }
 
-    @Override
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    @Override
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
-        return this.name;
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

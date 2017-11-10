@@ -32,7 +32,7 @@ public class EditActivity extends AppCompatActivity {
     LinearLayout tagListLayout;
     ArrayList<CheckBox> checkBoxes;
     Resume resume;
-    App app = App.getApp(App.company.getId(), App.recruiter.getId());
+    App app = App.getApp(App.company.getId(), App.recruiter.getRecId());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class EditActivity extends AppCompatActivity {
 
 
         // Initialize the resume
-        resume = new Resume(App.recruiter.getId());// TODO: retrrive id  from other screen
+        resume = new Resume(App.recruiter.getRecId());// TODO: retrrive id  from other screen
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);

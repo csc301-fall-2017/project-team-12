@@ -1,76 +1,64 @@
 package com.stackd.stackd.model;
 
-import android.content.Context;
-
-import com.stackd.stackd.db.AppDatabase;
-import com.stackd.stackd.db.entities.RecruiterEntity;
-import com.stackd.stackd.db.entities.ResumeEntity;
-import com.stackd.stackd.db.entities.ReviewEntity;
-import com.stackd.stackd.db.entities.TagEntity;
-
-import java.io.File;
-import java.util.List;
-
 /**
  * Created by user on 11/6/2017.
  */
 
 public class Recruiter  {
-    private RecruiterEntity recruiter;
-    private AppDatabase db;
+    private long recId;
+    private long compId;
+    private String firstName;
+    private String lastName;
+    private String email;
 
-    public Recruiter(Context context, Long recId) {
-        this.db = AppDatabase.getAppDatabase(context);
-        this.recruiter = db.recruiterDao().getRecruiter(recId);
+
+
+    public Recruiter() {
+
     }
 
-    @Override
-    public Long getId() {
-        return recruiter.getId();
+    public Recruiter(long recId, long compId) {
+        this.recId = recId;
+        this.compId = compId;
     }
 
-    @Override
-    public Long getCid() {
-        return recruiter.getCid();
+    public long getRecId() {
+        return recId;
     }
 
-    @Override
+    public void setRecId(long recId) {
+        this.recId = recId;
+    }
+
+    public long getCompId() {
+        return compId;
+    }
+
+    public void setCompId(long compId) {
+        this.compId = compId;
+    }
+
     public String getFirstName() {
-        return recruiter.getFirstName();
+        return firstName;
     }
 
-    @Override
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public String getLastName() {
-        return recruiter.getLastName();
+        return lastName;
     }
 
-    @Override
-    public ResumeEntity[] getAllResumes() {
-        return db.recruiterResumeDao().getAllResumes(recruiter.getId());
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    @Override
-    public ResumeEntity[] getResumesByTag(ITag tag) {
-        return db.resumeTagDao().getResumesByTag(tag.getId());
+    public String getEmail() {
+        return email;
     }
 
-    @Override
-    public TagEntity[] getCompanyTags(Long cid) {
-        return db.companyTagDao().getCompanyTags(cid);
+    public void setEmail(String email) {
+        this.email = email;
     }
-
-    @Override
-    public void insertResume(ResumeEntity resume) {
-        db.resumeDao().insertResume(resume);
-    }
-
-//    @Override
-//    public void addRating(int rating) {
-//
-//    }
-//
-//    @Override
-//    public void addComment(String comment) {
-//
-//    }
 }

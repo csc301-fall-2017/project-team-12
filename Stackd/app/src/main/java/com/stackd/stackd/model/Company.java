@@ -1,11 +1,5 @@
 package com.stackd.stackd.model;
 
-import android.content.Context;
-
-import com.stackd.stackd.db.AppDatabase;
-import com.stackd.stackd.db.entities.CompanyTagEntity;
-import com.stackd.stackd.db.entities.TagEntity;
-
 import java.util.ArrayList;
 import java.util.List;
 
