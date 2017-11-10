@@ -1,4 +1,4 @@
-package com.stackd.stackd;
+package com.stackd.stackd.activities;
 
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+
+import com.stackd.stackd.R;
 import com.stackd.stackd.helpers.Resume;
 import java.text.DateFormat;
 
@@ -25,7 +27,7 @@ public class EditActivity extends AppCompatActivity {
 
         // Initialize the resume
         resume = new Resume();
-        resume.setDate( new SimpleDateFormat("DD-MM-YYYY"));
+        //resume.setDate( new SimpleDateFormat("DD-MM-YYYY"));
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
