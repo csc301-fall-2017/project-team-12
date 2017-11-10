@@ -1,7 +1,21 @@
 package com.stackd.stackd.db.daos;
 
-import android.arch.persistence.room.Dao;
+public class TagDao {
 
-@Dao
-public interface TagDao {
+    private static TagDao tagDao = null;
+    //TODO: add the data in the jsonString
+    private final String jsonString = "";
+
+    private TagDao() {
+
+    }
+
+    public static TagDao getTagDao() {
+        if (tagDao == null) {
+            tagDao = new TagDao();
+            return tagDao;
+        }
+
+        return tagDao;
+    }
 }
