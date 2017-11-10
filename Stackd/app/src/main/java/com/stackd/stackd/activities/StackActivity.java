@@ -19,7 +19,7 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 
 public class StackActivity extends AppCompatActivity {
-
+    private ResumeImageAdapter adapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +27,9 @@ public class StackActivity extends AppCompatActivity {
 
         // initialize the grid view and its adapter
         GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ResumeImageAdapter(this));
+        adapter = new ResumeImageAdapter(this);
+        gridview.setAdapter(adapter);
+
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -52,6 +54,15 @@ public class StackActivity extends AppCompatActivity {
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
+
+        // set listener to reset all filters, once search view is closed
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                adapter.getFilter().filter(null);
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -94,6 +105,7 @@ public class StackActivity extends AppCompatActivity {
             //use the query to search your data somehow
             Toast.makeText(StackActivity.this, "Searching for " + query,
                     Toast.LENGTH_SHORT).show();
+            adapter.getFilter().filter(query);
         }
     }
 

@@ -4,27 +4,37 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stackd.stackd.R;
 
+import java.util.ArrayList;
+
 /**
  * Adapter for GridView of resumes.
  */
-public class ResumeImageAdapter extends BaseAdapter {
+public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
+    private ArrayList<Integer> mThumbIds = new ArrayList<>();
+    private ArrayList<Integer> filteredThumbIds = new ArrayList<>();
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
+        for(int i=0; i < 15; i++)
+            mThumbIds.add(R.drawable.resume_angelo_gabriel_austria);
+        filteredThumbIds = mThumbIds;
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return filteredThumbIds.size();
     }
 
     public Object getItem(int position) {
@@ -57,42 +67,14 @@ public class ResumeImageAdapter extends BaseAdapter {
 
         holder.resumeTitle.setText("Angelo Austria");
         holder.resumeImg.setImageBitmap(
-                decodeSampledBitmapFromResource(mContext.getResources(), mThumbIds[position], 100, 100));
+                decodeSampledBitmapFromResource(mContext.getResources(), filteredThumbIds.get(position), 100, 100));
         return convertView;
     }
 
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria
-    };
+    @Override
+    public Filter getFilter() {
+        return new ResumeFilter();
+    }
 
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -139,5 +121,34 @@ public class ResumeImageAdapter extends BaseAdapter {
     private static class ViewHolder {
         TextView resumeTitle;
         ImageView resumeImg;
+    }
+
+    private class ResumeFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            ArrayList<Integer> filtered = new ArrayList<>();
+            if(constraint != null && constraint.length() > 0) {
+                for(int i=0; i<mThumbIds.size(); i++) {
+                    if(i == Integer.parseInt((String)constraint)) {
+                        filtered.add(mThumbIds.get(i));
+                        Log.d("DEBUG", "Adding");
+                    }
+                }
+                results.values = filtered;
+                results.count = filtered.size();
+            }
+            else {
+                results.values = mThumbIds;
+                results.count = mThumbIds.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredThumbIds = (ArrayList<Integer>) results.values;
+            notifyDataSetChanged();
+        }
     }
 }
