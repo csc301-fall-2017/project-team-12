@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/mybutton"
-        android:title=""
-        app:showAsAction="always"
-        android:icon="@drawable/ic_export"
-        />
     <item android:id="@+id/search"
         android:title=""
         android:icon="@drawable/ic_search"
-        app:showAsAction="collapseActionView|ifRoom"
+        app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView" />
+    <item
+        android:id="@+id/mybutton"
+        android:title=""
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_export"
+        />
 </menu>

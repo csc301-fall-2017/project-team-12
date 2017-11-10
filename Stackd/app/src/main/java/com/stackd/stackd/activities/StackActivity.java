@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.stackd.stackd.R;
@@ -37,6 +37,8 @@ public class StackActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        handleIntent(getIntent());
     }
 
     // create an action bar button
@@ -86,7 +88,7 @@ public class StackActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-
+        //Log.d("DEBUG", "Handling intent");
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //use the query to search your data somehow
