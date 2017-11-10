@@ -3,6 +3,7 @@ package com.stackd.stackd.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -77,6 +78,21 @@ public class StackActivity extends AppCompatActivity {
             alertBox.show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //use the query to search your data somehow
+            Toast.makeText(StackActivity.this, "Searching for " + query,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
