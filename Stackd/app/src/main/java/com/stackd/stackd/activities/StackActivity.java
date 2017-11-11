@@ -55,7 +55,7 @@ public class StackActivity extends AppCompatActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
-        // set listener to reset all filters, once search view is closed
+        // reset all filters, once search view is closed
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
@@ -99,10 +99,9 @@ public class StackActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-        //Log.d("DEBUG", "Handling intent");
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            //use the query to search your data somehow
+            // use the query to search resume list for a resumes matching the query
             Toast.makeText(StackActivity.this, "Searching for " + query,
                     Toast.LENGTH_SHORT).show();
             adapter.getFilter().filter(query);

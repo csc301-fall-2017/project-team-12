@@ -24,19 +24,22 @@ import java.util.ArrayList;
  */
 public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
-    private ArrayList<Integer> mThumbIds = new ArrayList<>();
     private ArrayList<Resume> resumes = new ArrayList<>();
-    private ArrayList<Integer> filteredThumbIds = new ArrayList<>();
+    private ArrayList<Resume> filteredResumes = new ArrayList<>();
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
+        long rid = 0;
+        Resume r = new Resume(rid);
+        r.setCandidateName("John Smith");
+
         for(int i=0; i < 15; i++)
-            mThumbIds.add(R.drawable.resume_angelo_gabriel_austria);
-        filteredThumbIds = mThumbIds;
+            resumes.add(r);
+        filteredResumes = resumes;
     }
 
     public int getCount() {
-        return filteredThumbIds.size();
+        return filteredResumes.size();
     }
 
     public Object getItem(int position) {
@@ -67,9 +70,9 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        holder.resumeTitle.setText("Angelo Austria");
+        holder.resumeTitle.setText(filteredResumes.get(position).getCandidateName());
         holder.resumeImg.setImageBitmap(
-                decodeSampledBitmapFromResource(mContext.getResources(), filteredThumbIds.get(position), 100, 100));
+                decodeSampledBitmapFromResource(mContext.getResources(), R.drawable.resume_template, 100, 100));
         return convertView;
     }
 
@@ -129,27 +132,25 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            ArrayList<Integer> filtered = new ArrayList<>();
             if(constraint != null && constraint.length() > 0) {
-                for(int i=0; i<mThumbIds.size(); i++) {
+                for(int i=0; i<resumes.size(); i++) {
                     if(i == Integer.parseInt((String)constraint)) {
-                        filtered.add(mThumbIds.get(i));
+                        filteredResumes.add(resumes.get(i));
                         Log.d("DEBUG", "Adding");
                     }
                 }
-                results.values = filtered;
-                results.count = filtered.size();
+                results.values = filteredResumes;
+                results.count = filteredResumes.size();
             }
             else {
-                results.values = mThumbIds;
-                results.count = mThumbIds.size();
+                results.values = resumes;
+                results.count = resumes.size();
             }
             return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredThumbIds = (ArrayList<Integer>) results.values;
             notifyDataSetChanged();
         }
     }
