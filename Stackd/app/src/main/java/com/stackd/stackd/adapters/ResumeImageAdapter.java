@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stackd.stackd.R;
+import com.stackd.stackd.model.Resume;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
     private ArrayList<Integer> mThumbIds = new ArrayList<>();
+    private ArrayList<Resume> resumes = new ArrayList<>();
     private ArrayList<Integer> filteredThumbIds = new ArrayList<>();
 
     public ResumeImageAdapter(Context c) {
