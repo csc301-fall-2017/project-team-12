@@ -22,8 +22,10 @@ import android.widget.Toast;
 import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 public class StackActivity extends AppCompatActivity {
     private ResumeImageAdapter adapter;
@@ -67,8 +69,6 @@ public class StackActivity extends AppCompatActivity {
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         activeTags.put(btn.getText().toString(), false);
-                        adapter.removeConstraint(btn.getText().toString());
-                        adapter.getFilter().filter(null);
                     }
                     else {
                         int backgroundColor =
@@ -77,7 +77,6 @@ public class StackActivity extends AppCompatActivity {
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         activeTags.put(btn.getText().toString(), true);
-                        adapter.getFilter().filter(btn.getText().toString());
                     }
                 }
             });

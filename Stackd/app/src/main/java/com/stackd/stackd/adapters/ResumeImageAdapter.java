@@ -59,6 +59,14 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         filteredResumes = new ArrayList<>(resumes);
     }
 
+    public Set<String> getContraints() {
+        return this.contraints;
+    }
+
+    public void setConstraints(Set<String> constraints) {
+        this.contraints = constraints;
+    }
+
     public void removeConstraint(String constraint) {
         this.contraints.remove(constraint.toLowerCase());
     }
@@ -158,8 +166,6 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             filteredResumes.clear();
-            /*
-            filteredResumes.clear();
             if(constraint == null || constraint.length() == 0){
                 // no resume requested, restore all resumes to the adapter
                 results.values = resumes;
@@ -176,21 +182,8 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                 if(name.startsWith(strConstraint)) {
                     filteredResumes.add(resumes.get(i));
                 }
-
-                List<String> tags = new ArrayList<String>();
-                if (resumes.get(i).getTagList() != null) {
-                    for (Tag t : resumes.get(i).getTagList()) {
-                        //Log.d("Tag", t.getName().toLowerCase());
-                        tags.add(t.getName().toLowerCase());
-                    }
-
-                    if (tags.contains(strConstraint)) {
-                        filteredResumes.add(resumes.get(i));
-                    }
-                }
-
             }
-            */
+            /*
             if (constraint != null) {
                 contraints.add(constraint.toString().toLowerCase());
             }
@@ -205,7 +198,6 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                     List<String> tags = new ArrayList<String>();
                     if (resumes.get(i).getTagList() != null) {
                         for (Tag t : resumes.get(i).getTagList()) {
-                            //Log.d("Tag", t.getName().toLowerCase());
                             tags.add(t.getName().toLowerCase());
                         }
 
@@ -218,6 +210,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             if (contraints.size() == 0) {
                 filteredResumes = new ArrayList<>(resumes);
             }
+            */
             results.values = filteredResumes;
             results.count = filteredResumes.size();
             return results;
