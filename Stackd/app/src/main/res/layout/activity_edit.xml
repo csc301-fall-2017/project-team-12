@@ -18,12 +18,12 @@
         app:layout_constraintVertical_weight="7">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/current_resume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/resume_img_desc"
             android:scaleType="fitStart"
-            android:src="@drawable/resume_template" />
+            android:src="@drawable/r1" />
     </ScrollView>
 
     <android.support.constraint.ConstraintLayout
