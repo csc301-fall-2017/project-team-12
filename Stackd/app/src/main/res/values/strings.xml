@@ -16,4 +16,7 @@
     <string name="title_activity_edit">editActivity</string>
     <string name="search_hint">Enter a candidate's name</string>
     <string name="export_resumes">Export</string>
+    <string name="resume_img_desc">Picture of a resume</string>
+    <string name="edit_done">Done</string>
+    <string name="comments_hint">Your comments...</string>
 </resources>

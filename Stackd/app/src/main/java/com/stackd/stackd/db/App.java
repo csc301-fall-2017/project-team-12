@@ -50,7 +50,15 @@ public class App {
         }
     }
     public Company getCompany(Long cid) {
-        // Fetch the company from database, JSON CompanyDao.getCompany(
+        // Fetch the company from JSON file, for example:
+        // String jsonFileAsString, read it to jsonObject
+        // JSONObject fileAsJosnObject = new JSONObject(jsonFile)
+        // Get the required compnay (see the documentation of JSONObjects and how to use them,
+        // I still don't know them well yet sorry :P
+        // Then pass the companyAsJsonString to  parsere to get back a Company instance
+        // and return it!
+        // And yay!
+        
         return null;
     }
 

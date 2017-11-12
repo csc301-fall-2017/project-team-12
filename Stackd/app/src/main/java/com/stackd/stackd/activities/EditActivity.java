@@ -1,17 +1,15 @@
 package com.stackd.stackd.activities;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.stackd.stackd.R;
 import com.stackd.stackd.helpers.Resume;
-import java.text.DateFormat;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class EditActivity extends AppCompatActivity {
@@ -48,7 +46,7 @@ public class EditActivity extends AppCompatActivity {
                     resume.addTags((String) cb.getText());
                 }
             });
-            tagListLayout.addView(cb);
+            tagListLayout.addView(cb, 0);
         }
 
     }
