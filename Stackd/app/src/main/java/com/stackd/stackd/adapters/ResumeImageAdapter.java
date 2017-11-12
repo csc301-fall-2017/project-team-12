@@ -8,23 +8,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stackd.stackd.R;
+import com.stackd.stackd.model.Resume;
+
+import java.util.ArrayList;
 
 /**
  * Adapter for GridView of resumes.
  */
-public class ResumeImageAdapter extends BaseAdapter {
+public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
+    private ArrayList<Resume> resumes = new ArrayList<>();
+    private ArrayList<Resume> filteredResumes;
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
+        long rid = 0;
+        Resume r = new Resume(rid);
+        r.setCandidateName("John Smith");
+        Resume r2 = new Resume(rid + 1);
+        r2.setCandidateName("Angelo Austria");
+        for(int i=0; i < 5; i++)
+            resumes.add(r);
+        resumes.add(r2);
+        filteredResumes = new ArrayList<>(resumes);
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return filteredResumes.size();
     }
 
     public Object getItem(int position) {
@@ -55,44 +71,16 @@ public class ResumeImageAdapter extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        holder.resumeTitle.setText("Angelo Austria");
+        holder.resumeTitle.setText(filteredResumes.get(position).getCandidateName());
         holder.resumeImg.setImageBitmap(
-                decodeSampledBitmapFromResource(mContext.getResources(), mThumbIds[position], 100, 100));
+                decodeSampledBitmapFromResource(mContext.getResources(), R.drawable.resume_template, 100, 100));
         return convertView;
     }
 
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria,
-            R.drawable.resume_angelo_gabriel_austria
-    };
+    @Override
+    public Filter getFilter() {
+        return new ResumeFilter();
+    }
 
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -139,5 +127,38 @@ public class ResumeImageAdapter extends BaseAdapter {
     private static class ViewHolder {
         TextView resumeTitle;
         ImageView resumeImg;
+    }
+
+    private class ResumeFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            filteredResumes.clear();
+            if(constraint == null || constraint.length() == 0){
+                // no resume requested, restore all resumes to the adapter
+                results.values = resumes;
+                results.count = resumes.size();
+                filteredResumes = new ArrayList<>(resumes);
+                return results;
+            }
+            String strConstraint = (String) constraint;
+            strConstraint = strConstraint.toLowerCase();
+            for(int i=0; i<resumes.size(); i++) {
+                // put resumes into the adapter whose candidate's name starts with the query
+                String name = resumes.get(i).getCandidateName().toLowerCase();
+                if(name.startsWith(strConstraint)) {
+                    filteredResumes.add(resumes.get(i));
+                }
+            }
+            results.values = filteredResumes;
+            results.count = filteredResumes.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            // update GridView
+            notifyDataSetChanged();
+        }
     }
 }

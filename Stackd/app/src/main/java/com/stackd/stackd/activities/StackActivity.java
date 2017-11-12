@@ -1,5 +1,7 @@
 package com.stackd.stackd.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,13 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 
 public class StackActivity extends AppCompatActivity {
-
+    private ResumeImageAdapter adapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +27,9 @@ public class StackActivity extends AppCompatActivity {
 
         // initialize the grid view and its adapter
         GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ResumeImageAdapter(this));
+        adapter = new ResumeImageAdapter(this);
+        gridview.setAdapter(adapter);
+
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -34,12 +39,51 @@ public class StackActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        handleIntent(getIntent());
     }
 
     // create an action bar button
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.stack_menu, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        // reset all filters, once search view is closed
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                adapter.getFilter().filter(null);
+                return true;
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(query.equals("")){
+                    adapter.getFilter().filter(null);
+                }
+                else{
+                    adapter.getFilter().filter(query);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText.equals("")) {
+                    onQueryTextSubmit("");
+                }
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -68,6 +112,21 @@ public class StackActivity extends AppCompatActivity {
             alertBox.show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            // use the query to search resume list for a resumes matching the query
+            Toast.makeText(StackActivity.this, "Searching for " + query,
+                    Toast.LENGTH_SHORT).show();
+            adapter.getFilter().filter(query);
+        }
     }
 
     /**
