@@ -9,6 +9,7 @@ import com.stackd.stackd.model.Recruiter;
 import com.stackd.stackd.model.Resume;
 import com.stackd.stackd.model.Tag;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -83,7 +84,7 @@ public class App {
 
     }
 
-    public void addReview(int recId, int resId, String date, int rating) {
+    public void addReview(Long recId, Long resId, SimpleDateFormat date, int rating) {
 
     }
 

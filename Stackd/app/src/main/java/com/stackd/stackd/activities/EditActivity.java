@@ -2,11 +2,13 @@ package com.stackd.stackd.activities;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,11 +36,13 @@ public class EditActivity extends AppCompatActivity {
     Long cId = new Long(1);
     Long rId = new Long(2);
     App app = App.getApp(cId, rId);
+    AlertDialog alertBox = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        setUpAlertBox(this);
 
         // Fields needed from other screens
         Uri uri=Uri.parse("R.drawable.resume_template");
@@ -98,7 +102,9 @@ public class EditActivity extends AppCompatActivity {
         final EditText comment_field = (EditText) findViewById(R.id.comment_field);
 
 
-        // The DONE button which saves the resume and adds it to the database
+
+
+        // The DONE button, opens the rating dialog box and builds the resume
         final Button submitButton = (Button) findViewById(R.id.submit_resume);
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -108,6 +114,8 @@ public class EditActivity extends AppCompatActivity {
                 resume.setRecruiterComments(comment_field.getText().toString());
                 resume.setCollectionDate(new SimpleDateFormat("DD-MM-YYYY"));
                 resume.setCandidateName(candidate_name);
+
+                alertBox.show();
             }
         });
     }
@@ -120,6 +128,41 @@ public class EditActivity extends AppCompatActivity {
                 context.getResources().getResourcePackageName(resId) + '/' +
                 context.getResources().getResourceTypeName(resId) + '/' +
                 context.getResources().getResourceEntryName(resId) );
+
+    }
+
+    public void setUpAlertBox(Context context) {
+
+        // The button icons
+        ImageView no = new ImageView(this);
+        no.setImageResource(R.drawable.splattered);
+
+        // setup the alert builder
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("Candidate Status");
+        alertBuilder.setView(no);
+        // add a list
+        String[] ratings = {"Yes", "No", "Maybe"};
+
+        alertBuilder.setItems(ratings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: resume.setRating(2);// yes
+                    case 1: resume.setRating(0);// no
+                    case 2: resume.setRating(1);// maybe
+
+                }
+                // Insert the resume into the database
+                app.insertResume(resume);
+                // Review it and add a rating
+                app.addReview(resume.getRid(), resume.getId(), resume.getCollectionDate(), resume.getRating());
+                // Go back to stack view
+                Intent i = new Intent(EditActivity.this, StackActivity.class);
+                startActivity(i);
+            }
+        });
+        alertBox = alertBuilder.create();
 
     }
 
