@@ -24,7 +24,26 @@
             android:contentDescription="@string/resume_img_desc"
             android:scaleType="fitStart"
             android:src="@drawable/r1" />
+
+
     </ScrollView>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity" >
+
+        <com.stackd.stackd.activities.DrawingView
+            android:id="@+id/simpleDrawingView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
+
+    </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/review_layout"
@@ -102,4 +121,5 @@
         app:srcCompat="@android:drawable/ic_menu_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/imgContainer"/>
+
 </android.support.constraint.ConstraintLayout>

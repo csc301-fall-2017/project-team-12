@@ -134,13 +134,13 @@ public class EditActivity extends AppCompatActivity {
     public void setUpAlertBox(Context context) {
 
         // The button icons
-        ImageView no = new ImageView(this);
-        no.setImageResource(R.drawable.splattered);
+        //ImageView no = new ImageView(this);
+        //no.setImageResource(R.drawable.splattered);
 
         // setup the alert builder
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setTitle("Candidate Status");
-        alertBuilder.setView(no);
+        //alertBuilder.setView(no);
         // add a list
         String[] ratings = {"Yes", "No", "Maybe"};
 
