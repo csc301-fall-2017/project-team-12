@@ -67,6 +67,7 @@ public class StackActivity extends AppCompatActivity {
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         activeTags.put(btn.getText().toString(), false);
+                        adapter.getFilter().filter(null);
                     }
                     else {
                         int backgroundColor =
@@ -75,6 +76,7 @@ public class StackActivity extends AppCompatActivity {
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         activeTags.put(btn.getText().toString(), true);
+                        adapter.getFilter().filter(btn.getText().toString());
                     }
                 }
             });

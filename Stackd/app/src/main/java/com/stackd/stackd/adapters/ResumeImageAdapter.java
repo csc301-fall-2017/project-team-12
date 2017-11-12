@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,10 @@ import android.widget.TextView;
 
 import com.stackd.stackd.R;
 import com.stackd.stackd.model.Resume;
+import com.stackd.stackd.model.Tag;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter for GridView of resumes.
@@ -31,8 +34,14 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         long rid = 0;
         Resume r = new Resume(rid);
         r.setCandidateName("John Smith");
+
+        // test resume with python tag
+        List<Tag> tags = new ArrayList<Tag>();
+        tags.add(new Tag(1, "python"));
         Resume r2 = new Resume(rid + 1);
         r2.setCandidateName("Angelo Austria");
+        r2.setTagList(tags);
+
         for(int i=0; i < 5; i++)
             resumes.add(r);
         resumes.add(r2);
@@ -143,12 +152,26 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             }
             String strConstraint = (String) constraint;
             strConstraint = strConstraint.toLowerCase();
+
             for(int i=0; i<resumes.size(); i++) {
                 // put resumes into the adapter whose candidate's name starts with the query
                 String name = resumes.get(i).getCandidateName().toLowerCase();
                 if(name.startsWith(strConstraint)) {
                     filteredResumes.add(resumes.get(i));
                 }
+
+                List<String> tags = new ArrayList<String>();
+                if (resumes.get(i).getTagList() != null) {
+                    for (Tag t : resumes.get(i).getTagList()) {
+                        Log.d("Tag", t.getName().toLowerCase());
+                        tags.add(t.getName().toLowerCase());
+                    }
+
+                    if (tags.contains(strConstraint)) {
+                        filteredResumes.add(resumes.get(i));
+                    }
+                }
+
             }
             results.values = filteredResumes;
             results.count = filteredResumes.size();
