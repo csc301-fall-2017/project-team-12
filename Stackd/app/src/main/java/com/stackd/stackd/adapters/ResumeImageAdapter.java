@@ -19,7 +19,9 @@ import com.stackd.stackd.model.Resume;
 import com.stackd.stackd.model.Tag;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Adapter for GridView of resumes.
@@ -28,6 +30,8 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
     private ArrayList<Resume> resumes = new ArrayList<>();
     private ArrayList<Resume> filteredResumes;
+
+    private Set<String> contraints = new HashSet<String>();
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
@@ -42,10 +46,21 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         r2.setCandidateName("Angelo Austria");
         r2.setTagList(tags);
 
-        for(int i=0; i < 5; i++)
+        List<Tag> tags2 = new ArrayList<Tag>();
+        tags2.add(new Tag(2, "c"));
+        Resume r3 = new Resume(rid + 2);
+        r3.setCandidateName("Dmitry Ten");
+        r3.setTagList(tags2);
+
+        for(int i=0; i < 2; i++)
             resumes.add(r);
         resumes.add(r2);
+        resumes.add(r3);
         filteredResumes = new ArrayList<>(resumes);
+    }
+
+    public void removeConstraint(String constraint) {
+        this.contraints.remove(constraint.toLowerCase());
     }
 
     public int getCount() {
@@ -143,6 +158,8 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             filteredResumes.clear();
+            /*
+            filteredResumes.clear();
             if(constraint == null || constraint.length() == 0){
                 // no resume requested, restore all resumes to the adapter
                 results.values = resumes;
@@ -163,7 +180,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                 List<String> tags = new ArrayList<String>();
                 if (resumes.get(i).getTagList() != null) {
                     for (Tag t : resumes.get(i).getTagList()) {
-                        Log.d("Tag", t.getName().toLowerCase());
+                        //Log.d("Tag", t.getName().toLowerCase());
                         tags.add(t.getName().toLowerCase());
                     }
 
@@ -172,6 +189,34 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                     }
                 }
 
+            }
+            */
+            if (constraint != null) {
+                contraints.add(constraint.toString().toLowerCase());
+            }
+            for (String c: contraints) {
+                for (int i = 0; i < resumes.size(); i++) {
+                    // put resumes into the adapter whose candidate's name starts with the query
+                    String name = resumes.get(i).getCandidateName().toLowerCase();
+                    if(name.startsWith(c)) {
+                        filteredResumes.add(resumes.get(i));
+                    }
+
+                    List<String> tags = new ArrayList<String>();
+                    if (resumes.get(i).getTagList() != null) {
+                        for (Tag t : resumes.get(i).getTagList()) {
+                            //Log.d("Tag", t.getName().toLowerCase());
+                            tags.add(t.getName().toLowerCase());
+                        }
+
+                        if (tags.contains(c)) {
+                            filteredResumes.add(resumes.get(i));
+                        }
+                    }
+                }
+            }
+            if (contraints.size() == 0) {
+                filteredResumes = new ArrayList<>(resumes);
             }
             results.values = filteredResumes;
             results.count = filteredResumes.size();

@@ -67,6 +67,7 @@ public class StackActivity extends AppCompatActivity {
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         activeTags.put(btn.getText().toString(), false);
+                        adapter.removeConstraint(btn.getText().toString());
                         adapter.getFilter().filter(null);
                     }
                     else {
