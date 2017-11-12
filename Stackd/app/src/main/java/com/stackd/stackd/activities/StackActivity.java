@@ -52,10 +52,32 @@ public class StackActivity extends AppCompatActivity {
         LinearLayout tagsList = (LinearLayout)findViewById(R.id.tag_list);
         Iterator<String> tags = activeTags.keySet().iterator();
         while (tags.hasNext()) {
-            Button btn = new Button(getApplicationContext());
-            int backgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+            final Button btn = new Button(getApplicationContext());
+            int backgroundColor =
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
             btn.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
             btn.setText(tags.next());
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (activeTags.get(btn.getText().toString())) {
+                        int backgroundColor =
+                                ContextCompat.getColor(getApplicationContext(),
+                                        R.color.colorAccent);
+                        btn.getBackground().setColorFilter(backgroundColor,
+                                PorterDuff.Mode.MULTIPLY);
+                        activeTags.put(btn.getText().toString(), false);
+                    }
+                    else {
+                        int backgroundColor =
+                                ContextCompat.getColor(getApplicationContext(),
+                                        R.color.colorPrimary);
+                        btn.getBackground().setColorFilter(backgroundColor,
+                                PorterDuff.Mode.MULTIPLY);
+                        activeTags.put(btn.getText().toString(), true);
+                    }
+                }
+            });
             tagsList.addView(btn);
         }
 
