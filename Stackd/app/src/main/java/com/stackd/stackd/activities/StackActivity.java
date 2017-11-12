@@ -24,7 +24,7 @@ public class StackActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stack);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         // initialize the grid view and its adapter
         GridView gridview = (GridView) findViewById(R.id.gridview);
         adapter = new ResumeImageAdapter(this);
