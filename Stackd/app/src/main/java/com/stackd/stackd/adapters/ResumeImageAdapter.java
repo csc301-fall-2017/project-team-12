@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,17 +24,19 @@ import java.util.ArrayList;
 public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
     private ArrayList<Resume> resumes = new ArrayList<>();
-    private ArrayList<Resume> filteredResumes = new ArrayList<>();
+    private ArrayList<Resume> filteredResumes;
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
         long rid = 0;
         Resume r = new Resume(rid);
         r.setCandidateName("John Smith");
-
-        for(int i=0; i < 15; i++)
+        Resume r2 = new Resume(rid + 1);
+        r2.setCandidateName("Angelo Austria");
+        for(int i=0; i < 5; i++)
             resumes.add(r);
-        filteredResumes = resumes;
+        resumes.add(r2);
+        filteredResumes = new ArrayList<>(resumes);
     }
 
     public int getCount() {
@@ -132,25 +133,31 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            if(constraint != null && constraint.length() > 0) {
-                for(int i=0; i<resumes.size(); i++) {
-                    if(i == Integer.parseInt((String)constraint)) {
-                        filteredResumes.add(resumes.get(i));
-                        Log.d("DEBUG", "Adding");
-                    }
-                }
-                results.values = filteredResumes;
-                results.count = filteredResumes.size();
-            }
-            else {
+            filteredResumes.clear();
+            if(constraint == null || constraint.length() == 0){
+                // no resume requested, restore all resumes to the adapter
                 results.values = resumes;
                 results.count = resumes.size();
+                filteredResumes = new ArrayList<>(resumes);
+                return results;
             }
+            String strConstraint = (String) constraint;
+            strConstraint = strConstraint.toLowerCase();
+            for(int i=0; i<resumes.size(); i++) {
+                // put resumes into the adapter whose candidate's name starts with the query
+                String name = resumes.get(i).getCandidateName().toLowerCase();
+                if(name.startsWith(strConstraint)) {
+                    filteredResumes.add(resumes.get(i));
+                }
+            }
+            results.values = filteredResumes;
+            results.count = filteredResumes.size();
             return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+            // update GridView
             notifyDataSetChanged();
         }
     }

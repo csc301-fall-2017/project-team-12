@@ -15,4 +15,5 @@
     </string>
     <string name="title_activity_edit">editActivity</string>
     <string name="search_hint">Enter a candidate's name</string>
+    <string name="export_resumes">Export</string>
 </resources>
