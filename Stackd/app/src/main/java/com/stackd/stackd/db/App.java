@@ -1,5 +1,7 @@
 package com.stackd.stackd.db;
 
+import android.util.Log;
+
 import com.stackd.stackd.db.daos.CompanyDao;
 import com.stackd.stackd.db.daos.RecruiterDao;
 import com.stackd.stackd.db.daos.ResumeDao;
@@ -8,6 +10,9 @@ import com.stackd.stackd.model.Company;
 import com.stackd.stackd.model.Recruiter;
 import com.stackd.stackd.model.Resume;
 import com.stackd.stackd.model.Tag;
+
+import org.json.*;
+
 
 import java.util.List;
 
@@ -37,7 +42,7 @@ public class App {
 
         company.setId(compnyID);
 
-        //TODO, continue setting company & recriuter
+        //TODO, continue setting company & recruiter
 
     }
 
@@ -50,6 +55,28 @@ public class App {
         }
     }
     public Company getCompany(Long cid) {
+
+        //Assuming the jsonFileAsString = {"123": "info", "234":"info}
+        //where "123", "234" are the cid's of the company
+        //and "info" is the data that we can use to convert the company into an object
+
+
+        String jsonFileAsString = "temp";
+        //The above json string should look something like below:
+        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
+        Company company = null;
+        //
+        try{
+            JSONObject jsonObject = new JSONObject(jsonFileAsString);
+            String companyJson = jsonObject.getString(cid.toString());
+            // TODO: deal with the company string and pass it into the parser and receive a company object
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+        //Musa's original comments:
         // Fetch the company from JSON file, for example:
         // String jsonFileAsString, read it to jsonObject
         // JSONObject fileAsJosnObject = new JSONObject(jsonFile)
@@ -58,8 +85,10 @@ public class App {
         // Then pass the companyAsJsonString to  parsere to get back a Company instance
         // and return it!
         // And yay!
-        
-        return null;
+
+
+
+        return company;
     }
 
     public List<Tag> getCompanyTags(){
