@@ -43,6 +43,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         // test resumes with python tag and c tag
         List<Tag> tags = new ArrayList<Tag>();
         tags.add(new Tag(1, "python"));
+        tags.add(new Tag(3, "pey"));
         Resume r2 = new Resume(rid + 1);
         r2.setCandidateName("Angelo Austria");
         r2.setTagList(tags);
@@ -182,7 +183,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                                 tags.add(t.getName().toLowerCase());
                             }
 
-                            if (tags.contains(c)) {
+                            if (tags.contains(c) && !filteredResumes.contains(resumes.get(i))) {
                                 filteredResumes.add(resumes.get(i));
                             }
                         }
