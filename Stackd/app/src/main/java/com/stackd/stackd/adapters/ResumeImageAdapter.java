@@ -40,7 +40,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         Resume r = new Resume(rid);
         r.setCandidateName("John Smith");
 
-        // test resume with python tag
+        // test resumes with python tag and c tag
         List<Tag> tags = new ArrayList<Tag>();
         tags.add(new Tag(1, "python"));
         Resume r2 = new Resume(rid + 1);
@@ -171,15 +171,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             filteredResumes = new ArrayList<>(resumes);
-            /*
-            if(constraint == null || constraint.length() == 0){
-                // no resume requested, restore all resumes to the adapter
-                results.values = resumes;
-                results.count = resumes.size();
-                filteredResumes = new ArrayList<>(resumes);
-                return results;
-            }
-            */
+            // Filter candidates by tag
             if (constraint == null && constraints.size() > 0) {
                 filteredResumes.clear();
                 for (String c: constraints) {
@@ -201,9 +193,11 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                 results.count = filteredResumes.size();
                 return results;
             }
+            // Filter candidates by name
             else {
                 ArrayList<Resume> filteredResumesCopy = new ArrayList<>(filteredResumes);
                 filteredResumes.clear();
+                // No tags and empty search query means we must be able to view all candidates
                 if (constraint == null && constraints.size() == 0) {
                     results.values = resumes;
                     results.count = resumes.size();
