@@ -29,12 +29,13 @@
     </ScrollView>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawLayout"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity" >
 
-        <com.stackd.stackd.activities.DrawingView
+        <com.stackd.stackd.activities.DrawView
             android:id="@+id/simpleDrawingView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -109,7 +110,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/highlightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

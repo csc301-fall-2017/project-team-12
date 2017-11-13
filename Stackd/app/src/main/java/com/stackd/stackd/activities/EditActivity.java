@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.app.AlertDialog;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.stackd.stackd.R;
 import com.stackd.stackd.db.App;
@@ -38,6 +40,8 @@ public class EditActivity extends AppCompatActivity {
     App app = App.getApp(cId, rId);
     AlertDialog alertBox = null;
 
+    RelativeLayout drawLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +52,8 @@ public class EditActivity extends AppCompatActivity {
         Uri uri=Uri.parse("R.drawable.resume_template");
         int resId = R.drawable.resume_template;
 
+        drawLayout = (RelativeLayout) this.findViewById(R.id.drawLayout);
+        drawLayout.setVisibility(RelativeLayout.GONE);
 
         ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
         resumeView.setImageURI(resIdToUri(this, resId));
@@ -101,9 +107,6 @@ public class EditActivity extends AppCompatActivity {
 
         final EditText comment_field = (EditText) findViewById(R.id.comment_field);
 
-
-
-
         // The DONE button, opens the rating dialog box and builds the resume
         final Button submitButton = (Button) findViewById(R.id.submit_resume);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +120,19 @@ public class EditActivity extends AppCompatActivity {
 
                 alertBox.show();
             }
+        });
+
+        FloatingActionButton highlightButton = (FloatingActionButton) findViewById(R.id.highlightButton);
+        highlightButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawLayout.getVisibility() == RelativeLayout.GONE) {
+                    drawLayout.setVisibility(RelativeLayout.VISIBLE);
+                } else {
+                    drawLayout.setVisibility(RelativeLayout.GONE);
+                }
+            }
+
         });
     }
 

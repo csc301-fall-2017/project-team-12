@@ -12,7 +12,8 @@ import android.view.View;
 /**
  * Source code from: https://guides.codepath.com/android/Basic-Painting-with-Views
  */
-class DrawingView extends View {
+// TODO: Make this valid only on action button click
+class DrawView extends View {
     // setup initial color
     private final int paintColor = Color.GREEN;
     // defines paint and canvas
@@ -20,7 +21,7 @@ class DrawingView extends View {
     // stores next circle
     private Path path = new Path();
 
-    public DrawingView(Context context, AttributeSet attrs) {
+    public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setFocusable(true);
         setFocusableInTouchMode(true);
