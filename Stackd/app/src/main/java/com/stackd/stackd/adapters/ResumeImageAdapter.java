@@ -204,7 +204,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             else {
                 ArrayList<Resume> filteredResumesCopy = new ArrayList<>(filteredResumes);
                 filteredResumes.clear();
-                if (constraints.size() == 0) {
+                if (constraint == null && constraints.size() == 0) {
                     results.values = resumes;
                     results.count = resumes.size();
                     filteredResumes = new ArrayList<>(resumes);
@@ -219,12 +219,10 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                         filteredResumes.add(filteredResumesCopy.get(i));
                     }
                 }
+                results.values = filteredResumes;
+                results.count = filteredResumes.size();
+                return results;
             }
-
-
-            results.values = filteredResumes;
-            results.count = filteredResumes.size();
-            return results;
         }
 
         @Override
