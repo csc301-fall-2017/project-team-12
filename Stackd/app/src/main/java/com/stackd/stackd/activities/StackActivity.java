@@ -69,6 +69,8 @@ public class StackActivity extends AppCompatActivity {
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         activeTags.put(btn.getText().toString(), false);
+                        adapter.removeConstraint(btn.getText().toString());
+                        adapter.getFilter().filter(null);
                     }
                     else {
                         int backgroundColor =
@@ -77,6 +79,8 @@ public class StackActivity extends AppCompatActivity {
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         activeTags.put(btn.getText().toString(), true);
+                        adapter.addConstraint(btn.getText().toString());
+                        adapter.getFilter().filter(null);
                     }
                 }
             });
@@ -127,6 +131,7 @@ public class StackActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         return super.onCreateOptionsMenu(menu);
     }
 
