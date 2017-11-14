@@ -22,8 +22,8 @@ import android.widget.RelativeLayout;
 
 import com.stackd.stackd.R;
 import com.stackd.stackd.db.App;
-import com.stackd.stackd.model.Resume;
-import com.stackd.stackd.model.Tag;
+import com.stackd.stackd.db.entities.Resume;
+import com.stackd.stackd.db.entities.Tag;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

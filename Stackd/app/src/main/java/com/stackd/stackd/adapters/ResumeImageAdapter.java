@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stackd.stackd.R;
-import com.stackd.stackd.model.Resume;
-import com.stackd.stackd.model.Tag;
+import com.stackd.stackd.db.entities.Resume;
+import com.stackd.stackd.db.entities.Tag;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

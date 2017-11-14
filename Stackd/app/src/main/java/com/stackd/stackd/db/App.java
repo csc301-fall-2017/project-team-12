@@ -4,10 +4,10 @@ import com.stackd.stackd.db.daos.CompanyDao;
 import com.stackd.stackd.db.daos.RecruiterDao;
 import com.stackd.stackd.db.daos.ResumeDao;
 import com.stackd.stackd.db.daos.TagDao;
-import com.stackd.stackd.model.Company;
-import com.stackd.stackd.model.Recruiter;
-import com.stackd.stackd.model.Resume;
-import com.stackd.stackd.model.Tag;
+import com.stackd.stackd.db.entities.Company;
+import com.stackd.stackd.db.entities.Recruiter;
+import com.stackd.stackd.db.entities.Resume;
+import com.stackd.stackd.db.entities.Tag;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
