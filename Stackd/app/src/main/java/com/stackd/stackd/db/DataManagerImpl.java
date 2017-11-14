@@ -1,7 +1,5 @@
 package com.stackd.stackd.db;
 
-import android.util.Log;
-
 import com.stackd.stackd.db.daos.CompanyDao;
 import com.stackd.stackd.db.daos.RecruiterDao;
 import com.stackd.stackd.db.daos.ResumeDao;
@@ -11,13 +9,10 @@ import com.stackd.stackd.model.Recruiter;
 import com.stackd.stackd.model.Resume;
 import com.stackd.stackd.model.Tag;
 
-
-import org.json.*;
-
-
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-
 import java.util.List;
 
 /**
@@ -27,8 +22,8 @@ import java.util.List;
  * Created by Musa on 11/8/2017.
  */
 
-public class App {
-    private static App app = null;
+public class DataManagerImpl implements DataManager {
+    private static DataManager dataManager = null;
     private CompanyDao companyDao;
     private RecruiterDao recruiterDao;
     private ResumeDao resumeDao;
@@ -37,8 +32,9 @@ public class App {
     public static Company company = new Company();
     public static Recruiter recruiter = new Recruiter(); //new Recruiter();
 
-    private App(Long companyID, Long recruiterId) {
+    private DataManagerImpl(Long companyID, Long recruiterId) {
         // Instantiate Daos:
+        //TODO remove these daos
         this.companyDao = CompanyDao.getCompanyDao();
         this.recruiterDao = RecruiterDao.getRecruiterDao();
         this.resumeDao = ResumeDao.getResumeDao();
@@ -52,15 +48,15 @@ public class App {
 
     }
 
-    public static App getApp(Long companyId, Long recruiterId) {
-        if (app == null) {
-            app = new App(companyId, recruiterId);
-            return app;
+    public DataManager getDataManager(Long companyId, Long recruiterId) {
+        if (dataManager == null) {
+            dataManager = new DataManagerImpl(companyId, recruiterId);
+            return dataManager;
         } else {
-            return app;
+            return dataManager;
         }
     }
-    public Company getCompany(Long cid) {
+    public Company getCompany() {
 
         //Assuming the jsonFileAsString = {"123": "info", "234":"info}
         //where "123", "234" are the cid's of the company
@@ -74,7 +70,7 @@ public class App {
         //
         try{
             JSONObject jsonObject = new JSONObject(jsonFileAsString);
-            String companyJson = jsonObject.getString(cid.toString());
+            String companyJson = jsonObject.getString(company.getId().toString());
             // TODO: deal with the company string and pass it into the parser and receive a company object
 
         } catch (JSONException e){
@@ -114,11 +110,11 @@ public class App {
         return null;
     }
 
-    public void addTag(Long companyId, Tag tag) {
+    public void addTag(Tag tag) {
         //Do not need to read in a json object, MUSA what
     }
 
-    public Recruiter getRecruiter(Long recruiterId) {
+    public Recruiter getRecruiter() {
         // TODO: use the App.company ID
         String jsonFileAsString = "temp";
         //The above json string should look something like below:
@@ -159,7 +155,7 @@ public class App {
 
     }
 
-    public void addReview(Long recId, Long resId, SimpleDateFormat date, int rating) {
+    public void addReview(Long resId, SimpleDateFormat date, int rating) {
 
     }
 
