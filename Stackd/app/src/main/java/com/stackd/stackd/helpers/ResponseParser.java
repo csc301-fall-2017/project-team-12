@@ -46,6 +46,9 @@ public class ResponseParser {
             throws JSONException {
 
         JSONObject jo = new JSONObject(response);
+        JSONArray ja = jo.getJSONArray("resumes");
+
+        List<Resume> resume
         return null;
     }
 
