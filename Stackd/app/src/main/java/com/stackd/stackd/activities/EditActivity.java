@@ -75,7 +75,8 @@ public class EditActivity extends AppCompatActivity {
 
 
         // Initialize the resume
-        resume = new Resume(App.recruiter.getRecId());// TODO: retrrive id  from other screen
+        resume = new Resume();// TODO: retrrive id  from other screen
+        resume.setRid(App.recruiter.getRecId());
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
@@ -84,10 +85,10 @@ public class EditActivity extends AppCompatActivity {
         // The company's tags
         //final List<Tag> tagList = app.getCompanyTags();
         final List<Tag> tagList = new ArrayList<>();
-        tagList.add(new Tag(1, "Java"));
-        tagList.add(new Tag(2, "Python"));
-        tagList.add(new Tag(3, "Intern"));
-        tagList.add(new Tag(4, "Full Time"));
+        tagList.add(new Tag.Builder().id(1).name("java").build());
+        tagList.add(new Tag.Builder().id(2).name("Python").build());
+        tagList.add(new Tag.Builder().id(3).name("Intern").build());
+        tagList.add(new Tag.Builder().id(4).name("Full Time").build());
 
         // The tags the resume contains
         final List<Tag> resumeTags = new ArrayList<>();

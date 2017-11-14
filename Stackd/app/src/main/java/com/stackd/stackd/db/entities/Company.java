@@ -1,6 +1,5 @@
 package com.stackd.stackd.db.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,11 +51,14 @@ public class Company {
     private List<Recruiter> recruiters;
     private List<Resume> resumes;
 
-    public Company(Builder builder) {
+    private Company(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
         this.tags = builder.tags;
         this.resumes = builder.resumes;
+    }
+
+    public Company() {
     }
 
     public long getId() {
@@ -77,5 +79,25 @@ public class Company {
 
     public List<Resume> getResumes() {
         return resumes;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void setRecruiters(List<Recruiter> recruiters) {
+        this.recruiters = recruiters;
+    }
+
+    public void setResumes(List<Resume> resumes) {
+        this.resumes = resumes;
     }
 }
