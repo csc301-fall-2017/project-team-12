@@ -92,19 +92,60 @@ public class App {
     }
 
     public List<Tag> getCompanyTags(){
-        // TODO: use the App.company ID
+        String jsonFileAsString = "temp";
+        //The above json string should look something like below:
+        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
+        Company company = null;
+        //
+        try{
+            JSONObject jsonObject = new JSONObject(jsonFileAsString);
+            //String companyJson = jsonObject.getString(.toString());
+            // TODO: deal with the company string and pass it into the parser and receive a company tags
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
     public void addTag(Long companyId, Tag tag) {
-
+        //Do not need to read in a json object, MUSA what
     }
 
     public Recruiter getRecruiter(Long recruiterId) {
+        // TODO: use the App.company ID
+        String jsonFileAsString = "temp";
+        //The above json string should look something like below:
+        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
+        Company company = null;
+        //
+        try{
+            JSONObject jsonObject = new JSONObject(jsonFileAsString);
+            //String companyJson = jsonObject.getString(.toString());
+            // TODO: deal with the company string and pass it into the parser and receive a company object
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
     public List<Resume> getResumesWithTag(Tag tag) {
+
+        // TODO: use the App.company ID
+        String jsonFileAsString = "temp";
+        //The above json string should look something like below:
+        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
+        Company company = null;
+        //
+        try{
+            JSONObject jsonObject = new JSONObject(jsonFileAsString);
+            //String companyJson = jsonObject.getString(.toString());
+            // TODO: deal with the company string and pass it into the parser and receive a company object
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
