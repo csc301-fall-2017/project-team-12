@@ -9,6 +9,7 @@ import com.stackd.stackd.model.Recruiter;
 import com.stackd.stackd.model.Resume;
 import com.stackd.stackd.model.Tag;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -26,17 +27,17 @@ public class App {
     private TagDao tagDao;
     //TODO: set these during authentication
     public static Company company = new Company();
-    public static Recruiter recruiter = null; //new Recruiter();
+    public static Recruiter recruiter = new Recruiter(); //new Recruiter();
 
-    private App(Long compnyID, Long recruiterId) {
+    private App(Long companyID, Long recruiterId) {
         // Instantiate Daos:
         this.companyDao = CompanyDao.getCompanyDao();
         this.recruiterDao = RecruiterDao.getRecruiterDao();
         this.resumeDao = ResumeDao.getResumeDao();
         this.tagDao = TagDao.getTagDao();
 
-        company.setId(compnyID);
-
+        company.setId(companyID);
+        recruiter.setRecId(recruiterId);
         //TODO, continue setting company & recriuter
 
     }
@@ -83,7 +84,7 @@ public class App {
 
     }
 
-    public void addReview(int recId, int resId, String date, int rating) {
+    public void addReview(Long recId, Long resId, SimpleDateFormat date, int rating) {
 
     }
 
