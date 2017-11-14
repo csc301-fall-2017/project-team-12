@@ -48,7 +48,7 @@ public class ResponseParser {
         JSONObject jo = new JSONObject(response);
         JSONArray ja = jo.getJSONArray("resumes");
 
-        List<Resume> resume
+        List<Resume> resume;
         return null;
     }
 
