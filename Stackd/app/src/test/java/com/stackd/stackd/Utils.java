@@ -89,7 +89,6 @@ public class Utils {
     }
 
     public static Resume createExpectedResume() throws JSONException {
-        System.out.println(Utils.getTagResponse());
         List<Tag> tags = ResponseParser.parseTagResponse(Utils.getTagResponse());
         tags.remove(tags.size() - 1);
 
