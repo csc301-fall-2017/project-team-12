@@ -49,12 +49,35 @@ public class Recruiter  {
     private String lastName;
     private String email;
 
-    public Recruiter(Builder builder) {
+    private Recruiter(Builder builder) {
         this.recId = builder.recId;
         this.compId = builder.compId;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.email =  builder.email;
+    }
+
+    public Recruiter() {
+    }
+
+    public void setCompId(long compId) {
+        this.compId = compId;
+    }
+
+    public void setRecId(long recId) {
+        this.recId = recId;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public long getRecId() {

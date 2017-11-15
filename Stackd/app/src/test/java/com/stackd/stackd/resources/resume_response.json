@@ -1,0 +1,27 @@
+{
+  "resumes": [
+    {
+      "_id": 9,
+      "rid": 21,
+
+      "candidateName": {
+        "firstName": "Nate",
+        "lastName": "Diaz"
+      },
+      "collectionDate": "09/22/2009",
+      "url": "http://localhost:8080/Desktop/Resumes/9.pdf",
+      "recruiterComments": "Perfect fit for the position!",
+      "rating": 10,
+      "tags": [
+        {
+          "_id": 19,
+          "name": "Git"
+        },
+        {
+          "_id": 12,
+          "name": "Bash"
+        }
+      ]
+    }
+  ]
+}

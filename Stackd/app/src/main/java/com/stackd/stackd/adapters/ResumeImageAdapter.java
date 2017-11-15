@@ -35,20 +35,24 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     public ResumeImageAdapter(Context c) {
         mContext = c;
         long rid = 0;
-        Resume r = new Resume(rid);
+        Resume r = new Resume();
+        r.setRid(rid);
         r.setCandidateName("John Smith");
 
         // test resumes with python tag and c tag
         List<Tag> tags = new ArrayList<Tag>();
-        tags.add(new Tag(1, "python"));
-        tags.add(new Tag(3, "pey"));
-        Resume r2 = new Resume(rid + 1);
+        tags.add(new Tag.Builder().id(1).name("python").build());
+        tags.add(new Tag.Builder().id(3).name("python").build());
+
+        Resume r2 = new Resume();
+        r2.setRid(rid + 1);
         r2.setCandidateName("Angelo Austria");
         r2.setTagList(tags);
 
         List<Tag> tags2 = new ArrayList<Tag>();
-        tags2.add(new Tag(2, "c"));
-        Resume r3 = new Resume(rid + 2);
+        tags2.add(new Tag.Builder().id(2).name("c").build());
+        Resume r3 = new Resume();
+        r3.setRid(rid + 2);
         r3.setCandidateName("Dmitry Ten");
         r3.setTagList(tags2);
 

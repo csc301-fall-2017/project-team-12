@@ -15,7 +15,7 @@ public class Resume {
         private int rating;
         private String url;
         private String candidateName;
-        private SimpleDateFormat collectionDate;
+        private String collectionDate;
         private String recruiterComments;
         private List<Tag> tagList;
 
@@ -34,7 +34,7 @@ public class Resume {
             return this;
         }
 
-        public Builder collectionDate(SimpleDateFormat collectionDate) {
+        public Builder collectionDate(String collectionDate) {
             this.collectionDate = collectionDate;
             return this;
         }
@@ -72,10 +72,10 @@ public class Resume {
     private String candidateName;
     private String recruiterComments;
     private int rating;
-    private SimpleDateFormat collectionDate;
+    private String collectionDate;
     private List<Tag> tagList;
 
-    public Resume(Builder builder) {
+    private Resume(Builder builder) {
         this.id = builder.id;
         this.rid = builder.rid;
         this.url = builder.url;
@@ -83,6 +83,10 @@ public class Resume {
         this.collectionDate = builder.collectionDate;
         this.recruiterComments = builder.recruiterComments;
         this.rating = builder.rating;
+        this.tagList = builder.tagList;
+    }
+
+    public Resume() {
     }
 
     public long getId() {
@@ -97,7 +101,7 @@ public class Resume {
         return candidateName;
     }
 
-    public SimpleDateFormat getCollectionDate() {
+    public String getCollectionDate() {
         return collectionDate;
     }
 
@@ -115,5 +119,37 @@ public class Resume {
 
     public List<Tag> getTagList() {
         return tagList;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setRid(long rid) {
+        this.rid = rid;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setCandidateName(String candidateName) {
+        this.candidateName = candidateName;
+    }
+
+    public void setRecruiterComments(String recruiterComments) {
+        this.recruiterComments = recruiterComments;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public void setCollectionDate(String collectionDate) {
+        this.collectionDate = collectionDate;
+    }
+
+    public void setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
     }
 }
