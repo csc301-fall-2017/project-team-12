@@ -15,7 +15,7 @@ public class Resume {
         private int rating;
         private String url;
         private String candidateName;
-        private SimpleDateFormat collectionDate;
+        private String collectionDate;
         private String recruiterComments;
         private List<Tag> tagList;
 
@@ -34,7 +34,7 @@ public class Resume {
             return this;
         }
 
-        public Builder collectionDate(SimpleDateFormat collectionDate) {
+        public Builder collectionDate(String collectionDate) {
             this.collectionDate = collectionDate;
             return this;
         }
@@ -72,7 +72,7 @@ public class Resume {
     private String candidateName;
     private String recruiterComments;
     private int rating;
-    private SimpleDateFormat collectionDate;
+    private String collectionDate;
     private List<Tag> tagList;
 
     private Resume(Builder builder) {
@@ -100,7 +100,7 @@ public class Resume {
         return candidateName;
     }
 
-    public SimpleDateFormat getCollectionDate() {
+    public String getCollectionDate() {
         return collectionDate;
     }
 
@@ -144,7 +144,7 @@ public class Resume {
         this.rating = rating;
     }
 
-    public void setCollectionDate(SimpleDateFormat collectionDate) {
+    public void setCollectionDate(String collectionDate) {
         this.collectionDate = collectionDate;
     }
 

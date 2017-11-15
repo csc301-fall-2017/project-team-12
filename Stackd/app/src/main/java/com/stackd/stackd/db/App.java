@@ -84,7 +84,7 @@ public class App {
 
     }
 
-    public void addReview(Long recId, Long resId, SimpleDateFormat date, int rating) {
+    public void addReview(Long recId, Long resId, String date, int rating) {
 
     }
 

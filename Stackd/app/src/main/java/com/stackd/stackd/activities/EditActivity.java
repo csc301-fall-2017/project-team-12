@@ -27,6 +27,7 @@ import com.stackd.stackd.db.entities.Tag;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
@@ -116,7 +117,7 @@ public class EditActivity extends AppCompatActivity {
                 resume.setTagList(tagList);
                 resume.setUrl(resume_url);
                 resume.setRecruiterComments(comment_field.getText().toString());
-                resume.setCollectionDate(new SimpleDateFormat("DD-MM-YYYY"));
+                resume.setCollectionDate(new SimpleDateFormat("DD-MM-YYYY").format(new Date()));
                 resume.setCandidateName(candidate_name);
 
                 alertBox.show();
