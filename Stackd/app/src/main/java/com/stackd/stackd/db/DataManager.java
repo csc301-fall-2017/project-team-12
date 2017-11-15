@@ -153,7 +153,7 @@ public class DataManager {
 
     }
 
-    public void addReview(Long resId, SimpleDateFormat date, int rating) {
+    public void addReview(Long resId, String date, int rating) {
 
     }
 

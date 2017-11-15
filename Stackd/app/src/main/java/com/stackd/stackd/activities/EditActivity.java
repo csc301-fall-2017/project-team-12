@@ -174,7 +174,7 @@ public class EditActivity extends AppCompatActivity {
                 // Insert the resume into the database
                 app.insertResume(resume);
                 // Review it and add a rating
-                app.addReview(resume.getRid(), resume.getId(), resume.getCollectionDate(), resume.getRating());
+                app.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());
                 // Go back to stack view
                 Intent i = new Intent(EditActivity.this, StackActivity.class);
                 startActivity(i);
