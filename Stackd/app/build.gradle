@@ -10,14 +10,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        // Exports the schemas as a json file
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation":
-                                     "$projectDir/src/main/java/com/stackd/stackd/db/schemas".toString()]
-            }
-        }
     }
 
     buildTypes {
@@ -43,4 +35,5 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha1"
     compile 'android.arch.persistence.room:rxjava2:1.0.0-alpha1'
     testCompile 'android.arch.persistence.room:testing:1.0.0-alpha1'
+    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
 }
