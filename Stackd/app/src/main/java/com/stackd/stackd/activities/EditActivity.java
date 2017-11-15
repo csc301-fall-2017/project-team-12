@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.stackd.stackd.R;
-import com.stackd.stackd.db.App;
+import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 import java.io.File;
@@ -38,7 +38,7 @@ public class EditActivity extends AppCompatActivity {
     // Dummy Values
     Long cId = new Long(1);
     Long rId = new Long(2);
-    App app = App.getApp(cId, rId);
+    DataManager app = DataManager.getApp(cId, rId);
     AlertDialog alertBox = null;
 
     RelativeLayout drawLayout;
@@ -77,7 +77,7 @@ public class EditActivity extends AppCompatActivity {
 
         // Initialize the resume
         resume = new Resume();// TODO: retrrive id  from other screen
-        resume.setRid(App.recruiter.getRecId());
+        resume.setRid(DataManager.recruiter.getRecId());
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);

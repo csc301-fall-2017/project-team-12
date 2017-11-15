@@ -19,8 +19,8 @@ import java.util.List;
  * Created by Musa on 11/8/2017.
  */
 
-public class App {
-    private static App app = null;
+public class DataManager {
+    private static DataManager app = null;
     private CompanyDao companyDao;
     private RecruiterDao recruiterDao;
     private ResumeDao resumeDao;
@@ -29,7 +29,7 @@ public class App {
     public static Company company = new Company();
     public static Recruiter recruiter = new Recruiter(); //new Recruiter();
 
-    private App(Long companyID, Long recruiterId) {
+    private DataManager(Long companyID, Long recruiterId) {
         // Instantiate Daos:
         this.companyDao = CompanyDao.getCompanyDao();
         this.recruiterDao = RecruiterDao.getRecruiterDao();
@@ -42,9 +42,9 @@ public class App {
 
     }
 
-    public static App getApp(Long companyId, Long recruiterId) {
+    public static DataManager getApp(Long companyId, Long recruiterId) {
         if (app == null) {
-            app = new App(companyId, recruiterId);
+            app = new DataManager(companyId, recruiterId);
             return app;
         } else {
             return app;

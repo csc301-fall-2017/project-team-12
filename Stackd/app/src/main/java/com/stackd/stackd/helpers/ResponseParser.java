@@ -1,7 +1,5 @@
 package com.stackd.stackd.helpers;
 
-import android.util.Log;
-
 import com.stackd.stackd.db.entities.Company;
 import com.stackd.stackd.db.entities.Recruiter;
 import com.stackd.stackd.db.entities.Resume;
@@ -62,11 +60,12 @@ public class ResponseParser {
 
             resume.add(new Resume.Builder()
                     .id(jsonResume.getLong("_id"))
+                    .rid(jsonResume.getLong("rid"))
                     .rating(jsonResume.getInt("rating"))
                     .url(jsonResume.getString("url"))
                     .collectionDate(jsonResume.getString("collectionDate"))
                     .recruiterComments(jsonResume.getString("recruiterComments"))
-                    .tagList(ResponseParser.parseTagResponse(response))
+                    .tagList(ResponseParser.parseTagResponse(jsonResume.toString()))
                     .candidateName(candidateName)
                     .build());
         }
@@ -102,14 +101,15 @@ public class ResponseParser {
         List<Company> companies = new ArrayList<Company>();
         for (int i = 0; i < ja.length(); i++) {
             JSONObject jsonCompany = (JSONObject) ja.get(i);
+            String company = jsonCompany.toString();
 
             /* Construct the company object and add it to the array of companies */
             companies.add(new Company.Builder()
                     .id(jsonCompany.getLong("_id"))
                     .name(jsonCompany.getString("name"))
-                    .tags(ResponseParser.parseTagResponse(response))
-                    .recruiters(ResponseParser.parseRecruiterResponse(response))
-                    .resumes(ResponseParser.parseResumeResponse(response))
+                    .tags(ResponseParser.parseTagResponse(company))
+                    .recruiters(ResponseParser.parseRecruiterResponse(company))
+                    .resumes(ResponseParser.parseResumeResponse(company))
                     .build());
         }
         return companies;
