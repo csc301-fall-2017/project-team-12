@@ -9,6 +9,9 @@ import com.stackd.stackd.db.entities.Recruiter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -50,7 +53,30 @@ public class DataManager {
             return app;
         }
     }
-    public Company getCompany(Long cid) {
+    public Company getCompany() {
+
+        //Assuming the jsonFileAsString = {"123": "info", "234":"info}
+        //where "123", "234" are the cid's of the company
+        //and "info" is the data that we can use to convert the company into an object
+
+
+        String jsonFileAsString = "temp";
+        //The above json string should look something like below:
+        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
+        Company company = null;
+        //
+        try{
+            JSONObject jsonObject = new JSONObject(jsonFileAsString);
+            //String companyJson = jsonObject.getString(company.getId().toString());
+            // TODO: deal with the company string and pass it into the parser and receive a company object
+            return company;
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+        //Musa's original comments:
         // Fetch the company from JSON file, for example:
         // String jsonFileAsString, read it to jsonObject
         // JSONObject fileAsJosnObject = new JSONObject(jsonFile)
@@ -59,24 +85,67 @@ public class DataManager {
         // Then pass the companyAsJsonString to  parsere to get back a Company instance
         // and return it!
         // And yay!
-        
-        return null;
+
+
+
+        return company;
     }
 
     public List<Tag> getCompanyTags(){
-        // TODO: use the App.company ID
+        String jsonFileAsString = "temp";
+        //The above json string should look something like below:
+        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
+        Company company = null;
+        //
+        try{
+            JSONObject jsonObject = new JSONObject(jsonFileAsString);
+            //String companyJson = jsonObject.getString(.toString());
+            // TODO: deal with the company string and pass it into the parser and receive a company tags
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
-    public void addTag(Long companyId, Tag tag) {
-
+    public void addTag(Tag tag) {
+        //Do not need to read in a json object, MUSA what
     }
 
-    public Recruiter getRecruiter(Long recruiterId) {
+    public Recruiter getRecruiter() {
+        // TODO: use the App.company ID
+        String jsonFileAsString = "temp";
+        //The above json string should look something like below:
+        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
+        Company company = null;
+        //
+        try{
+            JSONObject jsonObject = new JSONObject(jsonFileAsString);
+            //String companyJson = jsonObject.getString(.toString());
+            // TODO: deal with the company string and pass it into the parser and receive a company object
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
     public List<Resume> getResumesWithTag(Tag tag) {
+
+        // TODO: use the App.company ID
+        String jsonFileAsString = "temp";
+        //The above json string should look something like below:
+        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
+        Company company = null;
+        //
+        try{
+            JSONObject jsonObject = new JSONObject(jsonFileAsString);
+            //String companyJson = jsonObject.getString(.toString());
+            // TODO: deal with the company string and pass it into the parser and receive a company object
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -84,7 +153,7 @@ public class DataManager {
 
     }
 
-    public void addReview(Long recId, Long resId, String date, int rating) {
+    public void addReview(Long resId, SimpleDateFormat date, int rating) {
 
     }
 
