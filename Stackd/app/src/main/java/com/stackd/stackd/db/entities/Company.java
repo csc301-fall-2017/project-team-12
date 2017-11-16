@@ -55,6 +55,7 @@ public class Company {
         this.id = builder.id;
         this.name = builder.name;
         this.tags = builder.tags;
+        this.recruiters = builder.recruiters;
         this.resumes = builder.resumes;
     }
 

@@ -38,7 +38,7 @@ public class EditActivity extends AppCompatActivity {
     // Dummy Values
     Long cId = new Long(1);
     Long rId = new Long(2);
-    DataManager app = DataManager.getApp(cId, rId);
+    DataManager dataManager = DataManager.getDataManager(cId, rId);
     AlertDialog alertBox = null;
 
     RelativeLayout drawLayout;
@@ -77,7 +77,7 @@ public class EditActivity extends AppCompatActivity {
 
         // Initialize the resume
         resume = new Resume();// TODO: retrrive id  from other screen
-        resume.setRid(DataManager.recruiter.getRecId());
+        resume.setRid(dataManager.getRecruiter().getRecId());
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
@@ -172,9 +172,9 @@ public class EditActivity extends AppCompatActivity {
 
                 }
                 // Insert the resume into the database
-                app.insertResume(resume);
+                dataManager.insertResume(resume);
                 // Review it and add a rating
-                app.addReview(resume.getRid(), resume.getId(), resume.getCollectionDate(), resume.getRating());
+                dataManager.addReview(resume.getRid(), resume.getId(), resume.getCollectionDate(), resume.getRating());
                 // Go back to stack view
                 Intent i = new Intent(EditActivity.this, StackActivity.class);
                 startActivity(i);
