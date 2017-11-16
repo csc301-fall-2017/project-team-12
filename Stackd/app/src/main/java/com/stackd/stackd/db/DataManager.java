@@ -96,6 +96,20 @@ public class DataManager {
         return this.recruiter;
     }
 
+    public List<Resume> getResumes() {
+        List<Resume> result = null;
+        // Fetch the company from JSON file, for example:
+        String resumesAsJsonString = readFile("resume_response.json");
+        try {
+            result = ResponseParser.parseResumeResponse(resumesAsJsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
     public List<Tag> getCompanyTags(){
         return this.company.getTags();
     }
