@@ -1,34 +1,56 @@
 package com.stackd.stackd.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.scanlibrary.ScanActivity;
+import com.scanlibrary.ScanConstants;
 import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_CONTACTS;
+
+
 public class StackActivity extends AppCompatActivity {
+    private static final int REQUEST_CAM = 0;
     private ResumeImageAdapter adapter;
+    private ImageView scannedImageView;
     private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<String, Boolean>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +109,12 @@ public class StackActivity extends AppCompatActivity {
             tagsList.addView(btn);
         }
 
-        handleIntent(getIntent());
+//        handleIntent(getIntent());
+//        int REQUEST_CODE = 99;
+//        int preference = ScanConstants.OPEN_CAMERA;
+//        Intent intent = new Intent(this, ScanActivity.class);
+//        intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
+//        startActivityForResult(intent, REQUEST_CODE);
     }
 
     // create an action bar button
@@ -176,18 +203,76 @@ public class StackActivity extends AppCompatActivity {
             adapter.getFilter().filter(query);
         }
     }
-
+    int REQUEST_CODE = 99;
+    private static final String TAG = "MyActivity";
+    private static final String TAAG = "IMHERE";
     /**
      *  Called when the camera button is clicked. Should open a camera activity.
      * @param v the button that was clicked.
      */
     public void onCameraBtnClick(View v){
-        // dummy alert
-        AlertDialog.Builder alertBox = new AlertDialog.Builder(this).
-                setMessage("Opening camera activity").
-                setTitle("Open camera");
-        alertBox.show();
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CODE);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED){
+            int preference = ScanConstants.OPEN_CAMERA;
+            Intent intent = new Intent(this, ScanActivity.class);
+
+            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
+            startActivityForResult(intent, REQUEST_CODE);
+            Log.e(TAAG, "onCameraBtnClick: " );
+        } else {
+
+            Log.e(TAG, "onCameraBtnClick: " );
+        }
+
     }
+    private static final String TAAAG = "ONACTIVITYRESULT";
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAAAG, "onActivityResult " );
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+
+                getContentResolver().delete(uri, null, null);
+                scannedImageView.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAM) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if(mayRequestContacts()){
+
+                }
+            }
+        }
+    }
+
+
+    private boolean mayRequestContacts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_CAM);
+        return false;
+    }
+//
+
 
     private void populateTagsList() {
         activeTags.put("PEY", false);
