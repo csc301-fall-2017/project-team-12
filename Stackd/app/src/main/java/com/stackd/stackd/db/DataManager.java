@@ -11,7 +11,6 @@ import com.stackd.stackd.db.entities.Tag;
 import com.stackd.stackd.helpers.ResponseParser;
 
 import org.json.JSONException;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+
 import java.util.List;
 
 /**
@@ -102,13 +102,14 @@ public class DataManager {
 
     public void addTag(Long companyId, Tag tag) {
 
+
     }
 
     public void insertResume(Resume resume) {
 
     }
 
-    public void addReview(Long recId, Long resId, String date, int rating) {
+    public void addReview(Long resId, String date, int rating) {
 
     }
 
@@ -137,4 +138,3 @@ public class DataManager {
         return result;
     }
 }
-
