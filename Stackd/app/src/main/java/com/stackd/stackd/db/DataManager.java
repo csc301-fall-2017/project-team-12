@@ -8,29 +8,35 @@ import com.stackd.stackd.db.entities.Company;
 import com.stackd.stackd.db.entities.Recruiter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
+import com.stackd.stackd.helpers.ResponseParser;
 
 import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
- * A global class for the whole app resposible for getting the required data
- * from the database to the app users, as objects.
+ * A global class for the whole dataManager resposible for getting the required data
+ * from the database to the dataManager users, as objects.
  *
  * Created by Musa on 11/8/2017.
  */
 
 public class DataManager {
-    private static DataManager app = null;
+    private static DataManager dataManager = null;
     private CompanyDao companyDao;
     private RecruiterDao recruiterDao;
     private ResumeDao resumeDao;
     private TagDao tagDao;
     //TODO: set these during authentication
-    public static Company company = new Company();
-    public static Recruiter recruiter = new Recruiter(); //new Recruiter();
+    private Company company; //TODO get cid from login activity
+    private Recruiter recruiter; // TODO: get rid from login
 
     private DataManager(Long companyID, Long recruiterId) {
         // Instantiate Daos:
@@ -39,114 +45,78 @@ public class DataManager {
         this.resumeDao = ResumeDao.getResumeDao();
         this.tagDao = TagDao.getTagDao();
 
-        company.setId(companyID);
-        recruiter.setRecId(recruiterId);
-        //TODO, continue setting company & recriuter
+        this.company = getCompany(new Long(1));
+        this.recruiter = getRecruiter(new Long(21));
 
     }
 
-    public static DataManager getApp(Long companyId, Long recruiterId) {
-        if (app == null) {
-            app = new DataManager(companyId, recruiterId);
-            return app;
+    public static DataManager getDataManager(Long companyId, Long recruiterId) {
+        if (dataManager == null) {
+            dataManager = new DataManager(companyId, recruiterId);
+            return dataManager;
         } else {
-            return app;
+            return dataManager;
         }
     }
-    public Company getCompany() {
 
-        //Assuming the jsonFileAsString = {"123": "info", "234":"info}
-        //where "123", "234" are the cid's of the company
-        //and "info" is the data that we can use to convert the company into an object
-
-
-        String jsonFileAsString = "temp";
-        //The above json string should look something like below:
-        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
-        Company company = null;
-        //
-        try{
-            JSONObject jsonObject = new JSONObject(jsonFileAsString);
-            //String companyJson = jsonObject.getString(company.getId().toString());
-            // TODO: deal with the company string and pass it into the parser and receive a company object
-            return company;
-
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-
-
-        //Musa's original comments:
+    private Company getCompany(Long cId) {
+        Company result = null;
         // Fetch the company from JSON file, for example:
-        // String jsonFileAsString, read it to jsonObject
-        // JSONObject fileAsJosnObject = new JSONObject(jsonFile)
-        // Get the required compnay (see the documentation of JSONObjects and how to use them,
-        // I still don't know them well yet sorry :P
-        // Then pass the companyAsJsonString to  parsere to get back a Company instance
-        // and return it!
-        // And yay!
-
-
-
-        return company;
-    }
-
-    public List<Tag> getCompanyTags(){
-        String jsonFileAsString = "temp";
-        //The above json string should look something like below:
-        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
-        Company company = null;
-        //
-        try{
-            JSONObject jsonObject = new JSONObject(jsonFileAsString);
-            //String companyJson = jsonObject.getString(.toString());
-            // TODO: deal with the company string and pass it into the parser and receive a company tags
-
-        } catch (JSONException e){
+        String companyAsJsonString = readFile("company_response.json");
+        try {
+            result = ResponseParser.parseCompanyResponse(companyAsJsonString).get(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
-        return null;
+        
+        return result;
     }
 
-    public void addTag(Tag tag) {
-        //Do not need to read in a json object, MUSA what
+
+    private Recruiter getRecruiter(Long rId) {
+        Recruiter result = null;
+        // Fetch the company from JSON file, for example:
+        String recruiterAsJsonString = readFile("recruiter_response.json");
+        try {
+            result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString).get(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public Company getCompany() {
+        return this.company;
     }
 
     public Recruiter getRecruiter() {
-        // TODO: use the App.company ID
-        String jsonFileAsString = "temp";
-        //The above json string should look something like below:
-        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
-        Company company = null;
-        //
-        try{
-            JSONObject jsonObject = new JSONObject(jsonFileAsString);
-            //String companyJson = jsonObject.getString(.toString());
-            // TODO: deal with the company string and pass it into the parser and receive a company object
-
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        return null;
+        return this.recruiter;
     }
 
-    public List<Resume> getResumesWithTag(Tag tag) {
-
-        // TODO: use the App.company ID
-        String jsonFileAsString = "temp";
-        //The above json string should look something like below:
-        //String jsonFileAsString = {"fetch":"this","from":"somewhere","else":"replace"};
-        Company company = null;
-        //
-        try{
-            JSONObject jsonObject = new JSONObject(jsonFileAsString);
-            //String companyJson = jsonObject.getString(.toString());
-            // TODO: deal with the company string and pass it into the parser and receive a company object
-
-        } catch (JSONException e){
+    public List<Resume> getResumes() {
+        List<Resume> result = null;
+        // Fetch the company from JSON file, for example:
+        String resumesAsJsonString = readFile("resume_response.json");
+        try {
+            result = ResponseParser.parseResumeResponse(resumesAsJsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return result;
+    }
+    public List<Tag> getCompanyTags(){
+        return this.company.getTags();
+    }
+
+    public void addTag(Long companyId, Tag tag) {
+
+
     }
 
     public void insertResume(Resume resume) {
@@ -157,5 +127,28 @@ public class DataManager {
 
     }
 
-    
+    private String readFile(String path) {
+        String result = null;
+        try {
+            File file = new File(path);
+            FileInputStream is = new FileInputStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            is.close();
+            reader.close();
+
+            result = sb.toString();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }
