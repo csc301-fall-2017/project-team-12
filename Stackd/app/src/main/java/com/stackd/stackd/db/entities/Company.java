@@ -1,5 +1,7 @@
 package com.stackd.stackd.db.entities;
 
+import com.stackd.stackd.helpers.ResponseParser;
+
 import java.util.List;
 
 /**
@@ -100,5 +102,9 @@ public class Company {
 
     public void setResumes(List<Resume> resumes) {
         this.resumes = resumes;
+    }
+
+    public void addResume(Resume resume) {
+        this.resumes.add(resume);
     }
 }
