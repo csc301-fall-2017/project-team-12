@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A global class for the whole dataManager resposible for getting the required data
@@ -38,14 +40,55 @@ public class DataManager {
     private Company company; //TODO get cid from login activity
     private Recruiter recruiter; // TODO: get rid from login
 
+    private static String fs = File.separator;
+    private static String PROJECT_PATH = new File(".").getPath();
+    private static String RESOURCE_FILE = new Formatter(new StringBuilder(), Locale.CANADA)
+            .format("%1$1s%2$1sapp" +
+                            "%2$1ssrc" +
+                            "%2$1stest" +
+                            "%2$1sjava" +
+                            "%2$1scom" +
+                            "%2$1sstackd" +
+                            "%2$1sstackd" +
+                            "%2$1sresources" +
+                            "%2$1s",
+                    PROJECT_PATH, fs).toString();
+
+    /* Path of the json files containing a dummy response from the api */
+    private static String TAG_RESPONSE_FILE = String.format(
+            "%stag_response.json",
+            RESOURCE_FILE);
+
+    public static String COMPANY_RESPONSE_FILE = String.format(
+            "%scompany_response.json",
+            RESOURCE_FILE);
+
+    public static String RECRUITER_RESPONSE_FILE = String.format(
+            "%srecruiter_response.json",
+            RESOURCE_FILE);
+
+    public static String RESUME_RESPONSE_FILE = String.format(
+            "%sresume_response.json",
+            RESOURCE_FILE);
+
+
     private DataManager(Long companyID, Long recruiterId) {
         // Instantiate Daos:
+
         this.companyDao = CompanyDao.getCompanyDao();
         this.recruiterDao = RecruiterDao.getRecruiterDao();
         this.resumeDao = ResumeDao.getResumeDao();
         this.tagDao = TagDao.getTagDao();
 
-        this.company = getCompany(new Long(1));
+
+        try {
+            this.company = getCompany(new Long(1));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         this.recruiter = getRecruiter(new Long(21));
 
     }
@@ -53,24 +96,20 @@ public class DataManager {
     public static DataManager getDataManager(Long companyId, Long recruiterId) {
         if (dataManager == null) {
             dataManager = new DataManager(companyId, recruiterId);
+            System.out.print("Constructor  " + dataManager.getCompany() );
             return dataManager;
         } else {
             return dataManager;
         }
     }
 
-    private Company getCompany(Long cId) {
+    private Company getCompany(Long cId) throws JSONException, ParseException {
         Company result = null;
         // Fetch the company from JSON file, for example:
-        String companyAsJsonString = readFile("company_response.json");
-        try {
-            result = ResponseParser.parseCompanyResponse(companyAsJsonString).get(0);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        
+        String companyAsJsonString = readFile(COMPANY_RESPONSE_FILE);
+        result = ResponseParser.parseCompanyResponse(companyAsJsonString).get(0);
+        System.out.print("Result is " + result);
+
         return result;
     }
 
@@ -78,7 +117,7 @@ public class DataManager {
     private Recruiter getRecruiter(Long rId) {
         Recruiter result = null;
         // Fetch the company from JSON file, for example:
-        String recruiterAsJsonString = readFile("recruiter_response.json");
+        String recruiterAsJsonString = readFile(RECRUITER_RESPONSE_FILE);
         try {
             result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString).get(0);
         } catch (JSONException e) {
@@ -99,7 +138,7 @@ public class DataManager {
     public List<Resume> getResumes() {
         List<Resume> result = null;
         // Fetch the company from JSON file, for example:
-        String resumesAsJsonString = readFile("resume_response.json");
+        String resumesAsJsonString = readFile(RESUME_RESPONSE_FILE);
         try {
             result = ResponseParser.parseResumeResponse(resumesAsJsonString);
         } catch (JSONException e) {

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stackd.stackd.R;
-import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 
@@ -34,16 +33,18 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
-        Resume resume;
         // Dummy Values
         Long cId = new Long(1);
         Long rId = new Long(21);
         // get data manager and get all data required for this activity (resumes and tags)
-        DataManager manager = DataManager.getDataManager(cId, rId);
+        /*DataManager manager = DataManager.getDataManager(cId, rId);
         resumes = manager.getResumes();
         List<Tag> tags = manager.getCompanyTags();
         for(Tag tag: tags)
-            constraints.add(tag.getName());
+            constraints.add(tag.getName());*/
+        Resume resume = new Resume.Builder().id(1).rid(21).candidateName("Dmitry Ten").build();
+        resumes = new ArrayList<>();
+        resumes.add(resume);
         filteredResumes = new ArrayList<>(resumes);
     }
 
@@ -160,17 +161,16 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             filteredResumes = new ArrayList<>(resumes);
             // Filter candidates by tag
             if (constraint == null && constraints.size() > 0) {
-
                 for (String c: constraints) {
-                    for (int i = 0; i < resumes.size(); i++) {
+                    for (Resume resume : resumes) {
                         List<String> tags = new ArrayList<String>();
-                        if (resumes.get(i).getTagList() != null) {
-                            for (Tag t : resumes.get(i).getTagList()) {
+                        if (resume.getTagList() != null) {
+                            for (Tag t : resume.getTagList()) {
                                 tags.add(t.getName().toLowerCase());
                             }
 
-                            if (tags.contains(c) && !filteredResumes.contains(resumes.get(i))) {
-                                filteredResumes.add(resumes.get(i));
+                            if (tags.contains(c) && !filteredResumes.contains(resume)) {
+                                filteredResumes.add(resume);
                             }
                         }
                     }

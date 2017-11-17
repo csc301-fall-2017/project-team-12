@@ -22,12 +22,11 @@ import android.widget.Toast;
 import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class StackActivity extends AppCompatActivity {
     private ResumeImageAdapter adapter;
-    private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<String, Boolean>();
+    private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,18 +48,19 @@ public class StackActivity extends AppCompatActivity {
         });
 
         populateTagsList();
+        // for each tag in a tag list, add a button to the tag bar.
         LinearLayout tagsList = (LinearLayout)findViewById(R.id.tag_list);
-        Iterator<String> tags = activeTags.keySet().iterator();
-        while (tags.hasNext()) {
+        for(String strTag : activeTags.keySet()) {
             final Button btn = new Button(getApplicationContext());
             int backgroundColor =
                     ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
             btn.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
-            btn.setText(tags.next());
+            btn.setText(strTag);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (activeTags.get(btn.getText().toString())) {
+                        // filter resumes based on the tag selected
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
                                         R.color.colorAccent);
@@ -71,6 +71,7 @@ public class StackActivity extends AppCompatActivity {
                         adapter.getFilter().filter(null);
                     }
                     else {
+                        // unset the tag, show resumes even without this tag
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
                                         R.color.colorPrimary);
