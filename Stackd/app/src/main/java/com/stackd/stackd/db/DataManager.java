@@ -102,9 +102,11 @@ public class DataManager {
         String resumesAsJsonString = Utils.getResumeResponse();
         //TODO: replace this with the commented line
         List<Resume> result = ResponseParser.parseResumeResponse(resumesAsJsonString);
-        for (Resume resume: this.company.getResumes()) {
-            if (!result.contains(resume)) {
-                result.add(resume);
+        if (this.company.getResumes() != null){
+            for (Resume resume: this.company.getResumes()) {
+                if (!result.contains(resume)) {
+                    result.add(resume);
+                }
             }
         }
         return result;
