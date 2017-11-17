@@ -86,6 +86,7 @@ public class DataManager {
 
     public void insertResume(Resume resume) {
         // To be implemented...
+        this.company.addResume(resume);
     }
 
     public void addReview(Long resId, String date, int rating) {
