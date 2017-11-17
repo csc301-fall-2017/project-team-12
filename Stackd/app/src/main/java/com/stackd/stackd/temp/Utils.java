@@ -21,7 +21,20 @@ public class Utils {
                 "    {\n" +
                 "      \"_id\": 19,\n" +
                 "      \"name\": \"Python\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"_id\": 10,\n" +
+                "      \"name\": \"C\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"_id\": 12,\n" +
+                "      \"name\": \"Java\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"_id\": 19,\n" +
+                "      \"name\": \"JavaScript\"\n" +
                 "    }\n" +
+                "\n" +
                 "  ]\n" +
                 "}";
     }
@@ -44,7 +57,20 @@ public class Utils {
                 "        {\n" +
                 "          \"_id\": 19,\n" +
                 "          \"name\": \"Python\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "          \"_id\": 10,\n" +
+                "          \"name\": \"C\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "          \"_id\": 12,\n" +
+                "          \"name\": \"Java\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "          \"_id\": 19,\n" +
+                "          \"name\": \"JavaScript\"\n" +
                 "        }\n" +
+                "\n" +
                 "      ],\n" +
                 "      \"recruiters\": [\n" +
                 "        {\n" +
