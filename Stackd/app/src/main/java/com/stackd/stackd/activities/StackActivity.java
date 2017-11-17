@@ -50,7 +50,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class StackActivity extends AppCompatActivity {
     private static final int REQUEST_CAM = 0;
     private ResumeImageAdapter adapter;
-    private ImageView scannedImageView;
+    int REQUEST_CODE = 99;
     private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<String, Boolean>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,12 +109,6 @@ public class StackActivity extends AppCompatActivity {
             tagsList.addView(btn);
         }
 
-//        handleIntent(getIntent());
-//        int REQUEST_CODE = 99;
-//        int preference = ScanConstants.OPEN_CAMERA;
-//        Intent intent = new Intent(this, ScanActivity.class);
-//        intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
-//        startActivityForResult(intent, REQUEST_CODE);
     }
 
     // create an action bar button
@@ -203,15 +197,14 @@ public class StackActivity extends AppCompatActivity {
             adapter.getFilter().filter(query);
         }
     }
-    int REQUEST_CODE = 99;
-    private static final String TAG = "MyActivity";
-    private static final String TAAG = "IMHERE";
+
     /**
      *  Called when the camera button is clicked. Should open a camera activity.
      * @param v the button that was clicked.
      */
     public void onCameraBtnClick(View v){
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
+       // ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODEE);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED){
@@ -220,17 +213,21 @@ public class StackActivity extends AppCompatActivity {
 
             intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
             startActivityForResult(intent, REQUEST_CODE);
-            Log.e(TAAG, "onCameraBtnClick: " );
         } else {
-
-            Log.e(TAG, "onCameraBtnClick: " );
+            //TODO handle case where permissions are denied
         }
 
     }
-    private static final String TAAAG = "ONACTIVITYRESULT";
+
+    /**
+     *  Called when camera finishes scanning. Should launch edit activity with scanned fragment.
+     * @param requestCode correct permission code.
+     * @param resultCode ensures correct activity result.
+     * @param data instance of scanning intent after taking a picture.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e(TAAAG, "onActivityResult " );
+
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
@@ -238,40 +235,15 @@ public class StackActivity extends AppCompatActivity {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
-                getContentResolver().delete(uri, null, null);
-                scannedImageView.setImageBitmap(bitmap);
+                Intent i = new Intent(StackActivity.this, EditActivity.class);
+                i.putExtra("imageUri", uri.toString());
+                startActivity(i);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CAM) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if(mayRequestContacts()){
-
-                }
-            }
-        }
-    }
-
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_CAM);
-        return false;
-    }
-//
 
 
     private void populateTagsList() {

@@ -19,10 +19,11 @@ public class ScanActivity extends Activity implements IScanner, ComponentCallbac
     private static final String TAAAG2 = "lalalala";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e(TAAAG0, "onCreate:");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scan_layout);
         init();
+        Log.e(TAAAG0, "onCreate:");
     }
 
     private void init() {

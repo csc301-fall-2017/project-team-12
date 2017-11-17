@@ -61,15 +61,15 @@ public class PickImageFragment extends Fragment {
         }
     }
 
-//    private void clearTempImages() {
-//        try {
-//            File tempFolder = new File(ScanConstants.IMAGE_PATH);
-//            for (File f : tempFolder.listFiles())
-//                f.delete();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void clearTempImages() {
+        try {
+            File tempFolder = new File(ScanConstants.IMAGE_PATH);
+            for (File f : tempFolder.listFiles())
+                f.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void handleIntentPreference() {
         int preference = getIntentPreference();
@@ -115,6 +115,9 @@ public class PickImageFragment extends Fragment {
     public void openCamera() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         File file = createImageFile();
+        if(file != null){
+            Log.d("", "openCamera: file createsd ");
+        }
         boolean isDirectoryCreated = file.getParentFile().mkdirs();
         Log.d("", "openCamera: isDirectoryCreated: " + isDirectoryCreated);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -122,6 +125,7 @@ public class PickImageFragment extends Fragment {
                     "com.scanlibrary.provider", // As defined in Manifest
                     file);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempFileUri);
+            Log.d("", "openCamera: buildversion: ");
         } else {
             Uri tempFileUri = Uri.fromFile(file);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempFileUri);
@@ -158,6 +162,7 @@ public class PickImageFragment extends Fragment {
                 e.printStackTrace();
             }
         } else {
+            Log.d("", "onActivityResult: getActivity().finish()");
             getActivity().finish();
         }
         if (bitmap != null) {
