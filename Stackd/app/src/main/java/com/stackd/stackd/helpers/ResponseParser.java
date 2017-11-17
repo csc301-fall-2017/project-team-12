@@ -22,7 +22,9 @@ import java.util.List;
 
 public class ResponseParser {
 
-    public static List<Tag> parseTagResponse(String response) {
+    public static List<Tag> parseTagResponse(String response)
+            throws NullPointerException {
+        if (response == null) throw new NullPointerException();
         try {
             JSONObject jo = new JSONObject(response);
             JSONArray ja = jo.getJSONArray("tags");
@@ -46,7 +48,9 @@ public class ResponseParser {
 
     }
 
-    public static List<Resume> parseResumeResponse(String response) {
+    public static List<Resume> parseResumeResponse(String response)
+            throws NullPointerException {
+        if (response == null) throw new NullPointerException();
         try {
             JSONObject jo = new JSONObject(response);
             JSONArray ja = jo.getJSONArray("resumes");
@@ -78,7 +82,9 @@ public class ResponseParser {
         }
     }
 
-    public static List<Recruiter> parseRecruiterResponse(String response) {
+    public static List<Recruiter> parseRecruiterResponse(String response)
+            throws NullPointerException {
+        if (response == null) throw new NullPointerException();
         try {
             JSONObject jo = new JSONObject(response);
             JSONArray ja = jo.getJSONArray("recruiters");
@@ -102,7 +108,9 @@ public class ResponseParser {
         }
     }
 
-    public static List<Company> parseCompanyResponse(String response) {
+    public static List<Company> parseCompanyResponse(String response)
+            throws NullPointerException{
+        if (response == null) throw new NullPointerException();
         try {
             JSONObject jo = new JSONObject(response);
             JSONArray ja = jo.getJSONArray("companies");
@@ -112,7 +120,7 @@ public class ResponseParser {
                 JSONObject jsonCompany = (JSONObject) ja.get(i);
                 String company = jsonCompany.toString();
 
-            /* Construct the company object and add it to the array of companies */
+                /* Construct the company object and add it to the array of companies */
                 companies.add(new Company.Builder()
                         .id(jsonCompany.getLong("_id"))
                         .name(jsonCompany.getString("name"))
