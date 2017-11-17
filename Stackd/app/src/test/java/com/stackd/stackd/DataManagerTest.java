@@ -45,7 +45,6 @@ public class DataManagerTest {
     public void getResumeTest() {
         List<Resume> r = dm.getResumes();
         assertNotNull(r);
-        System.out.println(Utils.createExpectedResume().getRating() + " " + r.get(0).getRating());
         assertTrue(Utils.compareResume(Utils.createExpectedResume(), r.get(0)));
     }
 
