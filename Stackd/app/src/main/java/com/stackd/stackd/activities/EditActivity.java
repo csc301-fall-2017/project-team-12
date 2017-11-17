@@ -37,9 +37,10 @@ public class EditActivity extends AppCompatActivity {
     Resume resume;
     // Dummy Values
     Long cId = new Long(1);
-    Long rId = new Long(2);
+    Long rId = new Long(21);
     DataManager dataManager = DataManager.getDataManager(cId, rId);
     AlertDialog alertBox = null;
+    final Resume.Builder resumeBuilder = new Resume.Builder();
 
     RelativeLayout drawLayout;
 
@@ -76,20 +77,19 @@ public class EditActivity extends AppCompatActivity {
 
 
         // Initialize the resume
-        resume = new Resume();// TODO: retrrive id  from other screen
-        resume.setRid(dataManager.getRecruiter().getRecId());
+        resumeBuilder.id(new Long(1));
+        resumeBuilder.rid(dataManager.getRecruiter().getRecId());
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
-        // Retrieve the company's list of tags TODO: call getTags from DOA, SCROLL
 
         // The company's tags
-        //final List<Tag> tagList = app.getCompanyTags();
-        final List<Tag> tagList = new ArrayList<>();
+        final List<Tag> tagList = dataManager.getCompanyTags();
+        /*final List<Tag> tagList = new ArrayList<>();
         tagList.add(new Tag.Builder().id(1).name("java").build());
         tagList.add(new Tag.Builder().id(2).name("Python").build());
         tagList.add(new Tag.Builder().id(3).name("Intern").build());
-        tagList.add(new Tag.Builder().id(4).name("Full Time").build());
+        tagList.add(new Tag.Builder().id(4).name("Full Time").build());*/
 
         // The tags the resume contains
         final List<Tag> resumeTags = new ArrayList<>();
@@ -114,11 +114,11 @@ public class EditActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Insert the resume
-                resume.setTagList(tagList);
-                resume.setUrl(resume_url);
-                resume.setRecruiterComments(comment_field.getText().toString());
-                resume.setCollectionDate(new SimpleDateFormat("DD-MM-YYYY").format(new Date()));
-                resume.setCandidateName(candidate_name);
+                resumeBuilder.tagList(tagList);
+                resumeBuilder.url(resume_url);
+                resumeBuilder.recruiterComments(comment_field.getText().toString());
+                resumeBuilder.collectionDate(new SimpleDateFormat("DD-MM-YYYY").format(new Date()));
+                resumeBuilder.candidateName(candidate_name);
 
                 alertBox.show();
             }
@@ -166,12 +166,13 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0: resume.setRating(2);// yes
-                    case 1: resume.setRating(0);// no
-                    case 2: resume.setRating(1);// maybe
+                    case 0: resumeBuilder.rating(2);// yes
+                    case 1: resumeBuilder.rating(0);// no
+                    case 2: resumeBuilder.rating(1);// maybe
 
                 }
                 // Insert the resume into the database
+                Resume resume = resumeBuilder.build();
                 dataManager.insertResume(resume);
                 // Review it and add a rating
                 dataManager.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());

@@ -1,24 +1,13 @@
 package com.stackd.stackd.db;
 
-import com.stackd.stackd.db.daos.CompanyDao;
-import com.stackd.stackd.db.daos.RecruiterDao;
-import com.stackd.stackd.db.daos.ResumeDao;
-import com.stackd.stackd.db.daos.TagDao;
 import com.stackd.stackd.db.entities.Company;
 import com.stackd.stackd.db.entities.Recruiter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 import com.stackd.stackd.helpers.ResponseParser;
+import com.stackd.stackd.temp.Utils;
 
-import org.json.JSONException;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
@@ -28,17 +17,19 @@ import java.util.Locale;
  * from the database to the dataManager users, as objects.
  *
  * Created by Musa on 11/8/2017.
+ *
+ * -----------------------------------
+ * TODO's
+ * - set these during authentication
+ * - get cid from login activity
+ * - get rid from login
+ * -----------------------------------
  */
 
 public class DataManager {
     private static DataManager dataManager = null;
-    private CompanyDao companyDao;
-    private RecruiterDao recruiterDao;
-    private ResumeDao resumeDao;
-    private TagDao tagDao;
-    //TODO: set these during authentication
-    private Company company; //TODO get cid from login activity
-    private Recruiter recruiter; // TODO: get rid from login
+    private Company company;
+    private Recruiter recruiter;
 
     private static String fs = File.separator;
     private static String PROJECT_PATH = new File(".").getPath();
@@ -73,58 +64,42 @@ public class DataManager {
 
 
     private DataManager(Long companyID, Long recruiterId) {
-        // Instantiate Daos:
-
-        this.companyDao = CompanyDao.getCompanyDao();
-        this.recruiterDao = RecruiterDao.getRecruiterDao();
-        this.resumeDao = ResumeDao.getResumeDao();
-        this.tagDao = TagDao.getTagDao();
-
-
-        try {
-            this.company = getCompany(new Long(1));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        this.recruiter = getRecruiter(new Long(21));
-
+        this.company = getCompany(Long.valueOf(1));
+        this.recruiter = getRecruiter(Long.valueOf(21));
     }
 
     public static DataManager getDataManager(Long companyId, Long recruiterId) {
-        if (dataManager == null) {
+        if (dataManager == null)
             dataManager = new DataManager(companyId, recruiterId);
-            System.out.print("Constructor  " + dataManager.getCompany() );
-            return dataManager;
-        } else {
-            return dataManager;
-        }
+        return dataManager;
     }
 
-    private Company getCompany(Long cId) throws JSONException, ParseException {
-        Company result = null;
-        // Fetch the company from JSON file, for example:
-        String companyAsJsonString = readFile(COMPANY_RESPONSE_FILE);
-        result = ResponseParser.parseCompanyResponse(companyAsJsonString).get(0);
-        System.out.print("Result is " + result);
-
-        return result;
+    /* Return the Company entity given the company id iff the json response is valid,
+     * null otherwise.
+     **/
+    private Company getCompany(Long cId) {
+        // "cId" is unused for the demo but will be used when making calls to the api
+        String companyAsJsonString = Utils.getCompanyResponse();
+        List<Company> result = ResponseParser.parseCompanyResponse(companyAsJsonString);
+        return result != null ? result.get(0): null;
     }
 
-
+    /* Return the Recruiter entity given the recruiter id iff the json response is valid,
+     * null otherwise.
+     **/
     private Recruiter getRecruiter(Long rId) {
-        Recruiter result = null;
-        // Fetch the company from JSON file, for example:
-        String recruiterAsJsonString = readFile(RECRUITER_RESPONSE_FILE);
-        try {
-            result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString).get(0);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        // "rId" is unused for the demo but will be used when making calls to the api
+        String recruiterAsJsonString = Utils.getRecruiterResponse();
+        List<Recruiter> result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString);
 
-        return result;
+        return result != null ? result.get(0): null;
+    }
+
+    /* Return the list of resumes the json response is valid, null otherwise.
+     **/
+    public List<Resume> getResumes() {
+        String resumesAsJsonString = Utils.getResumeResponse();
+        return ResponseParser.parseResumeResponse(resumesAsJsonString);
     }
 
     public Company getCompany() {
@@ -135,59 +110,20 @@ public class DataManager {
         return this.recruiter;
     }
 
-    public List<Resume> getResumes() {
-        List<Resume> result = null;
-        // Fetch the company from JSON file, for example:
-        String resumesAsJsonString = readFile(RESUME_RESPONSE_FILE);
-        try {
-            result = ResponseParser.parseResumeResponse(resumesAsJsonString);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
     public List<Tag> getCompanyTags(){
         return this.company.getTags();
     }
 
     public void addTag(Long companyId, Tag tag) {
-
-
+        // To be implemented...
     }
 
     public void insertResume(Resume resume) {
-
+        // To be implemented...
+        this.company.addResume(resume);
     }
 
     public void addReview(Long resId, String date, int rating) {
-
-    }
-
-    private String readFile(String path) {
-        String result = null;
-        try {
-            File file = new File(path);
-            FileInputStream is = new FileInputStream(file);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            is.close();
-            reader.close();
-
-            result = sb.toString();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+        // To be implemented...
     }
 }

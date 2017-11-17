@@ -28,6 +28,7 @@
           "resumes": [
             {
               "_id": 9,
+              "rid": 21,
               "candidateName": {
                 "firstName": "Nate",
                 "lastName": "Diaz"
