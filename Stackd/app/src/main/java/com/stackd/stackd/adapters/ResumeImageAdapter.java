@@ -14,9 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stackd.stackd.R;
-import com.stackd.stackd.model.Resume;
+import com.stackd.stackd.db.entities.Resume;
+import com.stackd.stackd.db.entities.Tag;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Adapter for GridView of resumes.
@@ -26,17 +30,53 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private ArrayList<Resume> resumes = new ArrayList<>();
     private ArrayList<Resume> filteredResumes;
 
+    private Set<String> constraints = new HashSet<String>();
+
     public ResumeImageAdapter(Context c) {
         mContext = c;
         long rid = 0;
-        Resume r = new Resume(rid);
+        Resume r = new Resume();
+        r.setRid(rid);
         r.setCandidateName("John Smith");
-        Resume r2 = new Resume(rid + 1);
+
+        // test resumes with python tag and c tag
+        List<Tag> tags = new ArrayList<Tag>();
+        tags.add(new Tag.Builder().id(1).name("python").build());
+        tags.add(new Tag.Builder().id(3).name("python").build());
+
+        Resume r2 = new Resume();
+        r2.setRid(rid + 1);
         r2.setCandidateName("Angelo Austria");
-        for(int i=0; i < 5; i++)
+        r2.setTagList(tags);
+
+        List<Tag> tags2 = new ArrayList<Tag>();
+        tags2.add(new Tag.Builder().id(2).name("c").build());
+        Resume r3 = new Resume();
+        r3.setRid(rid + 2);
+        r3.setCandidateName("Dmitry Ten");
+        r3.setTagList(tags2);
+
+        for(int i=0; i < 2; i++)
             resumes.add(r);
         resumes.add(r2);
+        resumes.add(r3);
         filteredResumes = new ArrayList<>(resumes);
+    }
+
+    public Set<String> getContraints() {
+        return this.constraints;
+    }
+
+    public void setConstraints(Set<String> constraints) {
+        this.constraints = constraints;
+    }
+
+    public void addConstraint(String constraint) {
+        this.constraints.add(constraint.toLowerCase());
+    }
+
+    public void removeConstraint(String constraint) {
+        this.constraints.remove(constraint.toLowerCase());
     }
 
     public int getCount() {
@@ -133,26 +173,53 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            filteredResumes.clear();
-            if(constraint == null || constraint.length() == 0){
-                // no resume requested, restore all resumes to the adapter
-                results.values = resumes;
-                results.count = resumes.size();
-                filteredResumes = new ArrayList<>(resumes);
+            filteredResumes = new ArrayList<>(resumes);
+            // Filter candidates by tag
+            if (constraint == null && constraints.size() > 0) {
+                filteredResumes.clear();
+                for (String c: constraints) {
+                    for (int i = 0; i < resumes.size(); i++) {
+                        List<String> tags = new ArrayList<String>();
+                        if (resumes.get(i).getTagList() != null) {
+                            for (Tag t : resumes.get(i).getTagList()) {
+                                tags.add(t.getName().toLowerCase());
+                            }
+
+                            if (tags.contains(c) && !filteredResumes.contains(resumes.get(i))) {
+                                filteredResumes.add(resumes.get(i));
+                            }
+                        }
+                    }
+                }
+
+                results.values = filteredResumes;
+                results.count = filteredResumes.size();
                 return results;
             }
-            String strConstraint = (String) constraint;
-            strConstraint = strConstraint.toLowerCase();
-            for(int i=0; i<resumes.size(); i++) {
-                // put resumes into the adapter whose candidate's name starts with the query
-                String name = resumes.get(i).getCandidateName().toLowerCase();
-                if(name.startsWith(strConstraint)) {
-                    filteredResumes.add(resumes.get(i));
+            // Filter candidates by name
+            else {
+                ArrayList<Resume> filteredResumesCopy = new ArrayList<>(filteredResumes);
+                filteredResumes.clear();
+                // No tags and empty search query means we must be able to view all candidates
+                if (constraint == null && constraints.size() == 0) {
+                    results.values = resumes;
+                    results.count = resumes.size();
+                    filteredResumes = new ArrayList<>(resumes);
+                    return results;
                 }
+                String strConstraint = (String) constraint;
+                strConstraint = strConstraint.toLowerCase();
+                for (int i = 0; i < filteredResumesCopy.size(); i++) {
+                    // put resumes into the adapter whose candidate's name starts with the query
+                    String name = filteredResumesCopy.get(i).getCandidateName().toLowerCase();
+                    if(name.startsWith(strConstraint)) {
+                        filteredResumes.add(filteredResumesCopy.get(i));
+                    }
+                }
+                results.values = filteredResumes;
+                results.count = filteredResumes.size();
+                return results;
             }
-            results.values = filteredResumes;
-            results.count = filteredResumes.size();
-            return results;
         }
 
         @Override
