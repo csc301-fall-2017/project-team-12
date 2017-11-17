@@ -84,6 +84,7 @@ public class Resume {
         this.recruiterComments = builder.recruiterComments;
         this.rating = builder.rating;
         this.tagList = builder.tagList;
+
     }
 
     public Resume() {
