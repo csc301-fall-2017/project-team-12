@@ -7,7 +7,10 @@ import com.stackd.stackd.db.entities.Tag;
 import com.stackd.stackd.helpers.ResponseParser;
 import com.stackd.stackd.temp.Utils;
 
+import java.io.File;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A global class for the whole dataManager resposible for getting the required data
@@ -28,6 +31,38 @@ public class DataManager {
     private Company company;
     private Recruiter recruiter;
 
+    private static String fs = File.separator;
+    private static String PROJECT_PATH = new File(".").getPath();
+    private static String RESOURCE_FILE = new Formatter(new StringBuilder(), Locale.CANADA)
+            .format("%1$1s%2$1sapp" +
+                            "%2$1ssrc" +
+                            "%2$1stest" +
+                            "%2$1sjava" +
+                            "%2$1scom" +
+                            "%2$1sstackd" +
+                            "%2$1sstackd" +
+                            "%2$1sresources" +
+                            "%2$1s",
+                    PROJECT_PATH, fs).toString();
+
+    /* Path of the json files containing a dummy response from the api */
+    private static String TAG_RESPONSE_FILE = String.format(
+            "%stag_response.json",
+            RESOURCE_FILE);
+
+    public static String COMPANY_RESPONSE_FILE = String.format(
+            "%scompany_response.json",
+            RESOURCE_FILE);
+
+    public static String RECRUITER_RESPONSE_FILE = String.format(
+            "%srecruiter_response.json",
+            RESOURCE_FILE);
+
+    public static String RESUME_RESPONSE_FILE = String.format(
+            "%sresume_response.json",
+            RESOURCE_FILE);
+
+
     private DataManager(Long companyID, Long recruiterId) {
         this.company = getCompany(Long.valueOf(1));
         this.recruiter = getRecruiter(Long.valueOf(21));
@@ -46,7 +81,6 @@ public class DataManager {
         // "cId" is unused for the demo but will be used when making calls to the api
         String companyAsJsonString = Utils.getCompanyResponse();
         List<Company> result = ResponseParser.parseCompanyResponse(companyAsJsonString);
-
         return result != null ? result.get(0): null;
     }
 

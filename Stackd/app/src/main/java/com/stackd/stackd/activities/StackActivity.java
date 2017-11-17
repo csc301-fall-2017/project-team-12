@@ -31,17 +31,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import com.scanlibrary.ScanActivity;
 import com.scanlibrary.ScanConstants;
 import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
-
+import com.stackd.stackd.db.entities.Tag;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_CONTACTS;
@@ -51,7 +49,8 @@ public class StackActivity extends AppCompatActivity {
     private static final int REQUEST_CAM = 0;
     private ResumeImageAdapter adapter;
     int REQUEST_CODE = 99;
-    private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<String, Boolean>();
+    private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<>();
+  
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,18 +72,19 @@ public class StackActivity extends AppCompatActivity {
         });
 
         populateTagsList();
+        // for each tag in a tag list, add a button to the tag bar.
         LinearLayout tagsList = (LinearLayout)findViewById(R.id.tag_list);
-        Iterator<String> tags = activeTags.keySet().iterator();
-        while (tags.hasNext()) {
+        for(String strTag : activeTags.keySet()) {
             final Button btn = new Button(getApplicationContext());
             int backgroundColor =
                     ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
             btn.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
-            btn.setText(tags.next());
+            btn.setText(strTag);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (activeTags.get(btn.getText().toString())) {
+                        // filter resumes based on the tag selected
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
                                         R.color.colorAccent);
@@ -95,6 +95,7 @@ public class StackActivity extends AppCompatActivity {
                         adapter.getFilter().filter(null);
                     }
                     else {
+                        // unset the tag, show resumes even without this tag
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
                                         R.color.colorPrimary);
@@ -248,20 +249,9 @@ public class StackActivity extends AppCompatActivity {
 
 
     private void populateTagsList() {
-        activeTags.put("PEY", false);
-        activeTags.put("Internship", false);
-        activeTags.put("Full-time", false);
-        activeTags.put("C++", false);
-        activeTags.put("C#", false);
-        activeTags.put("C", false);
-        activeTags.put("CSS", false);
-        activeTags.put("HTML", false);
-        activeTags.put("Java", false);
-        activeTags.put("JavaScript", false);
-        activeTags.put("Python", false);
-        activeTags.put("R", false);
-        activeTags.put("Swift", false);
-
+        for(Tag tag : adapter.getTags()) {
+            activeTags.put(tag.getName(), false);
+        }
     }
 }
 
