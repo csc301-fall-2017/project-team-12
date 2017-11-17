@@ -75,6 +75,36 @@ public class Resume {
     private String collectionDate;
     private List<Tag> tagList;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Resume resume = (Resume) o;
+
+        if (id != resume.id) return false;
+        if (rid != resume.rid) return false;
+        if (rating != resume.rating) return false;
+        if (!url.equals(resume.url)) return false;
+        if (!candidateName.equals(resume.candidateName)) return false;
+        if (!recruiterComments.equals(resume.recruiterComments)) return false;
+        if (!collectionDate.equals(resume.collectionDate)) return false;
+        return tagList.equals(resume.tagList);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (rid ^ (rid >>> 32));
+        result = 31 * result + url.hashCode();
+        result = 31 * result + candidateName.hashCode();
+        result = 31 * result + recruiterComments.hashCode();
+        result = 31 * result + rating;
+        result = 31 * result + collectionDate.hashCode();
+        result = 31 * result + tagList.hashCode();
+        return result;
+    }
+
     private Resume(Builder builder) {
         this.id = builder.id;
         this.rid = builder.rid;
@@ -84,6 +114,7 @@ public class Resume {
         this.recruiterComments = builder.recruiterComments;
         this.rating = builder.rating;
         this.tagList = builder.tagList;
+
     }
 
     public Resume() {

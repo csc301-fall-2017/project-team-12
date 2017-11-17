@@ -13,7 +13,7 @@ public class Recruiter  {
         private String lastName;
         private String email;
 
-        public Builder redId(long recId) {
+        public Builder recId(long recId) {
             this.recId = recId;
             return this;
         }
