@@ -133,7 +133,7 @@ public class Utils {
         return new Resume.Builder()
                 .id(9)
                 .rid(21)
-                .rating(10)
+                .rating(1)
                 .collectionDate("09/22/2009")
                 .candidateName("Nate Diaz")
                 .tagList(tags)
