@@ -44,6 +44,9 @@ public class EditActivity extends AppCompatActivity {
 
     RelativeLayout drawLayout;
 
+
+    private ImageView ImageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,7 @@ public class EditActivity extends AppCompatActivity {
         setUpAlertBox(this);
 
         // Fields needed from other screens
+        Uri myUri = Uri.parse(getIntent().getExtras().getString("imageUri"));
         Uri uri=Uri.parse("R.drawable.resume_template");
         int resId = R.drawable.resume_template;
 
@@ -58,7 +62,7 @@ public class EditActivity extends AppCompatActivity {
         drawLayout.setVisibility(RelativeLayout.GONE);
 
         ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
-        resumeView.setImageURI(resIdToUri(this, resId));
+        resumeView.setImageURI(myUri);
 
         final String resume_url = uri.toString();
         final String candidate_name = "";
