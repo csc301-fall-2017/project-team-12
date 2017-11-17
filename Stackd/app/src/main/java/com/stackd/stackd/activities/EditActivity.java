@@ -102,7 +102,7 @@ public class EditActivity extends AppCompatActivity {
                         .tagList(resumeTags)
                         .url(resume_url)
                         .recruiterComments(comment_field.getText().toString())
-                        .collectionDate(new SimpleDateFormat("DD-MM-YYYY").format(new Date()))
+                        .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
                         .candidateName(candidate_name).build();
 
                 alertBox.show();
