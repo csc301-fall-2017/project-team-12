@@ -162,52 +162,55 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private class ResumeFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+
             FilterResults results = new FilterResults();
-            // Show all resumes
-            if(constraint == null && activeTagNames.size() == 0) {
-                results.values = resumes;
-                results.count = resumes.size();
+            filteredResumes = new ArrayList<>(resumes);
+            // Filter candidates by tag
+            if (constraint == null && activeTagNames.size() > 0) {
+                filteredResumes.clear();
+                for (String c: activeTagNames) {
+                    for (int i = 0; i < resumes.size(); i++) {
+                        List<String> tags = new ArrayList<String>();
+                        if (resumes.get(i).getTagList() != null) {
+                            for (Tag t : resumes.get(i).getTagList()) {
+                                tags.add(t.getName().toLowerCase());
+                            }
+
+                            if (tags.contains(c) && !filteredResumes.contains(resumes.get(i))) {
+                                filteredResumes.add(resumes.get(i));
+                            }
+                        }
+                    }
+                }
+
+                results.values = filteredResumes;
+                results.count = filteredResumes.size();
                 return results;
             }
             // Filter candidates by name
-            if(constraint != null) {
+            else {
+                ArrayList<Resume> filteredResumesCopy = new ArrayList<>(filteredResumes);
                 filteredResumes.clear();
+                // No tags and empty search query means we must be able to view all candidates
+                if (constraint == null && activeTagNames.size() == 0) {
+                    results.values = resumes;
+                    results.count = resumes.size();
+                    filteredResumes = new ArrayList<>(resumes);
+                    return results;
+                }
                 String strConstraint = (String) constraint;
                 strConstraint = strConstraint.toLowerCase();
-                for (int i = 0; i < resumes.size(); i++) {
+                for (int i = 0; i < filteredResumesCopy.size(); i++) {
                     // put resumes into the adapter whose candidate's name starts with the query
-                    String name = resumes.get(i).getCandidateName().toLowerCase();
+                    String name = filteredResumesCopy.get(i).getCandidateName().toLowerCase();
                     if(name.startsWith(strConstraint)) {
-                        filteredResumes.add(resumes.get(i));
+                        filteredResumes.add(filteredResumesCopy.get(i));
                     }
                 }
+                results.values = filteredResumes;
+                results.count = filteredResumes.size();
+                return results;
             }
-            else // no name constraint, show all resumes
-                filteredResumes = new ArrayList<>(resumes);
-
-            // Filter candidates by tag, only look at those left after name search
-            if (activeTagNames.size() > 0) {
-                for (Resume resume : filteredResumes) {
-                    List<Tag> tagList = resume.getTagList();
-                    if (tagList != null) {
-                        int num_active_tags = activeTagNames.size();
-                        int num_tags = 0;
-                        for(String c: activeTagNames)
-                            for (Tag t : tagList) {
-                                if (t.getName().toLowerCase().equals(c.toLowerCase())) {
-                                    num_tags++;
-                                    break;
-                                }
-                            }
-                        // not all active tags present in the resume, remove it from filtered
-                        if(num_tags != num_active_tags && filteredResumes.contains(resume))
-                            filteredResumes.remove(resume);
-                    }
-                }
-            }
-            results.values = filteredResumes;
-            results.count = filteredResumes.size();
-            return results;
         }
 
         @Override
