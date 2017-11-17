@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stackd.stackd.R;
+import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 
@@ -27,39 +28,22 @@ import java.util.Set;
  */
 public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
-    private ArrayList<Resume> resumes = new ArrayList<>();
-    private ArrayList<Resume> filteredResumes;
-
-    private Set<String> constraints = new HashSet<String>();
+    private List<Resume> resumes;
+    private List<Resume> filteredResumes;
+    private Set<String> constraints = new HashSet<>();
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
-        long rid = 0;
-        Resume r = new Resume();
-        r.setRid(rid);
-        r.setCandidateName("John Smith");
-
-        // test resumes with python tag and c tag
-        List<Tag> tags = new ArrayList<Tag>();
-        tags.add(new Tag.Builder().id(1).name("python").build());
-        tags.add(new Tag.Builder().id(3).name("python").build());
-
-        Resume r2 = new Resume();
-        r2.setRid(rid + 1);
-        r2.setCandidateName("Angelo Austria");
-        r2.setTagList(tags);
-
-        List<Tag> tags2 = new ArrayList<Tag>();
-        tags2.add(new Tag.Builder().id(2).name("c").build());
-        Resume r3 = new Resume();
-        r3.setRid(rid + 2);
-        r3.setCandidateName("Dmitry Ten");
-        r3.setTagList(tags2);
-
-        for(int i=0; i < 2; i++)
-            resumes.add(r);
-        resumes.add(r2);
-        resumes.add(r3);
+        Resume resume;
+        // Dummy Values
+        long cId = 1;
+        long rId = 2;
+        // get data manager and get all data required for this activity (resumes and tags)
+        DataManager manager = DataManager.getDataManager(cId, rId);
+        resumes = manager.getResumes();
+        List<Tag> tags = manager.getCompanyTags();
+        for(Tag tag: tags)
+            constraints.add(tag.getName());
         filteredResumes = new ArrayList<>(resumes);
     }
 
@@ -176,7 +160,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             filteredResumes = new ArrayList<>(resumes);
             // Filter candidates by tag
             if (constraint == null && constraints.size() > 0) {
-                filteredResumes.clear();
+
                 for (String c: constraints) {
                     for (int i = 0; i < resumes.size(); i++) {
                         List<String> tags = new ArrayList<String>();
