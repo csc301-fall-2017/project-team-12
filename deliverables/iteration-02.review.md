@@ -46,45 +46,15 @@ I believe that not starting with JSON objects from the start made us lose some t
 
 #### Goals and/or tasks that were planned but not met/completed:
 
- * From most to least important.
- * For each goal/task, explain why it was not met/completed.      
-   e.g. Did you change your mind, or did you just not get to it yet?
 
-
-[Justine]: 
-Originally, we wanted to parse bits of the resume but we realized the name would be extremely difficult to parse. The emails are more possible and so are tags but some scans of the resume would vary from others.
-
-[Musa]:
-Implementing Room database, we changed our mind since we discovered it’s only a local database storage and won’t be sufficient for our final MVP, so working on it would be a waste of time
-Test cases, since we wrote and deleted a lot of code, we weren’t 100% aware of the requirements until we tried them out (we were learning as we go) so following TDD without previous experience was impossible.
-
-
-
-[Angelo]
-·       Real-time parsing of the resume was not fully completed due to difficulty of finding an API that can accurately parse information we want, i.e., name of candidate. We are considering trying to parse other information instead such as email because it might be easier for the API to pick up during the scan.
-·       Test cases were not completed because methods to be implemented were not planned in advance. Thus, some sub-teams did not write unit tests for these methods because they did not plan them in advance. Instead, testing was done by simply running the activity. Sub-teams would be able to focus on other tasks if activities did what were expected (even without unit tests).
+1. **Changing back-end architecture**. Initially, we wanter to use Room database, but we changed our mind since we discovered it’s only a local database storage and won’t be sufficient for our final MVP, so working on it would be a waste of time. Instead, we created JSON files faking database behaviour for this deliverable. This enabled us to focus on main features without worrying about the actual implementation of the database.
+2. **Removing parsing resume functionality**. Originally, we wanted to parse resume picture to extract information about candidates (email and name), but we realized the name would be extremely difficult to extract. Parsing emails and tags is more feasible but different scans of the same resume would sometimes provide inconsistent results. Since parsing the resume is just an additional feature and does not contribute significantly to the value of our app, we decided to remove it. 
+3. **Did not complete UML diagrams**. We wanted to make a UML diagram for each class we are going to implement. We changed the initial architecture and were not sure that we would stick with the current architecture, so making UML diagrams would potentially be a lot of wasted work. Instead, we defined interfaces and worked according to them.
 
 
 ## Meeting Highlights
 
-Going into the next iteration, our main insights are:
-
- * 2 - 4 items
- * Short (no more than one short paragraph per item)
- * High-level concepts that should guide your work for the next iteration.
- * These concepts should help you decide on where to focus your efforts.
- * Can be related to product and/or process.
-
-[Justine]:
-Finishing our MVP
-Polishing the UI if we have time
-
-[Musa]:
-Putting more work on making the UI stands out and aesthetically pleasing for the users, since this what will make them use our product and enables them to easily navigate through it.
-Do more research on the architecture before building it, since we’re building the server for the next iteration it’s important to not repeat same error (working on Room database before fully understanding its usability). To avoid wasting time and resources.
-Focus more on communication, use Slack more often and makes sure the whole team knows what’s going on, and what are the required tasks and who’s working on them to avoid potential conflicts and/or misunderstandings.
-
-[Angelo]
-Enhance the user interface of the mobile application to create a better user experience, i.e., ensure product stands out and the user has a better flow when navigating between different views.
- Ensure better communication between sub-teams. For example, two “Resume” classes were created. We need to ensure each team member are assigned specific tasks and understand what they are responsible for delivering at the end of the sprint to avoid duplicate work.
+1. Focus more on communication, use Slack more often and makes sure the whole team knows what’s going on, and what are the required tasks and who’s working on them to avoid potential conflicts and/or misunderstandings.  For example, two “Resume” classes were created because of lack of communication between team members and not assigning specific tasks.
+2. Implementing a web server, which will store our data. Do more research before building it, making sure not repeat the same error (working on Room database before fully understanding its usability limits), to avoid wasting time and resources.
+3. Polish the UI of the mobile application to create a better user experience, i.e., ensure product stands out and the user has a better flow when navigating between different views.
 
