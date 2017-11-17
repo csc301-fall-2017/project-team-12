@@ -34,17 +34,83 @@
                 "lastName": "Diaz"
               },
               "collectionDate": "09/22/2009",
-              "url": "http://localhost:8080/Desktop/Resumes/9.pdf",
+              "url": "",
               "recruiterComments": "Perfect fit for the position!",
-              "rating": 10,
+              "rating": 1,
               "tags": [
                 {
-                  "_id": 19,
+                  "_id": 10,
                   "name": "Git"
                 },
                 {
                   "_id": 12,
                   "name": "Bash"
+                }
+              ]
+            }, 
+            {
+              "_id": 10,
+              "rid": 21,
+              "candidateName": {
+                "firstName": "Jane",
+                "lastName": "Hoop"
+              },
+              "collectionDate": "09/22/2009",
+              "url": "",
+              "recruiterComments": "Close match",
+              "rating": 2,
+              "tags": [
+                {
+                  "_id": 10,
+                  "name": "Git"
+                },
+                {
+                  "_id": 19,
+                  "name": "Python"
+                }
+              ]
+            }, 
+            {
+              "_id": 11,
+              "rid": 21,
+              "candidateName": {
+                "firstName": "Jake",
+                "lastName": "Shields"
+              },
+              "collectionDate": "09/22/2009",
+              "url": "",
+              "recruiterComments": "Good technical knowledge",
+              "rating": 2,
+              "tags": [
+                {
+                  "_id": 19,
+                  "name": "Python"
+                },
+                {
+                  "_id": 12,
+                  "name": "Bash"
+                }
+              ]
+            },
+            {
+              "_id": 12,
+              "rid": 21,
+              "candidateName": {
+                "firstName": "Jesse",
+                "lastName": "Pinkman"
+              },
+              "collectionDate": "09/22/2009",
+              "url": "",
+              "recruiterComments": "Good person to talk to",
+              "rating": 1,
+              "tags": [
+                {
+                  "_id": 10,
+                  "name": "Git"
+                },
+                {
+                  "_id": 12,
+                  "name": "Python"
                 }
               ]
             }
