@@ -36,8 +36,8 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         mContext = c;
         Resume resume;
         // Dummy Values
-        long cId = 1;
-        long rId = 2;
+        Long cId = new Long(1);
+        Long rId = new Long(21);
         // get data manager and get all data required for this activity (resumes and tags)
         DataManager manager = DataManager.getDataManager(cId, rId);
         resumes = manager.getResumes();
