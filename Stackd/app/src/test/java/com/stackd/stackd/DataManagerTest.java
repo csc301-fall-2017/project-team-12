@@ -37,7 +37,6 @@ public class DataManagerTest {
     public void getCompanyTest() {
         Company c = dm.getCompany();
         assertNotNull(c);
-
         assertEquals(c.getId(), 1);
         assertEquals(c.getName(), "GitHub");
     }
@@ -54,7 +53,6 @@ public class DataManagerTest {
     public void getRecruiterTest() {
         Recruiter r = dm.getRecruiter();
         assertNotNull(r);
-
         assertTrue(Utils.compareRecruiter(r, Utils.createExpectedRecruiter()));
     }
 }
