@@ -81,13 +81,8 @@ public class DataManager {
         this.tagDao = TagDao.getTagDao();
 
 
-        try {
-            this.company = getCompany(new Long(1));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        this.company = getCompany(new Long(1));
+
 
         this.recruiter = getRecruiter(new Long(21));
 
@@ -96,20 +91,27 @@ public class DataManager {
     public static DataManager getDataManager(Long companyId, Long recruiterId) {
         if (dataManager == null) {
             dataManager = new DataManager(companyId, recruiterId);
-            System.out.print("Constructor  " + dataManager.getCompany() );
             return dataManager;
         } else {
             return dataManager;
         }
     }
 
-    private Company getCompany(Long cId) throws JSONException, ParseException {
+    private Company getCompany(Long cId) {
         Company result = null;
         // Fetch the company from JSON file, for example:
         String companyAsJsonString = readFile(COMPANY_RESPONSE_FILE);
-        result = ResponseParser.parseCompanyResponse(companyAsJsonString).get(0);
-        System.out.print("Result is " + result);
-        
+
+        try {
+            result = ResponseParser.parseCompanyResponse(companyAsJsonString).get(0);
+        } catch (JSONException e) {
+            System.out.println("Failed to get company");
+            e.printStackTrace();
+        } catch (ParseException e) {
+            System.out.println("Failed to get company");
+            e.printStackTrace();
+        }
+
         return result;
     }
 
