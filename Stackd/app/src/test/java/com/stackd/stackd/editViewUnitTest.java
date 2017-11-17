@@ -27,11 +27,12 @@ public class editViewUnitTest {
         Long cId = new Long(1);
         Long rId = new Long(21);
         DataManager dataManager = DataManager.getDataManager(cId, rId);
+
         List<Resume> originalResumes = dataManager.getResumes();
         final Resume.Builder resumeBuilder = new Resume.Builder();
         resumeBuilder.id(new Long(1));
         resumeBuilder.rid(dataManager.getRecruiter().getRecId());
-
+        System.out.print("Company: " + dataManager.getCompany());
         resumeBuilder.tagList(dataManager.getCompanyTags());
         resumeBuilder.url("http://localhost:8080/Desktop/Resumes/10.pdf");
         resumeBuilder.recruiterComments("Great fit.");
