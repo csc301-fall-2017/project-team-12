@@ -102,6 +102,7 @@ public class StackActivity extends AppCompatActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
+
         // reset all filters, once search view is closed
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
