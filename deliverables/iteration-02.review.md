@@ -38,25 +38,11 @@ I believe that not starting with JSON objects from the start made us lose some t
 
 #### Goals and/or tasks that were met/completed:
 
- * From most to least important.
- * Refer/link to artifact(s) that show that a goal/task was met/completed.
- * If a goal/task was not part of the original iteration plan, please mention it.
-
-[Justine]:
-Being able to annotate a resume
-(Almost) being able to capture a resume in a photo scan 
-
-I think these two are most important because they make our application what it is. 
-
-[Musa]:
-Implement DataManager, since this is the backbone of the backend to communicate with the other views (link github)
-All the views were almost fully implemented, this is crucial because we can demo the usability of the product and the workflow of it to collect feedback from users before committing more time and effort on optimizing it and fully integrate it with the backend.
-
-[Angelo]
-·       The ability to annotate a resume, i.e., highlighting a resume, adding a brief description about the candidate, and adding tags such as PEY, Full-time, Internship, etc.
-·       A virtual stack of resumes that the user can filter using a search bar and tags. The user upon login will be able to see thumbnails of resumes labeled by name of candidate, similar to a photo gallery. Furthermore, the recruiter will be able to search through the resumes by name or tags.
-·       The ability to take an image of the resume using the camera.
-
+1. **Finished the interactive [mock-up](https://marvelapp.com/51ea43d) of our app**. This allowed us to start implementing views knowing exactly what they should be. 
+2. **Designed the database and [ER diagram](https://drive.google.com/file/d/0B_k0GN496C_0azV1TlpzMnJoMmc/view?usp=sharing) for it**. This enabled everyone to have a good idea of what kind of data to expect from a database, how to interact with it, and what methods they will need for their features.  
+3. **Implemented most of the [front-end views](https://docs.google.com/presentation/d/1xYqzDtxW5LoD-0PNnPX27Dl2MdutonBh0i8pdaoWmkw/edit?usp=sharing)**. The user upon login will be able to see thumbnails of resumes labeled by candidate name, similar to Google Docs. This stack of resumes can be filtered using a search bar and/or tags. A user can annotate a resume, i.e., highlight a part of the resume, add a brief description of the candidate, and add tags such as PEY, Full-time, Internship, etc. This is crucial because we can demo the usability of the product and its workflow to collect feedback from users before committing more time and effort on optimizing it and fully integrating it with the backend.
+4. **Designed and implemented most of the [interface](https://github.com/csc301-fall-2017/project-team-12/tree/master/Stackd/app/src/main/java/com/stackd/stackd/db) between database and the app**.  This is the backbone of the backend to communicate with the other views. It enabled everyone to understand how to communicate with the data manager to get and store data.
+5. **Making a short video about our proudct**. The video allowed us to better explain users what is our app and how to use it. This will make user feedback more meaningful, since they will see the entire product in action. 
 
 #### Goals and/or tasks that were planned but not met/completed:
 
