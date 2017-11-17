@@ -2,11 +2,10 @@ package com.stackd.stackd;
 
 import android.util.Log;
 
+import com.stackd.stackd.db.entities.Recruiter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 import com.stackd.stackd.helpers.ResponseParser;
-
-import junit.framework.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,7 +56,7 @@ public class Utils {
             "%sresume_response.json",
             RESOURCE_FILE);
 
-    // -------------------------------------------------------------
+    // ---------------------------------------------------------------------------
 
     private static String getResponse(String filePath) {
         try {
@@ -72,24 +71,60 @@ public class Utils {
         }
     }
 
-    public static String getTagResponse() {
+    static String getTagResponse() {
         return getResponse(TAG_RESPONSE_FILE);
     }
 
-    public static String getCompanyResponse() {
+    static String getCompanyResponse() {
         return getResponse(COMPANY_RESPONSE_FILE);
     }
 
-    public static String getRecruiterResponse() {
+    static String getRecruiterResponse() {
         return getResponse(RECRUITER_RESPONSE_FILE);
     }
 
-    public static String getResumeResponse() {
+    static String getResumeResponse() {
         return getResponse(RESUME_RESPONSE_FILE);
     }
 
-    public static Resume createExpectedResume() throws JSONException {
-        List<Tag> tags = ResponseParser.parseTagResponse(Utils.getTagResponse());
+    static boolean compareTags(Tag t1, Tag t2) {
+        return ((t1.getId() == t2.getId()) &&
+                (t1.getName().equals(t2.getName())));
+    }
+
+    static boolean compareRecruiter(Recruiter r1, Recruiter r2) {
+        return r1.getRecId() == r2.getRecId() &&
+                r1.getCompId() == r2.getCompId() &&
+                r1.getFirstName().equals(r2.getFirstName()) &&
+                r1.getLastName().equals(r2.getLastName()) &&
+                r1.getEmail().equals(r2.getEmail());
+
+    }
+
+    static boolean compareResume(Resume r1, Resume r2) {
+        return r1.getId() == r2.getId() &&
+                r1.getRid() == r2.getRid() &&
+                r1.getCandidateName().equals(r2.getCandidateName()) &&
+                r1.getCollectionDate().equals(r2.getCollectionDate()) &&
+                r1.getRating() == r2.getRating();
+    }
+
+    static Recruiter createExpectedRecruiter() {
+        return new Recruiter.Builder()
+                .recId(21)
+                .compId(1)
+                .email("lisaroberts@github.com")
+                .firstName("Lisa")
+                .lastName("Roberts")
+                .build();
+
+    }
+
+    static Resume createExpectedResume() throws NullPointerException {
+        String response = Utils.getTagResponse();
+        if (response == null) throw new NullPointerException();
+
+        List<Tag> tags = ResponseParser.parseTagResponse(response);
         tags.remove(tags.size() - 1);
 
         String url = "http://localhost:8080/Desktop/Resumes/9.pdf";
@@ -105,9 +140,5 @@ public class Utils {
                 .url(url)
                 .recruiterComments(comments)
                 .build();
-    }
-
-    public static boolean compareTags(Tag t1, Tag t2) {
-        return ((t1.getId() == t2.getId()) && (t1.getName() == t2.getName()));
     }
 }

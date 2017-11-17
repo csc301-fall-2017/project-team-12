@@ -1,14 +1,11 @@
 package com.stackd.stackd;
 
-import com.google.gson.JsonParseException;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 import com.stackd.stackd.helpers.ResponseParser;
 
-import org.json.JSONException;
 import org.junit.Test;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
@@ -16,15 +13,14 @@ import static org.junit.Assert.*;
 /**
  * Created by Tanveer on 2017-11-14.
  *
- * This class tests the json each json parser in <code> ResponseParser <code/> class.
- *
- * @see: /Stackd/app/src/main/java/com/stackd/stackd/helpers/ResponseParser.java
+ * This class tests the json each json parser in
+ * <code> ResponseParser <code/> class.
  */
 
 public class ResponseParserTest {
 
     @Test
-    public void parseTagsTest()  throws JSONException {
+    public void parseTagsTest() {
         List<Tag> tags = ResponseParser.parseTagResponse(Utils.getTagResponse());
 
         assertEquals(tags.get(0).getId(), 10);
@@ -39,7 +35,7 @@ public class ResponseParserTest {
 
 
     @Test
-    public void parseResumeTest() throws JSONException, ParseException {
+    public void parseResumeTest() throws NullPointerException {
         List<Resume> actual = ResponseParser.parseResumeResponse(Utils.getResumeResponse());
 
         /* The expected result */
