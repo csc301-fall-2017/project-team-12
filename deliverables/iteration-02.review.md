@@ -89,6 +89,7 @@ Initially, we wanter to use Room database, but we changed our mind since we disc
 2. **Removing parsing resume functionality**. 
 
 Originally, we wanted to parse resume picture to extract information about candidates (email and name), but we realized the name would be extremely difficult to extract. Parsing emails and tags is more feasible but different scans of the same resume would sometimes provide inconsistent results. Since parsing the resume is just an additional feature and does not contribute significantly to the value of our app, we decided to remove it. 
+
 3. **Did not complete UML diagrams**. 
 
 We wanted to make a UML diagram for each class we are going to implement. We changed the initial architecture and were not sure that we would stick with the current architecture, so making UML diagrams would potentially be a lot of wasted work. Instead, we defined interfaces and worked according to them.
