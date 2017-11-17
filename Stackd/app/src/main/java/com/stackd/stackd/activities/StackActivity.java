@@ -1,35 +1,56 @@
 package com.stackd.stackd.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
-
+import com.scanlibrary.ScanActivity;
+import com.scanlibrary.ScanConstants;
 import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
-
+import com.stackd.stackd.db.entities.Tag;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Set;
+
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_CONTACTS;
+
 
 public class StackActivity extends AppCompatActivity {
+    private static final int REQUEST_CAM = 0;
     private ResumeImageAdapter adapter;
-    private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<String, Boolean>();
+    int REQUEST_CODE = 99;
+    private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<>();
+  
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,18 +72,19 @@ public class StackActivity extends AppCompatActivity {
         });
 
         populateTagsList();
+        // for each tag in a tag list, add a button to the tag bar.
         LinearLayout tagsList = (LinearLayout)findViewById(R.id.tag_list);
-        Iterator<String> tags = activeTags.keySet().iterator();
-        while (tags.hasNext()) {
+        for(String strTag : activeTags.keySet()) {
             final Button btn = new Button(getApplicationContext());
             int backgroundColor =
                     ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
             btn.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
-            btn.setText(tags.next());
+            btn.setText(strTag);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (activeTags.get(btn.getText().toString())) {
+                        // filter resumes based on the tag selected
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
                                         R.color.colorAccent);
@@ -73,6 +95,7 @@ public class StackActivity extends AppCompatActivity {
                         adapter.getFilter().filter(null);
                     }
                     else {
+                        // unset the tag, show resumes even without this tag
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
                                         R.color.colorPrimary);
@@ -87,7 +110,6 @@ public class StackActivity extends AppCompatActivity {
             tagsList.addView(btn);
         }
 
-        handleIntent(getIntent());
     }
 
     // create an action bar button
@@ -102,6 +124,7 @@ public class StackActivity extends AppCompatActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
+
         // reset all filters, once search view is closed
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
@@ -182,28 +205,53 @@ public class StackActivity extends AppCompatActivity {
      * @param v the button that was clicked.
      */
     public void onCameraBtnClick(View v){
-        // dummy alert
-        AlertDialog.Builder alertBox = new AlertDialog.Builder(this).
-                setMessage("Opening camera activity").
-                setTitle("Open camera");
-        alertBox.show();
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
+       // ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODEE);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED){
+            int preference = ScanConstants.OPEN_CAMERA;
+            Intent intent = new Intent(this, ScanActivity.class);
+
+            intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
+            startActivityForResult(intent, REQUEST_CODE);
+        } else {
+            //TODO handle case where permissions are denied
+        }
+
     }
 
-    private void populateTagsList() {
-        activeTags.put("PEY", false);
-        activeTags.put("Internship", false);
-        activeTags.put("Full-time", false);
-        activeTags.put("C++", false);
-        activeTags.put("C#", false);
-        activeTags.put("C", false);
-        activeTags.put("CSS", false);
-        activeTags.put("HTML", false);
-        activeTags.put("Java", false);
-        activeTags.put("JavaScript", false);
-        activeTags.put("Python", false);
-        activeTags.put("R", false);
-        activeTags.put("Swift", false);
+    /**
+     *  Called when camera finishes scanning. Should launch edit activity with scanned fragment.
+     * @param requestCode correct permission code.
+     * @param resultCode ensures correct activity result.
+     * @param data instance of scanning intent after taking a picture.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+
+                Intent i = new Intent(StackActivity.this, EditActivity.class);
+                i.putExtra("imageUri", uri.toString());
+                startActivity(i);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void populateTagsList() {
+        for(Tag tag : adapter.getTags()) {
+            activeTags.put(tag.getName(), false);
+        }
     }
 }
 
