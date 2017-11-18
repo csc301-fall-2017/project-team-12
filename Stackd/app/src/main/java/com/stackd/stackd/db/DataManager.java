@@ -100,12 +100,15 @@ public class DataManager {
      **/
     public List<Resume> getResumes() {
         String resumesAsJsonString = Utils.getResumeResponse();
-        List<Resume> dbResumes = ResponseParser.parseResumeResponse(resumesAsJsonString);;
-        List<Resume> companyResumes = this.company.getResumes();
-        if(companyResumes != null) {
-            dbResumes.addAll(companyResumes);
+        //TODO: replace this with the commented line
+        List<Resume> result = ResponseParser.parseResumeResponse(resumesAsJsonString);
+        for (Resume resume: this.company.getResumes()) {
+            if (!result.contains(resume)) {
+                result.add(resume);
+            }
         }
-        return dbResumes;
+        return result;
+        //return ResponseParser.parseResumeResponse(resumesAsJsonString);
     }
 
     public Company getCompany() {
