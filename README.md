@@ -52,7 +52,7 @@ Please read the [deliverables folder](https://github.com/csc301-fall-2017/projec
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/csc301-fall-2017/project-team-12/blob/master/LICENSE) file for details
 
 ## Acknowledgments
 
