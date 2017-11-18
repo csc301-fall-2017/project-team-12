@@ -1,16 +1,5 @@
 package com.stackd.stackd.temp;
 
-import android.util.Log;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Formatter;
-import java.util.Locale;
-
 /**
  * Created by Tanveer on 2017-11-17.
  *
@@ -146,7 +135,7 @@ public class Utils {
                 "        \"lastName\": \"Diaz\"\n" +
                 "      },\n" +
                 "      \"collectionDate\": \"09/22/2009\",\n" +
-                "      \"url\": \"http://localhost:8080/Desktop/Resumes/9.pdf\",\n" +
+                "      \"url\": \"\",\n" +
                 "      \"recruiterComments\": \"Perfect fit for the position!\",\n" +
                 "      \"rating\": 10,\n" +
                 "      \"tags\": [\n" +

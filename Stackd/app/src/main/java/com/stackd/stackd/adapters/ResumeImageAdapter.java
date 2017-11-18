@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,8 +96,14 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         }
 
         holder.resumeTitle.setText(filteredResumes.get(position).getCandidateName());
-        holder.resumeImg.setImageBitmap(
-                decodeSampledBitmapFromResource(mContext.getResources(), R.drawable.resume_template, 100, 100));
+        Resume resume = filteredResumes.get(position);
+        if(resume.getUrl() != null && resume.getUrl().length() > 0) {
+            holder.resumeImg.setImageURI(Uri.parse(resume.getUrl()));
+        }
+        else {
+            holder.resumeImg.setImageBitmap(
+                    decodeSampledBitmapFromResource(mContext.getResources(), R.drawable.resume_template, 100, 100));
+        }
         return convertView;
     }
 

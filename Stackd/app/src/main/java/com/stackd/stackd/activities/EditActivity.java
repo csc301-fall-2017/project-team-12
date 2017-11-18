@@ -1,17 +1,15 @@
 package com.stackd.stackd.activities;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
-import android.app.AlertDialog;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,7 +22,7 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
-import java.io.File;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,12 +34,10 @@ public class EditActivity extends AppCompatActivity {
     ArrayList<CheckBox> checkBoxes;
     Resume resume;
     // Dummy Values
-    Long cId = new Long(1);
-    Long rId = new Long(21);
+    long cId = 1;
+    long rId = 21;
     DataManager dataManager = DataManager.getDataManager(cId, rId);
     AlertDialog alertBox = null;
-    final Resume.Builder resumeBuilder = new Resume.Builder();
-
     RelativeLayout drawLayout;
 
 
@@ -54,46 +50,28 @@ public class EditActivity extends AppCompatActivity {
         setUpAlertBox(this);
 
         // Fields needed from other screens
-        Uri myUri = Uri.parse(getIntent().getExtras().getString("imageUri"));
-        Uri uri=Uri.parse("R.drawable.resume_template");
-        int resId = R.drawable.resume_template;
-
+        Bundle resumeUri = getIntent().getExtras();
+        Uri uri;
+        ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
+        if(resumeUri != null) {
+            uri = Uri.parse(getIntent().getExtras().getString("imageUri"));
+            resumeView.setImageURI(uri);
+        }
+        else {
+            uri = Uri.parse("R.drawable.resume_template");
+            resumeView.setImageResource(R.drawable.resume_template);
+        }
         drawLayout = (RelativeLayout) this.findViewById(R.id.drawLayout);
         drawLayout.setVisibility(RelativeLayout.GONE);
 
-        ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
-        resumeView.setImageURI(myUri);
-
         final String resume_url = uri.toString();
-        final String candidate_name = "";
-
-        File imgFile = new  File(resume_url);
-
-        if(imgFile.exists()){
-            System.out.print("Image exists\n \n \n ");
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-            ImageView resume_img = (ImageView) findViewById(R.id.current_resume);
-
-            resume_img.setImageBitmap(myBitmap);
-
-        }
-
-
-        // Initialize the resume
-        resumeBuilder.id(new Long(1));
-        resumeBuilder.rid(dataManager.getRecruiter().getRecId());
+        final String candidate_name = "Candidate 1";
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
 
         // The company's tags
         final List<Tag> tagList = dataManager.getCompanyTags();
-        /*final List<Tag> tagList = new ArrayList<>();
-        tagList.add(new Tag.Builder().id(1).name("java").build());
-        tagList.add(new Tag.Builder().id(2).name("Python").build());
-        tagList.add(new Tag.Builder().id(3).name("Intern").build());
-        tagList.add(new Tag.Builder().id(4).name("Full Time").build());*/
 
         // The tags the resume contains
         final List<Tag> resumeTags = new ArrayList<>();
@@ -117,12 +95,15 @@ public class EditActivity extends AppCompatActivity {
         final Button submitButton = (Button) findViewById(R.id.submit_resume);
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Insert the resume
-                resumeBuilder.tagList(tagList);
-                resumeBuilder.url(resume_url);
-                resumeBuilder.recruiterComments(comment_field.getText().toString());
-                resumeBuilder.collectionDate(new SimpleDateFormat("DD-MM-YYYY").format(new Date()));
-                resumeBuilder.candidateName(candidate_name);
+                // Initialize the resume
+                resume = new Resume.Builder()
+                        .id(1)
+                        .rid(dataManager.getRecruiter().getRecId())
+                        .tagList(resumeTags)
+                        .url(resume_url)
+                        .recruiterComments(comment_field.getText().toString())
+                        .collectionDate(new SimpleDateFormat("DD-MM-YYYY").format(new Date()))
+                        .candidateName(candidate_name).build();
 
                 alertBox.show();
             }
@@ -170,13 +151,13 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0: resumeBuilder.rating(2);// yes
-                    case 1: resumeBuilder.rating(0);// no
-                    case 2: resumeBuilder.rating(1);// maybe
+                    case 0: resume.setRating(2);// yes
+                    case 1: resume.setRating(0);// no
+                    case 2: resume.setRating(1);// maybe
 
                 }
                 // Insert the resume into the database
-                Resume resume = resumeBuilder.build();
+                assert(resume != null);
                 dataManager.insertResume(resume);
                 // Review it and add a rating
                 dataManager.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());
@@ -187,7 +168,6 @@ public class EditActivity extends AppCompatActivity {
             }
         });
         alertBox = alertBuilder.create();
-
     }
 
 }

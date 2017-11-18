@@ -8,6 +8,7 @@ import com.stackd.stackd.helpers.ResponseParser;
 import com.stackd.stackd.temp.Utils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
@@ -99,7 +100,12 @@ public class DataManager {
      **/
     public List<Resume> getResumes() {
         String resumesAsJsonString = Utils.getResumeResponse();
-        return ResponseParser.parseResumeResponse(resumesAsJsonString);
+        List<Resume> dbResumes = ResponseParser.parseResumeResponse(resumesAsJsonString);;
+        List<Resume> companyResumes = this.company.getResumes();
+        if(companyResumes != null) {
+            dbResumes.addAll(companyResumes);
+        }
+        return dbResumes;
     }
 
     public Company getCompany() {
@@ -120,6 +126,8 @@ public class DataManager {
 
     public void insertResume(Resume resume) {
         // To be implemented...
+        if(this.company.getResumes() == null)
+            this.company.setResumes(new ArrayList<Resume>());
         this.company.addResume(resume);
     }
 
