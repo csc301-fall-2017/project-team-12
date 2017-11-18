@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
+import com.stackd.stackd.db.entities.Tag;
 
 import java.util.LinkedHashMap;
 
@@ -190,21 +191,8 @@ public class StackActivity extends AppCompatActivity {
     }
 
     private void populateTagsList() {
-        /*activeTags.put("PEY", false);
-        activeTags.put("Internship", false);
-        activeTags.put("Full-time", false);
-        activeTags.put("C++", false);
-        activeTags.put("C#", false);
-        activeTags.put("C", false);
-        activeTags.put("CSS", false);
-        activeTags.put("HTML", false);
-        activeTags.put("Java", false);
-        activeTags.put("JavaScript", false);
-        activeTags.put("Python", false);
-        activeTags.put("R", false);
-        activeTags.put("Swift", false);*/
-        for(String strTag: adapter.getContraints()) {
-            activeTags.put(strTag, false);
+        for(Tag tag : adapter.getTags()) {
+            activeTags.put(tag.getName(), false);
         }
     }
 }
