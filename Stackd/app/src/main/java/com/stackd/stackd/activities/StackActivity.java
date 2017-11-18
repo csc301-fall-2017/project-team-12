@@ -1,7 +1,6 @@
 package com.stackd.stackd.activities;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -11,41 +10,36 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
+
 import com.scanlibrary.ScanActivity;
 import com.scanlibrary.ScanConstants;
 import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
+import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_CONTACTS;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 
 
 public class StackActivity extends AppCompatActivity {
+    public static final String RESUME_ID_KEY = "resumeId";
+    public static final long RESUME_ID_NEW = -1;
     private static final int REQUEST_CAM = 0;
     private ResumeImageAdapter adapter;
     int REQUEST_CODE = 99;
@@ -67,6 +61,14 @@ public class StackActivity extends AppCompatActivity {
                                     int position, long id) {
                 // dummy result, should open the review activity for the given resume
                 Intent i = new Intent(StackActivity.this, EditActivity.class);
+                String imgURL = adapter.getImageURL(position);
+                if(imgURL != null && imgURL.length() > 0)
+                    i.putExtra(EditActivity.IMAGE_URI_KEY, imgURL);
+                else {
+                    i.putExtra(EditActivity.IMAGE_R_KEY, adapter.getDummyResourceId(position));
+                }
+                long resumeId = ((Resume) adapter.getItem(position)).getId();
+                i.putExtra(RESUME_ID_KEY, resumeId);
                 startActivity(i);
             }
         });
@@ -78,7 +80,9 @@ public class StackActivity extends AppCompatActivity {
             final Button btn = new Button(getApplicationContext());
             int backgroundColor =
                     ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+            int textColor = ContextCompat.getColor(getApplicationContext(), R.color.colorWhite);
             btn.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
+            btn.setTextColor(textColor);
             btn.setText(strTag);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -216,7 +220,7 @@ public class StackActivity extends AppCompatActivity {
             intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
             startActivityForResult(intent, REQUEST_CODE);
         } else {
-            //TODO handle case where permissions are denied
+            // TODO handle case where permissions are denied
         }
 
     }
@@ -238,7 +242,8 @@ public class StackActivity extends AppCompatActivity {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
                 Intent i = new Intent(StackActivity.this, EditActivity.class);
-                i.putExtra("imageUri", uri.toString());
+                i.putExtra(EditActivity.IMAGE_URI_KEY, uri.toString());
+                i.putExtra(RESUME_ID_KEY, RESUME_ID_NEW);
                 startActivity(i);
 
             } catch (IOException e) {

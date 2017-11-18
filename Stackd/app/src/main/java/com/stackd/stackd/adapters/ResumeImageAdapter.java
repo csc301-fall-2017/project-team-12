@@ -46,6 +46,9 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         filteredResumes = new ArrayList<>(resumes);
     }
 
+    public String getImageURL(int position) {
+        return resumes.get(position).getUrl();
+    }
     public List<Tag> getTags() { return this.tags; }
     public Set<String> getActiveTagNames() {
         return this.activeTagNames;
@@ -68,7 +71,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     }
 
     public Object getItem(int position) {
-        return null;
+        return filteredResumes.get(position);
     }
 
     public long getItemId(int position) {
@@ -101,13 +104,17 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             holder.resumeImg.setImageURI(Uri.parse(resume.getUrl()));
         }
         else {
-            String resourceString = "r" + Integer.toString(position % 8 + 1);
-            int resourceID = mContext.getResources().getIdentifier(resourceString,
-                    "drawable", mContext.getPackageName());
-            holder.resumeImg.setImageBitmap(
-                    decodeSampledBitmapFromResource(mContext.getResources(), resourceID, 100, 100));
+            holder.resumeImg.setImageResource(getDummyResourceId(position));
+            //holder.resumeImg.setImageBitmap(
+            //        decodeSampledBitmapFromResource(mContext.getResources(), resourceID, 100, 100));
         }
         return convertView;
+    }
+
+    public int getDummyResourceId(int position) {
+        String resourceString = "r" + Integer.toString(position % 8 + 1);
+        return mContext.getResources().getIdentifier(resourceString,
+                "drawable", mContext.getPackageName());
     }
 
     @Override
