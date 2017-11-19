@@ -2,21 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:layout_gravity="center_vertical">
+
 
         <Button
             android:id="@+id/original"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorAccent"
             android:drawableTop="@drawable/ic_image"
             android:text="Original"
             android:textColor="@android:color/white" />
@@ -26,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorAccent"
             android:drawableTop="@drawable/ic_enhamce_image"
             android:singleLine="true"
             android:text="Magic color"
@@ -37,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorAccent"
             android:drawableTop="@drawable/ic_gray"
             android:singleLine="true"
             android:text="Gray Mode"
@@ -48,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@color/colorAccent"
             android:drawableTop="@drawable/ic_black_and_white"
             android:singleLine="true"
             android:text="B and W"
@@ -60,7 +62,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/bottom_background_color"
+        android:background="@color/colorAccent"
         android:orientation="horizontal"
         android:padding="@dimen/bottom_bar_padding"
         android:text="@string/done" />
@@ -72,6 +74,7 @@
         android:layout_above="@id/doneButton"
         android:layout_below="@id/topBar"
         android:layout_gravity="center"
+        android:background="@color/colorPrimary"
         android:layout_margin="@dimen/scanPadding">
 
         <ImageView
@@ -79,6 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@color/colorPrimary"
             android:layout_margin="@dimen/scanPadding" />
     </FrameLayout>
 
