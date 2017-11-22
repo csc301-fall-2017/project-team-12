@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.stackd.stackd.R;
+import com.stackd.stackd.adapters.ResumeImageAdapter;
 import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
@@ -25,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +47,8 @@ public class EditActivity extends AppCompatActivity {
     private RelativeLayout drawLayout;
     private int currentId = 100;
     private List<Tag> resumeTags;
+    private ResumeImageAdapter adapter;
+    private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,27 +110,68 @@ public class EditActivity extends AppCompatActivity {
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
 
         // The company's tags
-        final List<Tag> tagList = dataManager.getCompanyTags();
-        for (final Tag tag: tagList) {
-            final CheckBox cb = new CheckBox(this);
-            cb.setId(tagList.indexOf(tag));
-            cb.setText(tag.getName());
-            cb.setTextColor(Color.WHITE);
-            cb.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    resumeTags.add(tag);
-                }
-            });
-            if(resumeId != -1)
-                cb.setClickable(false);
-            //checkBoxes.put(cb, tag);
-            tagListLayout.addView(cb);
-        }
+//        final List<Tag> tagList = dataManager.getCompanyTags();
+//        for (final Tag tag: tagList) {
+//            final CheckBox cb = new CheckBox(this);
+//            cb.setId(tagList.indexOf(tag));
+//            cb.setText(tag.getName());
+//            cb.setTextColor(Color.WHITE);
+//            cb.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View v) {
+//                    resumeTags.add(tag);
+//                }
+//            });
+//            if(resumeId != -1)
+//                cb.setClickable(false);
+//            //checkBoxes.put(cb, tag);
+//            tagListLayout.addView(cb);
+//        }
         // mark checkboxes as selected, if a resume was already edited
         /*if(resumeId != -1) {
             for(CheckBox cb : checkBoxes)
                 if(resumeTags.contains(cb.getText().toString()))
         }*/
+        adapter = new ResumeImageAdapter(this);
+        populateTagsList();
+        // for each tag in a tag list, add a button to the tag bar.
+        LinearLayout tagsList = (LinearLayout)findViewById(R.id.tagListLayout);
+        for(String strTag : activeTags.keySet()) {
+            final Button btn = new Button(getApplicationContext());
+            int backgroundColor =
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+            int textColor = ContextCompat.getColor(getApplicationContext(), R.color.colorWhite);
+            btn.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
+            btn.setTextColor(textColor);
+            btn.setText(strTag);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (activeTags.get(btn.getText().toString())) {
+                        // filter resumes based on the tag selected
+                        int backgroundColor =
+                                ContextCompat.getColor(getApplicationContext(),
+                                        R.color.colorAccent);
+                        btn.getBackground().setColorFilter(backgroundColor,
+                                PorterDuff.Mode.MULTIPLY);
+                        activeTags.put(btn.getText().toString(), false);
+                        adapter.removeConstraint(btn.getText().toString());
+                        adapter.getFilter().filter(null);
+                    }
+                    else {
+                        // unset the tag, show resumes even without this tag
+                        int backgroundColor =
+                                ContextCompat.getColor(getApplicationContext(),
+                                        R.color.colorPrimary);
+                        btn.getBackground().setColorFilter(backgroundColor,
+                                PorterDuff.Mode.MULTIPLY);
+                        activeTags.put(btn.getText().toString(), true);
+                        adapter.addConstraint(btn.getText().toString());
+                        adapter.getFilter().filter(null);
+                    }
+                }
+            });
+            tagsList.addView(btn);
+        }
     }
 
     /*
@@ -188,6 +236,11 @@ public class EditActivity extends AppCompatActivity {
             }
         });
         alertBox = alertBuilder.create();
+    }
+    private void populateTagsList() {
+        for(Tag tag : adapter.getTags()) {
+            activeTags.put(tag.getName(), false);
+        }
     }
 
 }
