@@ -32,6 +32,9 @@ public class DataManager {
     private Company company;
     private Recruiter recruiter;
 
+    // a variable for producing resume ids locally
+    private static long currentResumeId = 100;
+
     private static String fs = File.separator;
     private static String PROJECT_PATH = new File(".").getPath();
     private static String RESOURCE_FILE = new Formatter(new StringBuilder(), Locale.CANADA)
@@ -138,5 +141,9 @@ public class DataManager {
 
     public void addReview(Long resId, String date, int rating) {
         // To be implemented...
+    }
+
+    public static long getNextResumeId() {
+        return currentResumeId++;
     }
 }
