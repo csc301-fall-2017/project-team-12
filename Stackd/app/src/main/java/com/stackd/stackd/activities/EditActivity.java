@@ -23,6 +23,7 @@ import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,10 +40,12 @@ public class EditActivity extends AppCompatActivity {
     // Dummy Values
     private final long cId = 1;
     private final long rId = 21;
-    private DataManager dataManager = DataManager.getDataManager(cId, rId);
+    private DataManager dataManager;
     private AlertDialog alertBox = null;
     private RelativeLayout drawLayout;
     private List<Tag> resumeTags;
+
+    private Uri imgUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +53,15 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         setUpAlertBox(this);
 
+        dataManager = DataManager.getDataManager(cId, rId, getApplicationContext());
         // Fields needed from other screens
         Bundle extras = getIntent().getExtras();
         String strUri = extras.getString(IMAGE_URI_KEY);
-        Uri uri;
-        // set picture to the picture of the current resume
+        // set resume view to the picture of the current resume
         ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
         if(strUri != null) {
-            uri = Uri.parse(extras.getString(IMAGE_URI_KEY));
-            resumeView.setImageURI(uri);
-        }
-        else {
-            uri = Uri.parse("");
-            resumeView.setImageResource(extras.getInt(IMAGE_R_KEY));
+            imgUri = Uri.parse(strUri);
+            resumeView.setImageURI(imgUri);
         }
         long resumeId = extras.getLong(StackActivity.RESUME_ID_KEY);
         if(resumeId == StackActivity.RESUME_ID_NEW) {
@@ -70,7 +69,6 @@ public class EditActivity extends AppCompatActivity {
             resume = new Resume.Builder()
                     .id(DataManager.getNextResumeId())
                     .rid(dataManager.getRecruiter().getRecId())
-                    .url(uri.toString())
                     .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
                     .candidateName("Candidate 1").build();
             resumeTags = new ArrayList<>();
@@ -154,6 +152,10 @@ public class EditActivity extends AppCompatActivity {
         String comments = commentField.getText().toString();
         resume.setRecruiterComments(commentField.getText().toString());
         resume.setTagList(resumeTags);
+
+        // upload the resume to the S3 bucket
+        File newResumeImg = new File(imgUri.getPath());
+        dataManager.uploadFile(resume.getCandidateName(), newResumeImg);
         alertBox.show();
     }
 
