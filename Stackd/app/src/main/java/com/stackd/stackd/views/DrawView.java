@@ -18,7 +18,7 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 
 // Source: https://stackoverflow.com/questions/36812567/android-draw-text-on-imageview-with-finger-touch
-public class DrawViewTest extends android.support.v7.widget.AppCompatImageView {
+public class DrawView extends android.support.v7.widget.AppCompatImageView {
 
     private int color = Color.GREEN;
     private float width = 20f;
@@ -41,17 +41,17 @@ public class DrawViewTest extends android.support.v7.widget.AppCompatImageView {
         }
     }
 
-    public DrawViewTest(Context context) {
+    public DrawView(Context context) {
         super(context);
         init();
     }
 
-    public DrawViewTest(Context context, AttributeSet attrs) {
+    public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public DrawViewTest(Context context, AttributeSet attrs, int defStyle) {
+    public DrawView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
