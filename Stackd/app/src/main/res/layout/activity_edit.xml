@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toTopOf="@id/review_layout"
         app:layout_constraintVertical_weight="7">
 
-        <ImageView
+        <com.stackd.stackd.views.DrawViewTest
             android:id="@+id/current_resume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
