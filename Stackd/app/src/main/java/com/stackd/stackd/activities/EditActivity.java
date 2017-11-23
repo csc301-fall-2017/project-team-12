@@ -39,9 +39,11 @@ public class EditActivity extends AppCompatActivity {
     private final long rId = 21;
     private DataManager dataManager = DataManager.getDataManager(cId, rId);
     private AlertDialog alertBox = null;
-    private RelativeLayout drawLayout;
     private int currentId = 100;
     private List<Tag> resumeTags;
+
+    private ImageView resumeView;
+    private ImageView resumeViewShadow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +56,17 @@ public class EditActivity extends AppCompatActivity {
         String strUri = extras.getString(IMAGE_URI_KEY);
         Uri uri;
         // set picture to the picture of the current resume
-        ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
+        resumeView = (ImageView)findViewById(R.id.current_resume);
+        resumeViewShadow = (ImageView)findViewById(R.id.current_resume_shadow);
         if(strUri != null) {
             uri = Uri.parse(extras.getString(IMAGE_URI_KEY));
             resumeView.setImageURI(uri);
+            resumeViewShadow.setImageURI(uri);
         }
         else {
             uri = Uri.parse("");
             resumeView.setImageResource(extras.getInt(IMAGE_R_KEY));
+            resumeViewShadow.setImageResource(extras.getInt(IMAGE_R_KEY));
         }
         long resumeId = extras.getLong(StackActivity.RESUME_ID_KEY);
         if(resumeId == StackActivity.RESUME_ID_NEW) {
@@ -95,9 +100,6 @@ public class EditActivity extends AppCompatActivity {
                 }
         }
 
-        // layout for highlighting
-        drawLayout = (RelativeLayout) this.findViewById(R.id.drawLayout);
-        drawLayout.setVisibility(RelativeLayout.GONE);
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
@@ -138,11 +140,10 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void onHighlightBtnClick(View v) {
-        if (drawLayout.getVisibility() == RelativeLayout.GONE) {
-            drawLayout.setVisibility(RelativeLayout.VISIBLE);
-        } else {
-            drawLayout.setVisibility(RelativeLayout.GONE);
-        }
+        if (resumeView.getVisibility() == ImageView.GONE) {
+            resumeView.setVisibility(ImageView.VISIBLE);
+        } else
+            resumeView.setVisibility(ImageView.GONE);
     }
 
     public void onDoneBtnClick(View v) {
