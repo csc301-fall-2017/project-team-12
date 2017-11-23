@@ -20,8 +20,8 @@ import android.widget.ImageView;
 // Source: https://stackoverflow.com/questions/36812567/android-draw-text-on-imageview-with-finger-touch
 public class DrawViewTest extends android.support.v7.widget.AppCompatImageView {
 
-    private int color = Color.parseColor("#0000FF");
-    private float width = 4f;
+    private int color = Color.GREEN;
+    private float width = 20f;
     private List<Holder> holderList = new ArrayList<Holder>();
 
     private class Holder {
@@ -37,6 +37,7 @@ public class DrawViewTest extends android.support.v7.widget.AppCompatImageView {
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeJoin(Paint.Join.ROUND);
             paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setAlpha(60);
         }
     }
 
