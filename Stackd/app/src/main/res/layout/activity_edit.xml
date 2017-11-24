@@ -19,33 +19,27 @@
         app:layout_constraintBottom_toTopOf="@id/review_layout"
         app:layout_constraintVertical_weight="7">
 
-        <ImageView
-            android:id="@+id/current_resume"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/resume_img_desc"
-            android:scaleType="fitStart"
-            android:src="@drawable/r1" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/current_resume_shadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitStart"
+                android:src="@drawable/r1"/>
+
+            <com.stackd.stackd.views.DrawView
+                android:id="@+id/current_resume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/resume_img_desc"
+                android:scaleType="fitStart"
+                android:src="@drawable/r1" />
+        </FrameLayout>
 
     </ScrollView>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/drawLayout"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity" >
-
-        <com.stackd.stackd.activities.DrawView
-            android:id="@+id/simpleDrawingView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
-
-    </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/review_layout"
