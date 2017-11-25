@@ -105,11 +105,10 @@ public class EditActivity extends AppCompatActivity {
         // layout for highlighting
         drawLayout = (RelativeLayout) this.findViewById(R.id.drawLayout);
         drawLayout.setVisibility(RelativeLayout.GONE);
+        // Add checkboxes dynamically
+        tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
 
-//        // Add checkboxes dynamically
-//        tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
-//
-//        // The company's tags
+        // The company's tags
 //        final List<Tag> tagList = dataManager.getCompanyTags();
 //        for (final Tag tag: tagList) {
 //            final CheckBox cb = new CheckBox(this);
@@ -219,13 +218,16 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0: resume.setRating(2);// yes
-                    case 1: resume.setRating(0);// no
-                    case 2: resume.setRating(1);// maybe
+                    case 0:
+                        resume.setRating(2);// yes
+                    case 1:
+                        resume.setRating(0);// no
+                    case 2:
+                        resume.setRating(1);// maybe
 
                 }
                 // Insert the resume into the database
-                assert(resume != null);
+                assert (resume != null);
                 dataManager.insertResume(resume);
                 // Review it and add a rating
                 dataManager.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());

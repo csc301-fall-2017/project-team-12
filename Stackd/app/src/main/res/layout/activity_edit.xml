@@ -34,7 +34,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity" >
+        tools:context=".MainActivity" />
 
         <com.stackd.stackd.activities.DrawView
             android:id="@+id/simpleDrawingView1"
@@ -44,8 +44,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true" />
-
-    </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/review_layout"
@@ -74,7 +72,7 @@
             </LinearLayout>
         </HorizontalScrollView>
 
-        
+
         <Button
             android:id="@+id/submit_resume"
             android:layout_width="88dp"

@@ -1,6 +1,14 @@
 {
     "logs": [
         {
+            "outputFile": "/home/sonata/2camview/project-team-12/Stackd/D:\\Android projects\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\res\\merged\\androidTest\\debug\\values_values.arsc.flat",
+            "map": []
+        },
+        {
+            "outputFile": "/home/sonata/2camview/project-team-12/Stackd/D:\\Users\\lana\\project-team-12\\Stackd\\D:\\Android projects\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\res\\merged\\androidTest\\debug\\values_values.arsc.flat",
+            "map": []
+        },
+        {
             "outputFile": "/home/sonata/2camview/project-team-12/Stackd/D:\\Users\\angeloaustria\\Desktop\\301\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\res\\merged\\androidTest\\debug\\values_values.arsc.flat",
             "map": []
         },
@@ -9,15 +17,11 @@
             "map": []
         },
         {
-            "outputFile": "/home/sonata/2camview/project-team-12/Stackd/D:\\Users\\lana\\project-team-12\\Stackd\\D:\\Android projects\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\res\\merged\\androidTest\\debug\\values_values.arsc.flat",
-            "map": []
-        },
-        {
-            "outputFile": "/home/sonata/2camview/project-team-12/Stackd/D:\\Android projects\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\res\\merged\\androidTest\\debug\\values_values.arsc.flat",
-            "map": []
-        },
-        {
             "outputFile": "/home/sonata/2camview/project-team-12/Stackd/D:\\Users\\lana\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\res\\merged\\androidTest\\debug\\values_values.arsc.flat",
+            "map": []
+        },
+        {
+            "outputFile": "/home/sonata/ugh/project-team-12/Stackd/openCVLibrary331/build/intermediates/res/merged/androidTest/debug/values_values.arsc.flat",
             "map": []
         }
     ]
