@@ -12,39 +12,34 @@
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/review_layout"
         app:layout_constraintVertical_weight="7">
 
-        <ImageView
-            android:id="@+id/current_resume"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/resume_img_desc"
-            android:scaleType="fitStart"
-            android:src="@drawable/r1" />
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/current_resume_shadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitStart"
+                android:src="@drawable/r1"/>
+
+            <com.stackd.stackd.views.DrawView
+                android:id="@+id/current_resume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/resume_img_desc"
+                android:scaleType="fitStart"
+                android:src="@drawable/r1" />
+        </FrameLayout>
 
     </ScrollView>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/drawLayout"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity" >
-
-        <com.stackd.stackd.activities.DrawView
-            android:id="@+id/simpleDrawingView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
-
-    </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/review_layout"
@@ -84,6 +79,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
                 android:text="@string/edit_done"
+                android:onClick="onDoneBtnClick"
                 android:textColor="@color/colorWhite"
                 android:background="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -118,6 +114,7 @@
         android:layout_marginRight="8dp"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="onHighlightBtnClick"
         app:elevation="7dp"
         app:srcCompat="@android:drawable/ic_menu_edit"
         app:layout_constraintEnd_toEndOf="parent"

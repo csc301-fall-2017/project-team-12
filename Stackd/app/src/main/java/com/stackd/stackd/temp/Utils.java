@@ -1,16 +1,5 @@
 package com.stackd.stackd.temp;
 
-import android.util.Log;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Formatter;
-import java.util.Locale;
-
 /**
  * Created by Tanveer on 2017-11-17.
  *

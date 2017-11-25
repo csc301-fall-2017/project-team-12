@@ -6,7 +6,7 @@
     android:padding="0dp"
     xmlns:andorid="http://schemas.android.com/tools">
 
-    <ImageView
+    <com.stackd.stackd.adapters.SquareImageView
         android:id="@+id/resume_img"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

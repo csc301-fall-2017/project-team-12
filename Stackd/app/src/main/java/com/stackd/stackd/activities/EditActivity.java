@@ -1,19 +1,15 @@
 package com.stackd.stackd.activities;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
-import android.app.AlertDialog;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,25 +20,30 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
-import java.io.File;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EditActivity extends AppCompatActivity {
-
-    LinearLayout tagListLayout;
-    ArrayList<CheckBox> checkBoxes;
-    Resume resume;
+    public static final String IMAGE_URI_KEY = "imageUri";
+    public static final String IMAGE_R_KEY = "rKey";
+    private LinearLayout tagListLayout;
+    private Map<CheckBox, Tag> checkBoxes = new HashMap<>();
+    private Resume resume;
     // Dummy Values
-    Long cId = new Long(1);
-    Long rId = new Long(21);
-    DataManager dataManager = DataManager.getDataManager(cId, rId);
-    AlertDialog alertBox = null;
-    final Resume.Builder resumeBuilder = new Resume.Builder();
+    private final long cId = 1;
+    private final long rId = 21;
+    private DataManager dataManager = DataManager.getDataManager(cId, rId);
+    private AlertDialog alertBox = null;
+    private int currentId = 100;
+    private List<Tag> resumeTags;
 
-    RelativeLayout drawLayout;
+    private ImageView resumeView;
+    private ImageView resumeViewShadow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,49 +52,60 @@ public class EditActivity extends AppCompatActivity {
         setUpAlertBox(this);
 
         // Fields needed from other screens
-        Uri uri=Uri.parse("R.drawable.resume_template");
-        int resId = R.drawable.resume_template;
+        Bundle extras = getIntent().getExtras();
+        String strUri = extras.getString(IMAGE_URI_KEY);
+        Uri uri;
+        // set picture to the picture of the current resume
+        resumeView = (ImageView)findViewById(R.id.current_resume);
+        resumeViewShadow = (ImageView)findViewById(R.id.current_resume_shadow);
+        if(strUri != null) {
+            uri = Uri.parse(extras.getString(IMAGE_URI_KEY));
+            resumeView.setImageURI(uri);
+            resumeViewShadow.setImageURI(uri);
+        }
+        else {
+            uri = Uri.parse("");
+            resumeView.setImageResource(extras.getInt(IMAGE_R_KEY));
+            resumeViewShadow.setImageResource(extras.getInt(IMAGE_R_KEY));
+        }
+        long resumeId = extras.getLong(StackActivity.RESUME_ID_KEY);
+        if(resumeId == StackActivity.RESUME_ID_NEW) {
+            // increment currentId, so that it is unique for every resume
+            currentId++;
 
-        drawLayout = (RelativeLayout) this.findViewById(R.id.drawLayout);
-        drawLayout.setVisibility(RelativeLayout.GONE);
-
-        ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
-        resumeView.setImageURI(resIdToUri(this, resId));
-
-        final String resume_url = uri.toString();
-        final String candidate_name = "";
-
-        File imgFile = new  File(resume_url);
-
-        if(imgFile.exists()){
-            System.out.print("Image exists\n \n \n ");
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-            ImageView resume_img = (ImageView) findViewById(R.id.current_resume);
-
-            resume_img.setImageBitmap(myBitmap);
-
+            // Initialize the new resume
+            resume = new Resume.Builder()
+                    .id(currentId)
+                    .rid(dataManager.getRecruiter().getRecId())
+                    .url(uri.toString())
+                    .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
+                    .candidateName("Candidate 1").build();
+            resumeTags = new ArrayList<>();
+        }
+        else {
+            // make a resume immutable, since it has already been reviewed
+            findViewById(R.id.submit_resume).setClickable(false);
+            EditText editText = ((EditText)findViewById(R.id.comment_field));
+            editText.setEnabled(false);
+            // load an existing resume
+            for(Resume r : dataManager.getResumes())
+                if(r.getId() == resumeId) {
+                    resume = r;
+                    editText.setText(resume.getRecruiterComments());
+                    if(resume.getTagList() != null)
+                        resumeTags = resume.getTagList();
+                    else
+                        resumeTags = new ArrayList<>();
+                    break;
+                }
         }
 
-
-        // Initialize the resume
-        resumeBuilder.id(new Long(1));
-        resumeBuilder.rid(dataManager.getRecruiter().getRecId());
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
 
         // The company's tags
         final List<Tag> tagList = dataManager.getCompanyTags();
-        /*final List<Tag> tagList = new ArrayList<>();
-        tagList.add(new Tag.Builder().id(1).name("java").build());
-        tagList.add(new Tag.Builder().id(2).name("Python").build());
-        tagList.add(new Tag.Builder().id(3).name("Intern").build());
-        tagList.add(new Tag.Builder().id(4).name("Full Time").build());*/
-
-        // The tags the resume contains
-        final List<Tag> resumeTags = new ArrayList<>();
-
         for (final Tag tag: tagList) {
             final CheckBox cb = new CheckBox(this);
             cb.setId(tagList.indexOf(tag));
@@ -104,38 +116,16 @@ public class EditActivity extends AppCompatActivity {
                     resumeTags.add(tag);
                 }
             });
+            if(resumeId != -1)
+                cb.setClickable(false);
+            //checkBoxes.put(cb, tag);
             tagListLayout.addView(cb);
         }
-
-        final EditText comment_field = (EditText) findViewById(R.id.comment_field);
-
-        // The DONE button, opens the rating dialog box and builds the resume
-        final Button submitButton = (Button) findViewById(R.id.submit_resume);
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Insert the resume
-                resumeBuilder.tagList(tagList);
-                resumeBuilder.url(resume_url);
-                resumeBuilder.recruiterComments(comment_field.getText().toString());
-                resumeBuilder.collectionDate(new SimpleDateFormat("DD-MM-YYYY").format(new Date()));
-                resumeBuilder.candidateName(candidate_name);
-
-                alertBox.show();
-            }
-        });
-
-        FloatingActionButton highlightButton = (FloatingActionButton) findViewById(R.id.highlightButton);
-        highlightButton.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (drawLayout.getVisibility() == RelativeLayout.GONE) {
-                    drawLayout.setVisibility(RelativeLayout.VISIBLE);
-                } else {
-                    drawLayout.setVisibility(RelativeLayout.GONE);
-                }
-            }
-
-        });
+        // mark checkboxes as selected, if a resume was already edited
+        /*if(resumeId != -1) {
+            for(CheckBox cb : checkBoxes)
+                if(resumeTags.contains(cb.getText().toString()))
+        }*/
     }
 
     /*
@@ -147,6 +137,22 @@ public class EditActivity extends AppCompatActivity {
                 context.getResources().getResourceTypeName(resId) + '/' +
                 context.getResources().getResourceEntryName(resId) );
 
+    }
+
+    public void onHighlightBtnClick(View v) {
+        if (resumeView.getVisibility() == ImageView.GONE) {
+            resumeView.setVisibility(ImageView.VISIBLE);
+        } else
+            resumeView.setVisibility(ImageView.GONE);
+    }
+
+    public void onDoneBtnClick(View v) {
+        // add comments and selected tags to the resume
+        final EditText commentField = (EditText) findViewById(R.id.comment_field);
+        String comments = commentField.getText().toString();
+        resume.setRecruiterComments(commentField.getText().toString());
+        resume.setTagList(resumeTags);
+        alertBox.show();
     }
 
     public void setUpAlertBox(Context context) {
@@ -166,13 +172,13 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0: resumeBuilder.rating(2);// yes
-                    case 1: resumeBuilder.rating(0);// no
-                    case 2: resumeBuilder.rating(1);// maybe
+                    case 0: resume.setRating(2);// yes
+                    case 1: resume.setRating(0);// no
+                    case 2: resume.setRating(1);// maybe
 
                 }
                 // Insert the resume into the database
-                Resume resume = resumeBuilder.build();
+                assert(resume != null);
                 dataManager.insertResume(resume);
                 // Review it and add a rating
                 dataManager.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());
@@ -183,7 +189,6 @@ public class EditActivity extends AppCompatActivity {
             }
         });
         alertBox = alertBuilder.create();
-
     }
 
 }

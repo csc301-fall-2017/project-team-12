@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stackd.stackd.R;
+import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 
@@ -27,56 +29,41 @@ import java.util.Set;
  */
 public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
-    private ArrayList<Resume> resumes = new ArrayList<>();
-    private ArrayList<Resume> filteredResumes;
-
-    private Set<String> constraints = new HashSet<String>();
+    private List<Resume> resumes;
+    private List<Resume> filteredResumes;
+    private List<Tag> tags; // the set of all company tags
+    private Set<String> activeTagNames = new HashSet<>(); // the set of active tag names
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
-        long rid = 0;
-        Resume r = new Resume();
-        r.setRid(rid);
-        r.setCandidateName("John Smith");
-
-        // test resumes with python tag and c tag
-        List<Tag> tags = new ArrayList<Tag>();
-        tags.add(new Tag.Builder().id(1).name("python").build());
-        tags.add(new Tag.Builder().id(3).name("python").build());
-
-        Resume r2 = new Resume();
-        r2.setRid(rid + 1);
-        r2.setCandidateName("Angelo Austria");
-        r2.setTagList(tags);
-
-        List<Tag> tags2 = new ArrayList<Tag>();
-        tags2.add(new Tag.Builder().id(2).name("c").build());
-        Resume r3 = new Resume();
-        r3.setRid(rid + 2);
-        r3.setCandidateName("Dmitry Ten");
-        r3.setTagList(tags2);
-
-        for(int i=0; i < 2; i++)
-            resumes.add(r);
-        resumes.add(r2);
-        resumes.add(r3);
+        // Dummy Values
+        long cId = 1;
+        long rId = 21;
+        // get data manager and get all data required for this activity (resumes and tags)
+        DataManager manager = DataManager.getDataManager(cId, rId);
+        resumes = manager.getResumes();
+        tags = manager.getCompanyTags();
         filteredResumes = new ArrayList<>(resumes);
     }
 
-    public Set<String> getContraints() {
-        return this.constraints;
+    public String getImageURL(int position) {
+        return resumes.get(position).getUrl();
+    }
+    public List<Tag> getTags() { return this.tags; }
+    public Set<String> getActiveTagNames() {
+        return this.activeTagNames;
     }
 
-    public void setConstraints(Set<String> constraints) {
-        this.constraints = constraints;
+    public void setActiveTagNames(Set<String> activeTagNames) {
+        this.activeTagNames = activeTagNames;
     }
 
     public void addConstraint(String constraint) {
-        this.constraints.add(constraint.toLowerCase());
+        this.activeTagNames.add(constraint.toLowerCase());
     }
 
     public void removeConstraint(String constraint) {
-        this.constraints.remove(constraint.toLowerCase());
+        this.activeTagNames.remove(constraint.toLowerCase());
     }
 
     public int getCount() {
@@ -84,7 +71,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     }
 
     public Object getItem(int position) {
-        return null;
+        return filteredResumes.get(position);
     }
 
     public long getItemId(int position) {
@@ -112,9 +99,22 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         }
 
         holder.resumeTitle.setText(filteredResumes.get(position).getCandidateName());
-        holder.resumeImg.setImageBitmap(
-                decodeSampledBitmapFromResource(mContext.getResources(), R.drawable.resume_template, 100, 100));
+        Resume resume = filteredResumes.get(position);
+        if(resume.getUrl() != null && resume.getUrl().length() > 0) {
+            holder.resumeImg.setImageURI(Uri.parse(resume.getUrl()));
+        }
+        else {
+            holder.resumeImg.setImageResource(getDummyResourceId(position));
+            //holder.resumeImg.setImageBitmap(
+            //        decodeSampledBitmapFromResource(mContext.getResources(), resourceID, 100, 100));
+        }
         return convertView;
+    }
+
+    public int getDummyResourceId(int position) {
+        String resourceString = "r" + Integer.toString(position % 8 + 1);
+        return mContext.getResources().getIdentifier(resourceString,
+                "drawable", mContext.getPackageName());
     }
 
     @Override
@@ -172,12 +172,13 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private class ResumeFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+
             FilterResults results = new FilterResults();
             filteredResumes = new ArrayList<>(resumes);
             // Filter candidates by tag
-            if (constraint == null && constraints.size() > 0) {
+            if (constraint == null && activeTagNames.size() > 0) {
                 filteredResumes.clear();
-                for (String c: constraints) {
+                for (String c: activeTagNames) {
                     for (int i = 0; i < resumes.size(); i++) {
                         List<String> tags = new ArrayList<String>();
                         if (resumes.get(i).getTagList() != null) {
@@ -201,7 +202,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                 ArrayList<Resume> filteredResumesCopy = new ArrayList<>(filteredResumes);
                 filteredResumes.clear();
                 // No tags and empty search query means we must be able to view all candidates
-                if (constraint == null && constraints.size() == 0) {
+                if (constraint == null && activeTagNames.size() == 0) {
                     results.values = resumes;
                     results.count = resumes.size();
                     filteredResumes = new ArrayList<>(resumes);

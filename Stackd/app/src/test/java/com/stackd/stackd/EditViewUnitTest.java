@@ -22,18 +22,16 @@ import static org.junit.Assert.*;
  */
 public class EditViewUnitTest {
     //
-    private DataManager dm = DataManager.getDataManager(Long.valueOf(1), Long.valueOf(21));
 
     @Test
     public void BuildResumeTest() throws Exception {
-
+        DataManager dm = DataManager.getDataManager(Long.valueOf(1), Long.valueOf(21));
         List<Resume> originalResumes = dm.getResumes();
 //        Resume newResume = new Resume.Builder()
 //                .id(new Long(1))
 //                .rid(dm.getRecruiter().getRecId())
 //                .tagList(dm.getCompanyTags())
 //                .url("http://localhost:8080/Desktop/Resumes/10.pdf")
-//                .recruiterComments("Great fit.")
 //                .collectionDate(new SimpleDateFormat("DD-MM-YYYY").toString())
 //                .candidateName("Ali May")
 //                .build();
