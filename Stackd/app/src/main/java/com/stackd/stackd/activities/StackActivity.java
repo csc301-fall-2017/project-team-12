@@ -32,9 +32,12 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
+import com.stackd.stackd.helpers.CsvWriter;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+
 
 
 public class StackActivity extends AppCompatActivity {
@@ -54,7 +57,6 @@ public class StackActivity extends AppCompatActivity {
         GridView gridview = (GridView) findViewById(R.id.gridview);
         adapter = new ResumeImageAdapter(this);
         gridview.setAdapter(adapter);
-
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -168,6 +170,13 @@ public class StackActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.mybutton) {
+            // Write to csv file
+            try {
+                System.out.print("\n \n Print CSV \n \n ");
+                CsvWriter csv = new CsvWriter();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
             // dummy alert box, should export all resumes to cvs file
             AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
             alertBox.setMessage("Are you sure you want to export resumes?");
@@ -175,7 +184,6 @@ public class StackActivity extends AppCompatActivity {
             alertBox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
                 }
             });
             alertBox.setNegativeButton("No", new DialogInterface.OnClickListener() {
