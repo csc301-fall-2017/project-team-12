@@ -32,10 +32,14 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
-import com.stackd.stackd.helpers.CsvWriter;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.LinkedHashMap;
 
 
@@ -171,12 +175,8 @@ public class StackActivity extends AppCompatActivity {
 
         if (id == R.id.mybutton) {
             // Write to csv file
-            try {
-                System.out.print("\n \n Print CSV \n \n ");
-                CsvWriter csv = new CsvWriter();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            System.out.print("\n \n Print CSV \n \n ");
+
             // dummy alert box, should export all resumes to cvs file
             AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
             alertBox.setMessage("Are you sure you want to export resumes?");
@@ -184,6 +184,7 @@ public class StackActivity extends AppCompatActivity {
             alertBox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    writeToCsv();
                 }
             });
             alertBox.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -265,6 +266,69 @@ public class StackActivity extends AppCompatActivity {
         for(Tag tag : adapter.getTags()) {
             activeTags.put(tag.getName(), false);
         }
+    }
+
+    /* Called when we want to export the resumes to a CSV file
+     *
+     */
+    private void writeToCsv() {
+        File file = new File(getApplicationContext().getFilesDir(), "export_test.csv");
+        PrintWriter pw = null;
+
+        String line = "";
+        String cvsSplitBy = ",";
+        String rowSplitBy = "\n";
+
+        try {
+            pw = new PrintWriter(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Name\t\t");
+        sb.append(cvsSplitBy);
+        sb.append("Date\t\t");
+        sb.append(cvsSplitBy);
+        sb.append("URL\t\t");
+        sb.append(cvsSplitBy);
+        sb.append("Tags\t\t");
+        sb.append(rowSplitBy);
+        List<Resume> resumes = adapter.getFilteredResumes();
+        for (Resume r : resumes) {
+            sb.append(r.getCandidateName());
+            sb.append(cvsSplitBy);
+            sb.append(r.getCollectionDate());
+            sb.append(cvsSplitBy);
+            sb.append(r.getUrl());
+            sb.append(cvsSplitBy);
+            sb.append(r.getTagList());
+            sb.append(rowSplitBy);
+        }
+
+        pw.write(sb.toString());
+        pw.close();
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            while ((line = br.readLine()) != null) {
+                String[] rList = line.split(cvsSplitBy);
+                for (String s : rList) {
+                    System.out.print(s + "\t\t");
+                }
+                System.out.print("\n");
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
 

@@ -229,4 +229,12 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             notifyDataSetChanged();
         }
     }
+
+    /**
+     * Return a list of filtered resumes for the export
+     * @return
+     */
+    public List<Resume> getFilteredResumes(){
+        return this.filteredResumes;
+    }
 }
