@@ -36,8 +36,11 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private Set<String> activeTagNames = new HashSet<>(); // the set of active tag names
     private DataManager manager;
     private static final int NUM_DUMMY_RESUMES = 4;
-    private String [] dummyResumeFilenames = {"r1.jpg", "r2.png", "r3.jpg", "r4.png"};
+    private String[] dummyResumeFilenames = {"r1.jpg", "r2.png", "r3.jpg", "r4.png"};
     private List<File> dummyResumeFiles = new ArrayList<>();
+    private int pos = 0;
+    private int activeRatingConstraint = -1;
+
     public ResumeImageAdapter(Context c) {
         mContext = c;
         // Dummy Values
@@ -52,12 +55,19 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         downloadDummyResumeImages();
     }
 
-    public String getImageURL(int position) {
+    public String getImagePath(int position) {
         return dummyResumeFiles.get(position).getPath();
         //return resumes.get(position).getUrl();
     }
 
-    public List<Tag> getTags() { return this.tags; }
+    public void setRatingConstraint(int rating) {
+        activeRatingConstraint = rating;
+    }
+
+    public List<Tag> getTags() {
+        return this.tags;
+    }
+
     public Set<String> getActiveTagNames() {
         return this.activeTagNames;
     }
@@ -86,14 +96,6 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         return 0;
     }
 
-    public void filterByRating(int rating) {
-        for(Resume resume : filteredResumes) {
-            if(resume.getRating() != rating)
-                filteredResumes.remove(resume);
-        }
-        notifyDataSetChanged();
-    }
-
     // return a view for the item at the position given.
     // Returns a view containing an ImageView and TextvView. ImageView is the picture of the resume
     // TextView is the title of the resume.
@@ -111,20 +113,18 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             holder.resumeImg = (ImageView) convertView.findViewById(R.id.resume_img);
             convertView.setTag(holder);
         } else {
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.resumeTitle.setText(filteredResumes.get(position).getCandidateName());
         Resume resume = filteredResumes.get(position);
-        if(resume.getUrl() != null && resume.getUrl().length() > 0) {
+        if (resume.getUrl() != null && resume.getUrl().length() > 0) {
             holder.resumeImg.setImageURI(Uri.parse(resume.getUrl()));
-        }
-        else {
+        } else {
             // if no url, use dummy resume images from S3 bucket
-            int idx = position % NUM_DUMMY_RESUMES;
-            if(dummyResumeFiles.size() > idx && dummyResumeFiles.get(idx) != null)
-                holder.resumeImg.setImageBitmap(decodeSampledBitmapFromFile(
-                        dummyResumeFiles.get(idx), 500, 500));
+            File resumeImg = new File(filteredResumes.get(position).getUrl());
+            holder.resumeImg.setImageBitmap(decodeSampledBitmapFromFile(
+                    resumeImg, 500, 500));
         }
         return convertView;
     }
@@ -186,10 +186,20 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
 
             FilterResults results = new FilterResults();
             filteredResumes = new ArrayList<>(resumes);
-            // Filter candidates by tag
-            if (constraint == null && activeTagNames.size() > 0) {
+            // Filter candidates by rating
+            if(constraint == null && activeRatingConstraint != -1) {
                 filteredResumes.clear();
-                for (String c: activeTagNames) {
+                for(Resume r: resumes)
+                    if(r.getRating() == activeRatingConstraint)
+                        filteredResumes.add(r);
+                results.values = filteredResumes;
+                results.count = filteredResumes.size();
+                return results;
+            }
+            // Filter candidates by tag
+            else if (constraint == null && activeTagNames.size() > 0) {
+                filteredResumes.clear();
+                for (String c : activeTagNames) {
                     for (int i = 0; i < resumes.size(); i++) {
                         List<String> tags = new ArrayList<>();
                         if (resumes.get(i).getTagList() != null) {
@@ -224,7 +234,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                 for (int i = 0; i < filteredResumesCopy.size(); i++) {
                     // put resumes into the adapter whose candidate's name starts with the query
                     String name = filteredResumesCopy.get(i).getCandidateName().toLowerCase();
-                    if(name.startsWith(strConstraint)) {
+                    if (name.startsWith(strConstraint)) {
                         filteredResumes.add(filteredResumesCopy.get(i));
                     }
                 }
@@ -246,12 +256,14 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
      * Tells the adapter to refresh when a file is possibly downloaded
      */
     private void downloadDummyResumeImages() {
-        for(int i=0; i < NUM_DUMMY_RESUMES; i++) {
+        for (int i = 0; i < NUM_DUMMY_RESUMES; i++) {
             manager.downloadFile(dummyResumeFilenames[i], new Consumer<File>() {
                 @Override
                 public void accept(File file) {
-                    if(!dummyResumeFiles.contains(file)) {
+                    if (!dummyResumeFiles.contains(file)) {
                         dummyResumeFiles.add(file);
+                        resumes.get(pos).setUrl(dummyResumeFiles.get(pos % NUM_DUMMY_RESUMES).getPath());
+                        pos++;
                     }
                     notifyDataSetChanged();
                 }

@@ -43,7 +43,8 @@ public class StackActivity extends AppCompatActivity {
     private ResumeImageAdapter adapter;
     private int REQUEST_CODE = 99;
     private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<>();
-  
+    private int activeRatingConstraint = -1; // no rating constraint selected
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +62,9 @@ public class StackActivity extends AppCompatActivity {
                                     int position, long id) {
                 // dummy result, should open the review activity for the given resume
                 Intent i = new Intent(StackActivity.this, EditActivity.class);
-                String imgURL = adapter.getImageURL(position);
-                if(imgURL != null && imgURL.length() > 0)
-                    i.putExtra(EditActivity.IMAGE_URI_KEY, imgURL);
+                String imgPath = adapter.getImagePath(position);
+                if (imgPath != null && imgPath.length() > 0)
+                    i.putExtra(EditActivity.IMAGE_URI_KEY, imgPath);
                 long resumeId = ((Resume) adapter.getItem(position)).getId();
                 i.putExtra(RESUME_ID_KEY, resumeId);
                 startActivity(i);
@@ -72,8 +73,8 @@ public class StackActivity extends AppCompatActivity {
 
         populateTagsList();
         // for each tag in a tag list, add a button to the tag bar.
-        LinearLayout tagsList = (LinearLayout)findViewById(R.id.tag_list);
-        for(String strTag : activeTags.keySet()) {
+        LinearLayout tagsList = (LinearLayout) findViewById(R.id.tag_list);
+        for (String strTag : activeTags.keySet()) {
             final Button btn = new Button(getApplicationContext());
             int backgroundColor =
                     ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
@@ -94,8 +95,7 @@ public class StackActivity extends AppCompatActivity {
                         activeTags.put(btn.getText().toString(), false);
                         adapter.removeConstraint(btn.getText().toString());
                         adapter.getFilter().filter(null);
-                    }
-                    else {
+                    } else {
                         // unset the tag, show resumes even without this tag
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
@@ -138,10 +138,9 @@ public class StackActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // reset all filters, if an empty query is passed
-                if(query.equals("")){
+                if (query.equals("")) {
                     adapter.getFilter().filter(null);
-                }
-                else{
+                } else {
                     adapter.getFilter().filter(query);
                 }
                 return true;
@@ -149,7 +148,7 @@ public class StackActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.equals("")) {
+                if (newText.equals("")) {
                     onQueryTextSubmit("");
                 }
                 return true;
@@ -202,29 +201,29 @@ public class StackActivity extends AppCompatActivity {
     }
 
     /**
-     *  Called when the camera button is clicked. Should open a camera activity.
+     * Called when the camera button is clicked. Should open a camera activity.
+     *
      * @param v the button that was clicked.
      */
-    public void onCameraBtnClick(View v){
+    public void onCameraBtnClick(View v) {
         // request camera permissions
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED){
+                == PackageManager.PERMISSION_GRANTED) {
             int preference = ScanConstants.OPEN_CAMERA;
             Intent intent = new Intent(this, ScanActivity.class);
 
             intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
             startActivityForResult(intent, REQUEST_CODE);
-        } else {
-            // TODO handle case where permissions are denied
         }
     }
 
     /**
-     *  Called when camera finishes scanning. Should launch edit activity with scanned fragment.
+     * Called when camera finishes scanning. Should launch edit activity with scanned fragment.
+     *
      * @param requestCode correct permission code.
-     * @param resultCode ensures correct activity result.
-     * @param data instance of scanning intent after taking a picture.
+     * @param resultCode  ensures correct activity result.
+     * @param data        instance of scanning intent after taking a picture.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -237,7 +236,7 @@ public class StackActivity extends AppCompatActivity {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
                 Intent i = new Intent(StackActivity.this, EditActivity.class);
-                i.putExtra(EditActivity.IMAGE_URI_KEY, uri.toString());
+                i.putExtra(EditActivity.IMAGE_URI_KEY, uri.getPath());
                 i.putExtra(RESUME_ID_KEY, RESUME_ID_NEW);
                 startActivity(i);
 
@@ -249,21 +248,71 @@ public class StackActivity extends AppCompatActivity {
 
 
     private void populateTagsList() {
-        for(Tag tag : adapter.getTags()) {
+        for (Tag tag : adapter.getTags()) {
             activeTags.put(tag.getName(), false);
         }
     }
 
     public void filterByRating(View v) {
-        if(findViewById(R.id.yes_button) == v) {
-            adapter.filterByRating(2);
+        Button yesBtn = (Button) findViewById(R.id.yes_button);
+        Button maybeBtn = (Button) findViewById(R.id.maybe_button);
+        Button noBtn = (Button) findViewById(R.id.no_button);
+        Button activeBtn = null;
+        Button inactiveBtn1 = null, inactiveBtn2 = null;
+        if (yesBtn == v) {
+            if (activeRatingConstraint != 2) {
+                activeRatingConstraint = 2;
+                activeBtn = yesBtn;
+                inactiveBtn1 = noBtn;
+                inactiveBtn2 = maybeBtn;
+            } else {
+                activeRatingConstraint = -1;
+            }
+
+        } else if (noBtn == v) {
+            if (activeRatingConstraint != 0) {
+                activeRatingConstraint = 0;
+                activeBtn = noBtn;
+                inactiveBtn1 = yesBtn;
+                inactiveBtn2 = maybeBtn;
+            } else {
+                activeRatingConstraint = -1;
+            }
+
+        } else if (maybeBtn == v) {
+            if (activeRatingConstraint != 1) {
+                activeRatingConstraint = 1;
+                activeBtn = maybeBtn;
+                inactiveBtn1 = noBtn;
+                inactiveBtn2 = yesBtn;
+            } else {
+                activeRatingConstraint = -1;
+            }
         }
-        else if(findViewById(R.id.no_button) == v) {
-            adapter.filterByRating(0);
+        if(activeRatingConstraint != -1) {
+            int activeColor =
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorWhite);
+            int inactiveColor =
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorGrey);
+            int textColor = ContextCompat.getColor(getApplicationContext(), R.color.colorBlack);
+            activeBtn.getBackground().setColorFilter(activeColor, PorterDuff.Mode.MULTIPLY);
+            activeBtn.setTextColor(textColor);
+            inactiveBtn1.getBackground().setColorFilter(inactiveColor, PorterDuff.Mode.MULTIPLY);
+            inactiveBtn2.getBackground().setColorFilter(inactiveColor, PorterDuff.Mode.MULTIPLY);
         }
         else {
-            adapter.filterByRating(1);
+            int standardColor =
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
+            int textColor = ContextCompat.getColor(getApplicationContext(), R.color.colorWhite);
+            yesBtn.getBackground().setColorFilter(standardColor, PorterDuff.Mode.MULTIPLY);
+            maybeBtn.getBackground().setColorFilter(standardColor, PorterDuff.Mode.MULTIPLY);
+            noBtn.getBackground().setColorFilter(standardColor, PorterDuff.Mode.MULTIPLY);
+            yesBtn.setTextColor(textColor);
+            maybeBtn.setTextColor(textColor);
+            noBtn.setTextColor(textColor);
         }
+        adapter.setRatingConstraint(activeRatingConstraint);
+        adapter.getFilter().filter(null);
     }
 }
 
