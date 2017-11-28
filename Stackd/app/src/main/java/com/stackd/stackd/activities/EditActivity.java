@@ -25,22 +25,17 @@ import com.stackd.stackd.db.entities.Tag;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class EditActivity extends AppCompatActivity {
     public static final String IMAGE_URI_KEY = "imageUri";
-    public static final String IMAGE_R_KEY = "rKey";
     private LinearLayout tagListLayout;
-    private Map<CheckBox, Tag> checkBoxes = new HashMap<>();
     private Resume resume;
     // Dummy Values
     private final long cId = 1;
     private final long rId = 21;
     private DataManager dataManager;
     private AlertDialog alertBox = null;
-    private int currentId = 100;
     private List<Tag> resumeTags;
 
     private ImageView resumeView;
@@ -65,23 +60,15 @@ public class EditActivity extends AppCompatActivity {
             resumeView.setImageURI(uri);
             resumeViewShadow.setImageURI(uri);
         }
-        else {
-            uri = Uri.parse("");
-            resumeView.setImageResource(extras.getInt(IMAGE_R_KEY));
-            resumeViewShadow.setImageResource(extras.getInt(IMAGE_R_KEY));
-        }
+
         long resumeId = extras.getLong(StackActivity.RESUME_ID_KEY);
         if(resumeId == StackActivity.RESUME_ID_NEW) {
-            // increment currentId, so that it is unique for every resume
-            currentId++;
-
             // Initialize the new resume
             resume = new Resume.Builder()
-                    .id(currentId)
+                    .id(DataManager.getNextResumeId())
                     .rid(dataManager.getRecruiter().getRecId())
-                    .url(uri.toString())
                     .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
-                    .candidateName("Candidate 1").build();
+                    .build();
             resumeTags = new ArrayList<>();
         }
         else {
@@ -195,6 +182,10 @@ public class EditActivity extends AppCompatActivity {
             }
         });
         alertBox = alertBuilder.create();
+    }
+
+    private String generateResumeKey(Resume resume) {
+        return Long.toString(resume.getId()) + resume.getCandidateName();
     }
 
 }

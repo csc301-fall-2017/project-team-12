@@ -236,7 +236,7 @@ public class StackActivity extends AppCompatActivity {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
                 Intent i = new Intent(StackActivity.this, EditActivity.class);
-                i.putExtra(EditActivity.IMAGE_URI_KEY, uri.getPath());
+                i.putExtra(EditActivity.IMAGE_URI_KEY, uri);
                 i.putExtra(RESUME_ID_KEY, RESUME_ID_NEW);
                 startActivity(i);
 
