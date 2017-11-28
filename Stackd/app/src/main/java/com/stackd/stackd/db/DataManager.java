@@ -1,9 +1,22 @@
 package com.stackd.stackd.db;
 
+import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
+
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.stackd.stackd.db.entities.Company;
 import com.stackd.stackd.db.entities.Recruiter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
+import com.stackd.stackd.helpers.Consumer;
 import com.stackd.stackd.helpers.ResponseParser;
 import com.stackd.stackd.temp.Utils;
 
@@ -28,9 +41,15 @@ import java.util.Locale;
  */
 
 public class DataManager {
+    // transfer utility for S3
+    private static final String BUCKET_NAME = "stackd-files";
+    private TransferUtility transferUtility;
     private static DataManager dataManager = null;
     private Company company;
     private Recruiter recruiter;
+
+    // a variable for producing resume ids locally
+    private static long currentResumeId = 100;
 
     private static String fs = File.separator;
     private static String PROJECT_PATH = new File(".").getPath();
@@ -64,14 +83,24 @@ public class DataManager {
             RESOURCE_FILE);
 
 
-    private DataManager(Long companyID, Long recruiterId) {
+    private DataManager(Long companyID, Long recruiterId, Context appContext) {
         this.company = getCompany(Long.valueOf(1));
         this.recruiter = getRecruiter(Long.valueOf(21));
+
+        // Initialize the Amazon Cognito credentials provider
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                appContext,
+                "us-east-1:5a4ae675-8187-4d70-8a69-c0c7eb1c7722", // Identity pool ID
+                Regions.US_EAST_1 // Region
+        );
+        // Create an S3 client
+        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+        transferUtility = new TransferUtility(s3, appContext);
     }
 
-    public static DataManager getDataManager(Long companyId, Long recruiterId) {
+    public static DataManager getDataManager(Long companyId, Long recruiterId, Context appContext) {
         if (dataManager == null)
-            dataManager = new DataManager(companyId, recruiterId);
+            dataManager = new DataManager(companyId, recruiterId, appContext);
         return dataManager;
     }
 
@@ -138,5 +167,50 @@ public class DataManager {
 
     public void addReview(Long resId, String date, int rating) {
         // To be implemented...
+    }
+
+    public static long getNextResumeId() {
+        return currentResumeId++;
+    }
+
+    /**
+     * Downloads file from S3 bucket with the given key. On completion, notifies the consumer
+     * and passes the data in a file.
+     * @param key key of the file in S3 bucket
+     * @param consumer observer of the current download
+     */
+    public void downloadFile(String key, final Consumer<File> consumer) {
+        final File f = new File(Environment.getExternalStorageDirectory().toString() + "/" + key);
+        TransferObserver observer = transferUtility.download(DataManager.BUCKET_NAME, key, f);
+        observer.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                // when download is complete (or likely to be complete), notify the consumer and pass file to it
+                if(bytesTotal > 0 && bytesTotal - bytesCurrent == 0 && f.canRead()) {
+                    Log.d("S3", "Download complete/almost complete");
+                    consumer.accept(f);
+                }
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                Log.d("S3", "Error: " + ex.getLocalizedMessage());
+                consumer.accept(null);
+            }
+        });
+    }
+
+    /**
+     * Uploads a given file to S3 bucket, assigning it a provided key
+     * @param key a key that will identify the file
+     * @param newFile a file to be uploaded
+     */
+    public void uploadFile(String key, File newFile) {
+        transferUtility.upload(BUCKET_NAME, key, newFile);
     }
 }

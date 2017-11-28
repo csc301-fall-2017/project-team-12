@@ -1,7 +1,6 @@
 package com.stackd.stackd.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,7 +17,9 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
+import com.stackd.stackd.helpers.Consumer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,12 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private List<Resume> filteredResumes;
     private List<Tag> tags; // the set of all company tags
     private Set<String> activeTagNames = new HashSet<>(); // the set of active tag names
+    private DataManager manager;
+    private static final int NUM_DUMMY_RESUMES = 4;
+    private String[] dummyResumeFilenames = {"r1.jpg", "r2.png", "r3.jpg", "r4.png"};
+    private List<File> dummyResumeFiles = new ArrayList<>();
+    private int pos = 0;
+    private int activeRatingConstraint = -1;
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
@@ -40,16 +47,27 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         long cId = 1;
         long rId = 21;
         // get data manager and get all data required for this activity (resumes and tags)
-        DataManager manager = DataManager.getDataManager(cId, rId);
+        manager = DataManager.getDataManager(cId, rId, mContext.getApplicationContext());
         resumes = manager.getResumes();
         tags = manager.getCompanyTags();
         filteredResumes = new ArrayList<>(resumes);
+        // download dummy resume images for dummy resumes
+        downloadDummyResumeImages();
     }
 
-    public String getImageURL(int position) {
-        return resumes.get(position).getUrl();
+    public String getImagePath(int position) {
+        return dummyResumeFiles.get(position).getPath();
+        //return resumes.get(position).getUrl();
     }
-    public List<Tag> getTags() { return this.tags; }
+
+    public void setRatingConstraint(int rating) {
+        activeRatingConstraint = rating;
+    }
+
+    public List<Tag> getTags() {
+        return this.tags;
+    }
+
     public Set<String> getActiveTagNames() {
         return this.activeTagNames;
     }
@@ -95,26 +113,20 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             holder.resumeImg = (ImageView) convertView.findViewById(R.id.resume_img);
             convertView.setTag(holder);
         } else {
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.resumeTitle.setText(filteredResumes.get(position).getCandidateName());
         Resume resume = filteredResumes.get(position);
-        if(resume.getUrl() != null && resume.getUrl().length() > 0) {
+        if (resume.getUrl() != null && resume.getUrl().length() > 0) {
             holder.resumeImg.setImageURI(Uri.parse(resume.getUrl()));
-        }
-        else {
-            holder.resumeImg.setImageResource(getDummyResourceId(position));
-            //holder.resumeImg.setImageBitmap(
-            //        decodeSampledBitmapFromResource(mContext.getResources(), resourceID, 100, 100));
+        } else {
+            // if no url, use dummy resume images from S3 bucket
+            File resumeImg = new File(filteredResumes.get(position).getUrl());
+            holder.resumeImg.setImageBitmap(decodeSampledBitmapFromFile(
+                    resumeImg, 500, 500));
         }
         return convertView;
-    }
-
-    public int getDummyResourceId(int position) {
-        String resourceString = "r" + Integer.toString(position % 8 + 1);
-        return mContext.getResources().getIdentifier(resourceString,
-                "drawable", mContext.getPackageName());
     }
 
     @Override
@@ -145,20 +157,19 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         return inSampleSize;
     }
 
-    private static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+    private static Bitmap decodeSampledBitmapFromFile(File f, int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
+        BitmapFactory.decodeFile(f.getPath(), options);
 
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
+        return BitmapFactory.decodeFile(f.getPath(), options);
     }
 
     /**
@@ -175,12 +186,22 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
 
             FilterResults results = new FilterResults();
             filteredResumes = new ArrayList<>(resumes);
-            // Filter candidates by tag
-            if (constraint == null && activeTagNames.size() > 0) {
+            // Filter candidates by rating
+            if(constraint == null && activeRatingConstraint != -1) {
                 filteredResumes.clear();
-                for (String c: activeTagNames) {
+                for(Resume r: resumes)
+                    if(r.getRating() == activeRatingConstraint)
+                        filteredResumes.add(r);
+                results.values = filteredResumes;
+                results.count = filteredResumes.size();
+                return results;
+            }
+            // Filter candidates by tag
+            else if (constraint == null && activeTagNames.size() > 0) {
+                filteredResumes.clear();
+                for (String c : activeTagNames) {
                     for (int i = 0; i < resumes.size(); i++) {
-                        List<String> tags = new ArrayList<String>();
+                        List<String> tags = new ArrayList<>();
                         if (resumes.get(i).getTagList() != null) {
                             for (Tag t : resumes.get(i).getTagList()) {
                                 tags.add(t.getName().toLowerCase());
@@ -213,7 +234,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                 for (int i = 0; i < filteredResumesCopy.size(); i++) {
                     // put resumes into the adapter whose candidate's name starts with the query
                     String name = filteredResumesCopy.get(i).getCandidateName().toLowerCase();
-                    if(name.startsWith(strConstraint)) {
+                    if (name.startsWith(strConstraint)) {
                         filteredResumes.add(filteredResumesCopy.get(i));
                     }
                 }
@@ -227,6 +248,26 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // update GridView
             notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Downloads dummy resumes from S3 bucket and puts them into dummyResumeFiles list.
+     * Tells the adapter to refresh when a file is possibly downloaded
+     */
+    private void downloadDummyResumeImages() {
+        for (int i = 0; i < NUM_DUMMY_RESUMES; i++) {
+            manager.downloadFile(dummyResumeFilenames[i], new Consumer<File>() {
+                @Override
+                public void accept(File file) {
+                    if (!dummyResumeFiles.contains(file)) {
+                        dummyResumeFiles.add(file);
+                        resumes.get(pos).setUrl(dummyResumeFiles.get(pos % NUM_DUMMY_RESUMES).getPath());
+                        pos++;
+                    }
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 }
