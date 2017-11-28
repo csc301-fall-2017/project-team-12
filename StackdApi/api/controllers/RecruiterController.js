@@ -1,3 +1,5 @@
+'use strict';
+
 var Recruiter = mongoose.model('Recruiter');
 
 /* Get all the recruiters */
