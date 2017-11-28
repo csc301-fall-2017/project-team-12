@@ -8,11 +8,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,7 +21,6 @@ import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,17 +32,18 @@ public class EditActivity extends AppCompatActivity {
     public static final String IMAGE_URI_KEY = "imageUri";
     public static final String IMAGE_R_KEY = "rKey";
     private LinearLayout tagListLayout;
-    private Map<Tag, CheckBox> checkBoxes = new HashMap<>();
+    private Map<CheckBox, Tag> checkBoxes = new HashMap<>();
     private Resume resume;
     // Dummy Values
     private final long cId = 1;
     private final long rId = 21;
-    private DataManager dataManager;
+    private DataManager dataManager = DataManager.getDataManager(cId, rId);
     private AlertDialog alertBox = null;
-    private RelativeLayout drawLayout;
+    private int currentId = 100;
     private List<Tag> resumeTags;
 
-    private Uri imgUri;
+    private ImageView resumeView;
+    private ImageView resumeViewShadow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,38 +51,41 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         setUpAlertBox(this);
 
-        dataManager = DataManager.getDataManager(cId, rId, getApplicationContext());
         // Fields needed from other screens
         Bundle extras = getIntent().getExtras();
         String strUri = extras.getString(IMAGE_URI_KEY);
-        // set resume view to the picture of the current resume
-        ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
+        Uri uri;
+        // set picture to the picture of the current resume
+        resumeView = (ImageView)findViewById(R.id.current_resume);
+        resumeViewShadow = (ImageView)findViewById(R.id.current_resume_shadow);
         if(strUri != null) {
-            Log.d("URI", strUri);
-            imgUri = Uri.parse(strUri);
-            resumeView.setImageURI(imgUri);
+            uri = Uri.parse(extras.getString(IMAGE_URI_KEY));
+            resumeView.setImageURI(uri);
+            resumeViewShadow.setImageURI(uri);
+        }
+        else {
+            uri = Uri.parse("");
+            resumeView.setImageResource(extras.getInt(IMAGE_R_KEY));
+            resumeViewShadow.setImageResource(extras.getInt(IMAGE_R_KEY));
         }
         long resumeId = extras.getLong(StackActivity.RESUME_ID_KEY);
         if(resumeId == StackActivity.RESUME_ID_NEW) {
+            // increment currentId, so that it is unique for every resume
+            currentId++;
+
             // Initialize the new resume
             resume = new Resume.Builder()
-                    .id(DataManager.getNextResumeId())
+                    .id(currentId)
                     .rid(dataManager.getRecruiter().getRecId())
+                    .url(uri.toString())
                     .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
                     .candidateName("Candidate 1").build();
             resumeTags = new ArrayList<>();
         }
         else {
             // make a resume immutable, since it has already been reviewed
-            // make adjustments to UI design
-            Button btnDone = (Button) findViewById(R.id.submit_resume);
-            btnDone.setEnabled(false);
-            btnDone.setBackgroundColor(getResources().getColor(R.color.colorGrey));
-            FloatingActionButton hlButton = (FloatingActionButton) findViewById(R.id.highlightButton);
-            hlButton.setEnabled(false);
-            hlButton.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+            findViewById(R.id.submit_resume).setClickable(false);
             EditText editText = ((EditText)findViewById(R.id.comment_field));
-            editText.setTextColor(getResources().getColor(R.color.colorPrimary));
             editText.setEnabled(false);
             // load an existing resume
             for(Resume r : dataManager.getResumes())
@@ -99,10 +99,7 @@ public class EditActivity extends AppCompatActivity {
                     break;
                 }
         }
-        assert(resume != null);
-        // layout for highlighting
-        drawLayout = (RelativeLayout) this.findViewById(R.id.drawLayout);
-        drawLayout.setVisibility(RelativeLayout.GONE);
+
 
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
@@ -119,14 +116,16 @@ public class EditActivity extends AppCompatActivity {
                     resumeTags.add(tag);
                 }
             });
-            if(resumeId != -1) {
-                // make checkbox inactive and checked
-                cb.setEnabled(false);
-                if(resume.getTagList().contains(tag))
-                    cb.setChecked(true);
-            }
+            if(resumeId != -1)
+                cb.setClickable(false);
+            //checkBoxes.put(cb, tag);
             tagListLayout.addView(cb);
         }
+        // mark checkboxes as selected, if a resume was already edited
+        /*if(resumeId != -1) {
+            for(CheckBox cb : checkBoxes)
+                if(resumeTags.contains(cb.getText().toString()))
+        }*/
     }
 
     /*
@@ -141,11 +140,10 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void onHighlightBtnClick(View v) {
-        if (drawLayout.getVisibility() == RelativeLayout.GONE) {
-            drawLayout.setVisibility(RelativeLayout.VISIBLE);
-        } else {
-            drawLayout.setVisibility(RelativeLayout.GONE);
-        }
+        if (resumeView.getVisibility() == ImageView.GONE) {
+            resumeView.setVisibility(ImageView.VISIBLE);
+        } else
+            resumeView.setVisibility(ImageView.GONE);
     }
 
     public void onDoneBtnClick(View v) {
@@ -154,10 +152,6 @@ public class EditActivity extends AppCompatActivity {
         String comments = commentField.getText().toString();
         resume.setRecruiterComments(commentField.getText().toString());
         resume.setTagList(resumeTags);
-
-        // upload the resume to the S3 bucket
-        File newResumeImg = new File(imgUri.getPath());
-        dataManager.uploadFile(resume.getCandidateName(), newResumeImg);
         alertBox.show();
     }
 

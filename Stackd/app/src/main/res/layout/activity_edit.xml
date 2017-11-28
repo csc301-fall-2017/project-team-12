@@ -19,35 +19,27 @@
         app:layout_constraintBottom_toTopOf="@id/review_layout"
         app:layout_constraintVertical_weight="7">
 
-        <ImageView
-            android:id="@+id/current_resume"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/resume_img_desc"
-            android:scaleType="fitStart"
-            android:src="@drawable/r1" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/current_resume_shadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitStart"
+                android:src="@drawable/r1"/>
+
+            <com.stackd.stackd.views.DrawView
+                android:id="@+id/current_resume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/resume_img_desc"
+                android:scaleType="fitStart"
+                android:src="@drawable/r1" />
+        </FrameLayout>
 
     </ScrollView>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/drawLayout"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity" >
-
-        <com.stackd.stackd.activities.DrawView
-            android:id="@+id/simpleDrawingView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true" />
-
-    </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/review_layout"
@@ -60,41 +52,39 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_weight="3">
 
-        <ScrollView
-            android:id="@+id/tagListScrollContainer"
+        <LinearLayout
+            android:id="@+id/tagListLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="8dp"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintEnd_toStartOf="@id/comment_field"
             app:layout_constraintLeft_toLeftOf="@id/comment_field"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="1">
-            <LinearLayout
-                android:id="@+id/tagListLayout"
-                android:layout_width="match_parent"
+
+            <Button
+                android:id="@+id/submit_resume"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <Button
-                    android:id="@+id/submit_resume"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:text="@string/edit_done"
-                    android:onClick="onDoneBtnClick"
-                    android:textColor="@color/colorWhite"
-                    android:background="@color/colorAccent"/>
-            </LinearLayout>
-        </ScrollView>
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:text="@string/edit_done"
+                android:onClick="onDoneBtnClick"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
         <EditText
             android:id="@+id/comment_field"
             android:layout_width="0dp"
@@ -111,8 +101,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@id/tagListScrollContainer"
-            app:layout_constraintStart_toEndOf="@id/tagListScrollContainer" />
+            app:layout_constraintLeft_toRightOf="@id/tagListLayout"
+            app:layout_constraintStart_toEndOf="@id/tagListLayout" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
