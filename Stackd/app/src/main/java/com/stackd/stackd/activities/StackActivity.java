@@ -40,9 +40,8 @@ import java.util.LinkedHashMap;
 public class StackActivity extends AppCompatActivity {
     public static final String RESUME_ID_KEY = "resumeId";
     public static final long RESUME_ID_NEW = -1;
-    private static final int REQUEST_CAM = 0;
     private ResumeImageAdapter adapter;
-    int REQUEST_CODE = 99;
+    private int REQUEST_CODE = 99;
     private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<>();
   
     @Override
@@ -50,7 +49,8 @@ public class StackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stack);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        // initialize the grid view and its adapter
+
+        // initialize adapter and assign it to a resume grid
         GridView gridview = (GridView) findViewById(R.id.gridview);
         adapter = new ResumeImageAdapter(this);
         gridview.setAdapter(adapter);
@@ -64,9 +64,6 @@ public class StackActivity extends AppCompatActivity {
                 String imgURL = adapter.getImageURL(position);
                 if(imgURL != null && imgURL.length() > 0)
                     i.putExtra(EditActivity.IMAGE_URI_KEY, imgURL);
-                else {
-                    i.putExtra(EditActivity.IMAGE_R_KEY, adapter.getDummyResourceId(position));
-                }
                 long resumeId = ((Resume) adapter.getItem(position)).getId();
                 i.putExtra(RESUME_ID_KEY, resumeId);
                 startActivity(i);
@@ -113,7 +110,6 @@ public class StackActivity extends AppCompatActivity {
             });
             tagsList.addView(btn);
         }
-
     }
 
     // create an action bar button
@@ -141,6 +137,7 @@ public class StackActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                // reset all filters, if an empty query is passed
                 if(query.equals("")){
                     adapter.getFilter().filter(null);
                 }
@@ -209,9 +206,8 @@ public class StackActivity extends AppCompatActivity {
      * @param v the button that was clicked.
      */
     public void onCameraBtnClick(View v){
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
-       // ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODEE);
-
+        // request camera permissions
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CODE);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED){
             int preference = ScanConstants.OPEN_CAMERA;
@@ -222,7 +218,6 @@ public class StackActivity extends AppCompatActivity {
         } else {
             // TODO handle case where permissions are denied
         }
-
     }
 
     /**

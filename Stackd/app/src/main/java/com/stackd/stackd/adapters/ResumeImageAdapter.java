@@ -1,7 +1,6 @@
 package com.stackd.stackd.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,7 +17,9 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
+import com.stackd.stackd.helpers.Consumer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,22 +34,24 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private List<Resume> filteredResumes;
     private List<Tag> tags; // the set of all company tags
     private Set<String> activeTagNames = new HashSet<>(); // the set of active tag names
-
+    private DataManager manager;
+    private static final int NUM_DUMMY_RESUMES = 4;
+    private String [] dummyResumeFilenames = {"r1.jpg", "r2.png", "r3.jpg", "r4.png"};
+    private List<File> dummyResumeFiles = new ArrayList<>();
     public ResumeImageAdapter(Context c) {
         mContext = c;
         // Dummy Values
         long cId = 1;
         long rId = 21;
         // get data manager and get all data required for this activity (resumes and tags)
-        DataManager manager = DataManager.getDataManager(cId, rId);
+        manager = DataManager.getDataManager(cId, rId, mContext.getApplicationContext());
         resumes = manager.getResumes();
         tags = manager.getCompanyTags();
         filteredResumes = new ArrayList<>(resumes);
+        // download dummy resume images for dummy resumes
+        downloadDummyResumeImages();
     }
 
-    public String getImageURL(int position) {
-        return resumes.get(position).getUrl();
-    }
     public List<Tag> getTags() { return this.tags; }
     public Set<String> getActiveTagNames() {
         return this.activeTagNames;
@@ -104,17 +107,13 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             holder.resumeImg.setImageURI(Uri.parse(resume.getUrl()));
         }
         else {
-            holder.resumeImg.setImageResource(getDummyResourceId(position));
-            //holder.resumeImg.setImageBitmap(
-            //        decodeSampledBitmapFromResource(mContext.getResources(), resourceID, 100, 100));
+            // if no url, use dummy resume images from S3 bucket
+            int idx = position % NUM_DUMMY_RESUMES;
+            if(dummyResumeFiles.size() > idx && dummyResumeFiles.get(idx) != null)
+                holder.resumeImg.setImageBitmap(decodeSampledBitmapFromFile(
+                        dummyResumeFiles.get(idx), 500, 500));
         }
         return convertView;
-    }
-
-    public int getDummyResourceId(int position) {
-        String resourceString = "r" + Integer.toString(position % 8 + 1);
-        return mContext.getResources().getIdentifier(resourceString,
-                "drawable", mContext.getPackageName());
     }
 
     @Override
@@ -145,20 +144,19 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         return inSampleSize;
     }
 
-    private static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+    private static Bitmap decodeSampledBitmapFromFile(File f, int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
+        BitmapFactory.decodeFile(f.getPath(), options);
 
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
+        return BitmapFactory.decodeFile(f.getPath(), options);
     }
 
     /**
@@ -180,7 +178,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
                 filteredResumes.clear();
                 for (String c: activeTagNames) {
                     for (int i = 0; i < resumes.size(); i++) {
-                        List<String> tags = new ArrayList<String>();
+                        List<String> tags = new ArrayList<>();
                         if (resumes.get(i).getTagList() != null) {
                             for (Tag t : resumes.get(i).getTagList()) {
                                 tags.add(t.getName().toLowerCase());
@@ -227,6 +225,24 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // update GridView
             notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Downloads dummy resumes from S3 bucket and puts them into dummyResumeFiles list.
+     * Tells the adapter to refresh when a file is possibly downloaded
+     */
+    private void downloadDummyResumeImages() {
+        for(int i=0; i < NUM_DUMMY_RESUMES; i++) {
+            manager.downloadFile(dummyResumeFilenames[i], new Consumer<File>() {
+                @Override
+                public void accept(File file) {
+                    if(!dummyResumeFiles.contains(file)) {
+                        dummyResumeFiles.add(file);
+                    }
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 }
