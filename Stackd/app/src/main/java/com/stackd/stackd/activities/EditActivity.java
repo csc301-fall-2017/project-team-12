@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -60,6 +61,7 @@ public class EditActivity extends AppCompatActivity {
         // set resume view to the picture of the current resume
         ImageView resumeView = (ImageView)findViewById(R.id.current_resume);
         if(strUri != null) {
+            Log.d("URI", strUri);
             imgUri = Uri.parse(strUri);
             resumeView.setImageURI(imgUri);
         }
