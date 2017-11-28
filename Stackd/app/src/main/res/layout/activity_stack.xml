@@ -24,6 +24,47 @@
                 android:orientation="horizontal">
             </LinearLayout>
         </HorizontalScrollView>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/rating_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/yes_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rating_yes"
+                    android:background="@color/colorAccent"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:onClick="filterByRating"/>
+                <Button
+                    android:id="@+id/maybe_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rating_maybe"
+                    android:background="@color/colorAccent"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:onClick="filterByRating"/>
+                <Button
+                    android:id="@+id/no_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rating_no"
+                    android:background="@color/colorAccent"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:onClick="filterByRating"/>
+            </LinearLayout>
+        </HorizontalScrollView>
         <FrameLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"

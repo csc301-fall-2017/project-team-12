@@ -253,5 +253,17 @@ public class StackActivity extends AppCompatActivity {
             activeTags.put(tag.getName(), false);
         }
     }
+
+    public void filterByRating(View v) {
+        if(findViewById(R.id.yes_button) == v) {
+
+        }
+        else if(findViewById(R.id.no_button) == v) {
+
+        }
+        else {
+
+        }
+    }
 }
 

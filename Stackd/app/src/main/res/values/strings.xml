@@ -19,4 +19,7 @@
     <string name="resume_img_desc">Picture of a resume</string>
     <string name="edit_done">Done</string>
     <string name="comments_hint">Your comments...</string>
+    <string name="rating_yes">Yes</string>
+    <string name="rating_no">No</string>
+    <string name="rating_maybe">Maybe</string>
 </resources>
