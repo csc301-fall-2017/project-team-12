@@ -84,6 +84,7 @@ public class EditActivity extends AppCompatActivity {
                     .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
                     .candidateName("Candidate 1").build();
             resumeTags = new ArrayList<>();
+            setCandidateEmailAlertBox.show();
         }
         else {
             // make a resume immutable, since it has already been reviewed
