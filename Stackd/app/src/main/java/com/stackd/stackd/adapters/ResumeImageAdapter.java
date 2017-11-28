@@ -52,6 +52,11 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         downloadDummyResumeImages();
     }
 
+    public String getImageURL(int position) {
+        return dummyResumeFiles.get(position).getPath();
+        //return resumes.get(position).getUrl();
+    }
+
     public List<Tag> getTags() { return this.tags; }
     public Set<String> getActiveTagNames() {
         return this.activeTagNames;
@@ -79,6 +84,14 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
 
     public long getItemId(int position) {
         return 0;
+    }
+
+    public void filterByRating(int rating) {
+        for(Resume resume : filteredResumes) {
+            if(resume.getRating() != rating)
+                filteredResumes.remove(resume);
+        }
+        notifyDataSetChanged();
     }
 
     // return a view for the item at the position given.

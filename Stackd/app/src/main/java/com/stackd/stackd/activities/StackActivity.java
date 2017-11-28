@@ -256,13 +256,13 @@ public class StackActivity extends AppCompatActivity {
 
     public void filterByRating(View v) {
         if(findViewById(R.id.yes_button) == v) {
-
+            adapter.filterByRating(2);
         }
         else if(findViewById(R.id.no_button) == v) {
-
+            adapter.filterByRating(0);
         }
         else {
-
+            adapter.filterByRating(1);
         }
     }
 }

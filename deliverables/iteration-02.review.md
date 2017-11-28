@@ -75,7 +75,7 @@ The user upon login will be able to see thumbnails of resumes labeled by candida
 
 This is the backbone of the backend to communicate with the other views. It enabled everyone to understand how to communicate with the data manager to get and store data.
 
-5. **Making a short video about our product**. 
+5. **Making a [short video](https://youtu.be/hIHGR2ZjrjE) (with captions available) about our product**. 
 
 The video allowed us to better explain users what is our app and how to use it. This will make user feedback more meaningful, since they will see the entire product in action. 
 
