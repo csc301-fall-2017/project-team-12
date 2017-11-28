@@ -3,7 +3,6 @@ package com.stackd.stackd.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,10 +118,8 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         holder.resumeTitle.setText(filteredResumes.get(position).getCandidateName());
         Resume resume = filteredResumes.get(position);
         if (resume.getUrl() != null && resume.getUrl().length() > 0) {
-            holder.resumeImg.setImageURI(Uri.parse(resume.getUrl()));
-        } else {
-            // if no url, use dummy resume images from S3 bucket
-            File resumeImg = new File(filteredResumes.get(position).getUrl());
+            // set image to the image from the resume url
+            File resumeImg = new File(resume.getUrl());
             holder.resumeImg.setImageBitmap(decodeSampledBitmapFromFile(
                     resumeImg, 500, 500));
         }
@@ -260,7 +257,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
             manager.downloadFile(dummyResumeFilenames[i], new Consumer<File>() {
                 @Override
                 public void accept(File file) {
-                    if (!dummyResumeFiles.contains(file)) {
+                    if (file != null && !dummyResumeFiles.contains(file)) {
                         dummyResumeFiles.add(file);
                         resumes.get(pos).setUrl(dummyResumeFiles.get(pos % NUM_DUMMY_RESUMES).getPath());
                         pos++;

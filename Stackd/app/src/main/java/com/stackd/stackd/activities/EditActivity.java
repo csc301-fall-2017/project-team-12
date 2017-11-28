@@ -8,13 +8,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.stackd.stackd.R;
 import com.stackd.stackd.db.DataManager;
@@ -37,7 +38,7 @@ public class EditActivity extends AppCompatActivity {
     // Dummy Values
     private final long cId = 1;
     private final long rId = 21;
-    private DataManager dataManager = DataManager.getDataManager(cId, rId);
+    private DataManager dataManager;
     private AlertDialog alertBox = null;
     private int currentId = 100;
     private List<Tag> resumeTags;
@@ -51,6 +52,7 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         setUpAlertBox(this);
 
+        dataManager = DataManager.getDataManager(cId, rId, getApplicationContext());
         // Fields needed from other screens
         Bundle extras = getIntent().getExtras();
         String strUri = extras.getString(IMAGE_URI_KEY);
@@ -84,8 +86,14 @@ public class EditActivity extends AppCompatActivity {
         }
         else {
             // make a resume immutable, since it has already been reviewed
-            findViewById(R.id.submit_resume).setClickable(false);
+            Button btnDone = (Button) findViewById(R.id.submit_resume);
+            btnDone.setEnabled(false);
+            btnDone.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+            FloatingActionButton hlButton = (FloatingActionButton) findViewById(R.id.highlightButton);
+            hlButton.setEnabled(false);
+            hlButton.setBackgroundColor(getResources().getColor(R.color.colorGrey));
             EditText editText = ((EditText)findViewById(R.id.comment_field));
+            editText.setTextColor(getResources().getColor(R.color.colorPrimary));
             editText.setEnabled(false);
             // load an existing resume
             for(Resume r : dataManager.getResumes())
@@ -116,16 +124,14 @@ public class EditActivity extends AppCompatActivity {
                     resumeTags.add(tag);
                 }
             });
-            if(resumeId != -1)
-                cb.setClickable(false);
-            //checkBoxes.put(cb, tag);
+            if(resumeId != -1) {
+                // make checkbox inactive and checked
+                cb.setEnabled(false);
+                if(resume.getTagList().contains(tag))
+                    cb.setChecked(true);
+            }
             tagListLayout.addView(cb);
         }
-        // mark checkboxes as selected, if a resume was already edited
-        /*if(resumeId != -1) {
-            for(CheckBox cb : checkBoxes)
-                if(resumeTags.contains(cb.getText().toString()))
-        }*/
     }
 
     /*

@@ -36,6 +36,8 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
  * A login screen that offers login via email/password.
@@ -109,7 +111,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
                 checkSelfPermission(INTERNET) == PackageManager.PERMISSION_GRANTED &&
-                checkSelfPermission(ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
+                checkSelfPermission(ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED &&
+                checkSelfPermission(READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
@@ -118,32 +122,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
                         public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS, INTERNET, ACCESS_NETWORK_STATE}, REQUEST_PERMISSIONS);
-                        }
-                    });
-        }
-        if(shouldShowRequestPermissionRationale(INTERNET)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{INTERNET}, REQUEST_PERMISSIONS);
-                        }
-                    });
-        }
-        if(shouldShowRequestPermissionRationale((ACCESS_NETWORK_STATE))) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{ACCESS_NETWORK_STATE}, REQUEST_PERMISSIONS);
+                            requestPermissions(new String[]{READ_CONTACTS, INTERNET, ACCESS_NETWORK_STATE,
+                                    READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
                         }
                     });
         }
         else {
-            requestPermissions(new String[]{READ_CONTACTS, INTERNET, ACCESS_NETWORK_STATE}, REQUEST_PERMISSIONS);
+            requestPermissions(new String[]{READ_CONTACTS, INTERNET, ACCESS_NETWORK_STATE,
+                    READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
         }
         return false;
     }
@@ -155,7 +141,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSIONS) {
-            if (grantResults.length >= 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length >= 5) {
+                // check that all permissions have been granted
+                for(int i=0; i < 5; i++)
+                    if(grantResults[i] != PackageManager.PERMISSION_GRANTED)
+                        return;
                 populateAutoComplete();
             }
         }
