@@ -37,8 +37,6 @@
                     android:text="@string/rating_maybe"
                     android:backgroundTint="@color/colorPrimary"
                     android:textColor="@color/colorWhite"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:onClick="filterByRating"/>
                 <Button
                     android:id="@+id/no_button"
@@ -47,8 +45,6 @@
                     android:text="@string/rating_no"
                     android:backgroundTint="@color/colorPrimary"
                     android:textColor="@color/colorWhite"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:onClick="filterByRating"/>
             </LinearLayout>
         </HorizontalScrollView>

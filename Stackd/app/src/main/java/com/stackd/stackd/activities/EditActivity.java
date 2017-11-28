@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,8 +35,9 @@ public class EditActivity extends AppCompatActivity {
     // Dummy Values
     private final long cId = 1;
     private final long rId = 21;
-    private DataManager dataManager;
+    private DataManager dataManager = DataManager.getDataManager(cId, rId, getBaseContext());
     private AlertDialog alertBox = null;
+    private AlertDialog setCandidateEmailAlertBox = null;
     private List<Tag> resumeTags;
 
     private ImageView resumeView;
@@ -46,6 +48,7 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         setUpAlertBox(this);
+        setUpCandidateEmail(this);
 
         dataManager = DataManager.getDataManager(cId, rId, getApplicationContext());
         // Fields needed from other screens
@@ -70,6 +73,7 @@ public class EditActivity extends AppCompatActivity {
                     .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
                     .build();
             resumeTags = new ArrayList<>();
+            setCandidateEmailAlertBox.show();
         }
         else {
             // make a resume immutable, since it has already been reviewed
@@ -146,6 +150,28 @@ public class EditActivity extends AppCompatActivity {
         resume.setRecruiterComments(commentField.getText().toString());
         resume.setTagList(resumeTags);
         alertBox.show();
+    }
+
+    public void setUpCandidateEmail(Context context) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.set_candidate_email_dialog, null);
+        alertBuilder.setView(dialogView);
+
+        final EditText name = (EditText) dialogView.findViewById(R.id.set_candidate_name);
+        final EditText email = (EditText) dialogView.findViewById(R.id.set_candidate_email);
+        alertBuilder.setTitle("Candidate Name");
+        alertBuilder.setMessage("Enter name and email:");
+
+
+
+        alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (name != null)
+                    resume.setCandidateName(name.getText().toString());
+            }
+        });
+        setCandidateEmailAlertBox = alertBuilder.create();
     }
 
     public void setUpAlertBox(Context context) {
