@@ -38,7 +38,7 @@ public class EditActivity extends AppCompatActivity {
     // Dummy Values
     private final long cId = 1;
     private final long rId = 21;
-    private DataManager dataManager = DataManager.getDataManager(cId, rId, getApplicationContext());
+    private DataManager dataManager = DataManager.getDataManager(cId, rId, getBaseContext());
     private AlertDialog alertBox = null;
     private AlertDialog setCandidateEmailAlertBox = null;
     private int currentId = 100;
