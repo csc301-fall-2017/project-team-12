@@ -1,13 +1,19 @@
 var mongoose = require('mongoose');
-
+var Schema = mongoose.Schema;
 var RecruiterSchema = new mongoose.Schema({
 	cId : {
-		type  : Schema.ObjectId, 
+		type  : Schema.ObjectId,
 		ref   : 'Company'
+	},
+	firstName : {
+		type : String
+	},
+	lastName  : {
+		type : String
+	},
+	email     : {
+		type: String
 	}
-	firstName : String, 
-	lastName  : String, 
-	email     : String
 });
 
 module.export = mongoose.model('Recruiter', RecruiterSchema);
