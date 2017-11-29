@@ -8,20 +8,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -36,8 +41,10 @@ import com.stackd.stackd.db.entities.Tag;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.LinkedHashMap;
@@ -47,6 +54,7 @@ import java.util.LinkedHashMap;
 public class StackActivity extends AppCompatActivity {
     public static final String RESUME_ID_KEY = "resumeId";
     public static final long RESUME_ID_NEW = -1;
+    private static final int REQUEST_WRITE_STORAGE = 112;
     private static final int REQUEST_CAM = 0;
     private ResumeImageAdapter adapter;
     int REQUEST_CODE = 99;
@@ -184,7 +192,21 @@ public class StackActivity extends AppCompatActivity {
             alertBox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    writeToCsv();
+                    //writeToCsv();
+
+                    boolean hasPermission = (ContextCompat.checkSelfPermission(StackActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+                    if (!hasPermission) {
+                        ActivityCompat.requestPermissions(StackActivity.this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_WRITE_STORAGE);
+                    }
+
+                    if (isExternalStorageWritable()){
+                        File dir = getAlbumStorageDir(getApplicationContext(),"test" );
+                        writeResume(dir);
+                    }
+
                 }
             });
             alertBox.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -286,13 +308,13 @@ public class StackActivity extends AppCompatActivity {
 
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("Name\t\t");
+        sb.append("Name");
         sb.append(cvsSplitBy);
-        sb.append("Date\t\t");
+        sb.append("Date");
         sb.append(cvsSplitBy);
-        sb.append("URL\t\t");
+        sb.append("URL");
         sb.append(cvsSplitBy);
-        sb.append("Tags\t\t");
+        sb.append("Tags");
         sb.append(rowSplitBy);
         List<Resume> resumes = adapter.getFilteredResumes();
         for (Resume r : resumes) {
@@ -327,6 +349,133 @@ public class StackActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+    }
+
+    /* Checks if external storage is available for read and write
+     * Sourced from Android Dev
+     * */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    public File getAlbumStorageDir(Context context, String fileName) {
+        // Get the directory for the app's private pictures directory.
+        // Find the SD Card path
+
+        // Create a new folder in SD Card
+        File dir = new File(context.getExternalFilesDir(
+                Environment.DIRECTORY_DOCUMENTS), fileName);
+
+        // Find the SD Card path
+        /*File filepath = Environment.getExternalStorageDirectory();
+*/
+        // Create a new folder in SD Card
+        /*File dir = new File(filepath.getAbsolutePath()
+                + "test");*/
+
+       // File dir = new File ("/storage/emulated/0/Documents/test");
+
+        if (!dir.mkdirs() && !dir.exists()) {
+            // Show a toast message on successful save
+            System.out.println("Failed to create dir");
+            Toast.makeText(StackActivity.this,"FAILED DIR",
+                    Toast.LENGTH_SHORT).show();
+            System.out.println("DIR: FAILED" + dir.getAbsolutePath());
+            return null;
+
+        }
+        System.out.println("DIR: SUCCESS" + dir.getAbsolutePath());
+        return dir;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode)
+        {
+            case REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    // pass
+                } else
+                {
+                    Toast.makeText(StackActivity.this, "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+    }
+
+    public void writeResume(File dir) {
+        // Get resume as well
+        //File file = new File( getApplicationContext().getExternalFilesDir(
+                //Environment.DIRECTORY_DOWNLOADS) ,"testResume");
+        File file = new File( dir ,"testResume");
+
+        if (dir.exists()) {
+            Toast.makeText(StackActivity.this, "Directory Exists", Toast.LENGTH_SHORT).show();
+        }
+        for (File f : dir.listFiles()) {
+            System.out.println(f.getAbsolutePath());
+        }
+
+
+
+       // File file = new File("/storage/emulated/0/Documents/test/testFile");
+        Bitmap bitmap;
+        OutputStream output;
+
+        // Retrieve the image from the res folder
+        bitmap = ((BitmapDrawable)getResources().getDrawable(R.drawable.r1)).getBitmap();
+
+
+        try {
+            output = new FileOutputStream(file);
+            // Compress into png format image from 0% - 100%
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+            output.flush();
+            output.close();
+        } catch (Exception e) {
+            Log.e("ERROR", "Could not create file");
+            // Show a toast message on successful save
+            Toast.makeText(StackActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Show a toast message on successful save
+        //Toast.makeText(StackActivity.this, file.getAbsolutePath()   ,
+          //     Toast.LENGTH_SHORT).show();
+
+        // Try reading the image:
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            String line;
+            System.out.println("\n\n\n\n\nIMAGE");
+            while ((line = br.readLine()) != null) {
+
+                //System.out.print(line + "\n");
+
+
+            }
+        } catch (IOException e) {
+            Log.e("ERROR", "Can't read file");
+        }
+
+
+
+
 
 
     }
