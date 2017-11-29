@@ -181,6 +181,7 @@ public class DataManager {
      */
     public void downloadFile(String key, final Consumer<File> consumer) {
         final File f = new File(Environment.getExternalStorageDirectory().toString() + "/" + key);
+        Log.d("S3", "Downlading to: " + f.getPath());
         TransferObserver observer = transferUtility.download(DataManager.BUCKET_NAME, key, f);
         observer.setTransferListener(new TransferListener() {
             @Override
@@ -210,7 +211,30 @@ public class DataManager {
      * @param key a key that will identify the file
      * @param newFile a file to be uploaded
      */
-    public void uploadFile(String key, File newFile) {
-        transferUtility.upload(BUCKET_NAME, key, newFile);
+    public void uploadFile(String key, File newFile, final Consumer consumer) {
+        Log.d("S3", "Uploading a new file");
+        TransferObserver observer = transferUtility.upload(BUCKET_NAME, key, newFile);
+        observer.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                Log.d("S3", "Making progress uploading");
+                if(bytesCurrent == bytesTotal && bytesTotal > 0)
+                    consumer.accept(null);
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                Log.d("S3", ex.getMessage());
+            }
+        });
+    }
+
+    public static String getResumeImgKey(Resume resume) {
+        return Long.toString(resume.getId()) + "-" +Long.toString(resume.getRid()) + ".jpg";
     }
 }
