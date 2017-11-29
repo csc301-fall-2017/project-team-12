@@ -36,4 +36,3 @@ ResumeRoutes(app);
 app.listen(port, () => {
 	console.log('StackdApi server is running on port ' + port + '...');
 });
-
