@@ -11,7 +11,7 @@ var ResumeSchema = new Schema({
 	// },
 	url: {
 		type: String, 
-		required: true
+		default: ""
 	}, 
 	candidateName: {
 		type: String, 
@@ -22,7 +22,8 @@ var ResumeSchema = new Schema({
 		default: Date.now
 	}, 
 	recruiterComments: {
-		type: String
+		type: String, 
+		required: true 
 	},
 	/* list of of tags associated to the resume */
 	tags: [{
@@ -37,4 +38,4 @@ var ResumeSchema = new Schema({
 	}
 });
 
-module.export = mongoose.model('Resume', Resume Schema);
+module.export = mongoose.model('Resume', ResumeSchema);
