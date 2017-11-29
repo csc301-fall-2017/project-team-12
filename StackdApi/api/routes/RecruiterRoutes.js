@@ -4,8 +4,9 @@ module.exports = function(app){
 	var rc = require('../controllers/RecruiterController');
 
 	app.route('/recruiters')
-		.get(rc.getAllRecruiters);
+		.get(rc.getAllRecruiters)
 		.post(rc.addRecruiter);
+	
 
 	app.route('/recruiters/:email')
 		.delete(rc.deleteRecruiter);
