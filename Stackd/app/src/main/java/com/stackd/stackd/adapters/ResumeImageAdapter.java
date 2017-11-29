@@ -20,8 +20,10 @@ import com.stackd.stackd.helpers.Consumer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -34,10 +36,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
     private List<Tag> tags; // the set of all company tags
     private Set<String> activeTagNames = new HashSet<>(); // the set of active tag names
     private DataManager manager;
-    private static final int NUM_DUMMY_RESUMES = 4;
-    private String[] dummyResumeFilenames = {"r1.jpg", "r2.png", "r3.jpg", "r4.png"};
-    private List<File> dummyResumeFiles = new ArrayList<>();
-    private int pos = 0;
+    private Map<Resume, File> resumeImages = new HashMap<>();
     private int activeRatingConstraint = -1;
 
     public ResumeImageAdapter(Context c) {
@@ -50,13 +49,13 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         resumes = manager.getResumes();
         tags = manager.getCompanyTags();
         filteredResumes = new ArrayList<>(resumes);
-        // download dummy resume images for dummy resumes
-        downloadDummyResumeImages();
+        // download resume images
+        downloadResumeImages();
     }
 
-    public String getImagePath(int position) {
-        return dummyResumeFiles.get(position).getPath();
-        //return resumes.get(position).getUrl();
+    public String getImgPath(int position) {
+        File f = resumeImages.get(filteredResumes.get(position));
+        return (f == null) ? null : f.getPath();
     }
 
     public void setRatingConstraint(int rating) {
@@ -117,11 +116,10 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
 
         holder.resumeTitle.setText(filteredResumes.get(position).getCandidateName());
         Resume resume = filteredResumes.get(position);
-        if (resume.getUrl() != null && resume.getUrl().length() > 0) {
-            // set image to the image from the resume url
-            File resumeImg = new File(resume.getUrl());
+        if(resumeImages.containsKey(resume)) {
+            // set image to the resume image
             holder.resumeImg.setImageBitmap(decodeSampledBitmapFromFile(
-                    resumeImg, 500, 500));
+                    resumeImages.get(resume), 500, 500));
         }
         return convertView;
     }
@@ -248,21 +246,17 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         }
     }
 
-    /**
-     * Downloads dummy resumes from S3 bucket and puts them into dummyResumeFiles list.
-     * Tells the adapter to refresh when a file is possibly downloaded
-     */
-    private void downloadDummyResumeImages() {
-        for (int i = 0; i < NUM_DUMMY_RESUMES; i++) {
-            manager.downloadFile(dummyResumeFilenames[i], new Consumer<File>() {
+    private void downloadResumeImages() {
+        for(final Resume r: resumes) {
+            String imgKey = DataManager.getResumeImgKey(r);
+            manager.downloadFile(imgKey, new Consumer<File>() {
                 @Override
                 public void accept(File file) {
-                    if (file != null && !dummyResumeFiles.contains(file)) {
-                        dummyResumeFiles.add(file);
-                        resumes.get(pos).setUrl(dummyResumeFiles.get(pos % NUM_DUMMY_RESUMES).getPath());
-                        pos++;
+                    // download resume image for each resume
+                    if(file != null) {
+                        resumeImages.put(r, file);
+                        notifyDataSetChanged();
                     }
-                    notifyDataSetChanged();
                 }
             });
         }

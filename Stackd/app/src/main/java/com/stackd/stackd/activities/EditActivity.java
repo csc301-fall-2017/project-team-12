@@ -1,7 +1,6 @@
 package com.stackd.stackd.activities;
 
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,26 +21,29 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.db.DataManager;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
+import com.stackd.stackd.helpers.Consumer;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
-    public static final String IMAGE_URI_KEY = "imageUri";
+    public static final String IMAGE_PATH_KEY = "imagePath";
     private LinearLayout tagListLayout;
     private Resume resume;
     // Dummy Values
     private final long cId = 1;
     private final long rId = 21;
-    private DataManager dataManager = DataManager.getDataManager(cId, rId, getBaseContext());
+    private DataManager dataManager;
     private AlertDialog alertBox = null;
     private AlertDialog setCandidateEmailAlertBox = null;
     private List<Tag> resumeTags;
 
     private ImageView resumeView;
     private ImageView resumeViewShadow;
+    private String resumeImgPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +55,21 @@ public class EditActivity extends AppCompatActivity {
         dataManager = DataManager.getDataManager(cId, rId, getApplicationContext());
         // Fields needed from other screens
         Bundle extras = getIntent().getExtras();
-        String strUri = extras.getString(IMAGE_URI_KEY);
-        Uri uri;
+        resumeImgPath = extras.getString(IMAGE_PATH_KEY);
         // set picture to the picture of the current resume
         resumeView = (ImageView)findViewById(R.id.current_resume);
         resumeViewShadow = (ImageView)findViewById(R.id.current_resume_shadow);
-        if(strUri != null) {
-            uri = Uri.parse(extras.getString(IMAGE_URI_KEY));
-            resumeView.setImageURI(uri);
-            resumeViewShadow.setImageURI(uri);
-        }
+
+        assert(resumeImgPath != null);
+        File imgFile = new File(resumeImgPath);
+        resumeView.setImageURI(Uri.fromFile(imgFile));
+        resumeViewShadow.setImageURI(Uri.fromFile(imgFile));
+
 
         long resumeId = extras.getLong(StackActivity.RESUME_ID_KEY);
         if(resumeId == StackActivity.RESUME_ID_NEW) {
-            // Initialize the new resume
+            // Initialize a new resume
+            // NOTE: as of right now, we are not using url field at all
             resume = new Resume.Builder()
                     .id(DataManager.getNextResumeId())
                     .rid(dataManager.getRecruiter().getRecId())
@@ -125,17 +128,6 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     * Find the URI from the given resID
-     */
-    public static Uri resIdToUri(Context context, int resId) {
-        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                context.getResources().getResourcePackageName(resId) + '/' +
-                context.getResources().getResourceTypeName(resId) + '/' +
-                context.getResources().getResourceEntryName(resId) );
-
-    }
-
     public void onHighlightBtnClick(View v) {
         if (resumeView.getVisibility() == ImageView.GONE) {
             resumeView.setVisibility(ImageView.VISIBLE);
@@ -162,8 +154,6 @@ public class EditActivity extends AppCompatActivity {
         final EditText email = (EditText) dialogView.findViewById(R.id.set_candidate_email);
         alertBuilder.setTitle("Candidate Name");
         alertBuilder.setMessage("Enter name and email:");
-
-
 
         alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -194,25 +184,24 @@ public class EditActivity extends AppCompatActivity {
                     case 0: resume.setRating(2);// yes
                     case 1: resume.setRating(0);// no
                     case 2: resume.setRating(1);// maybe
-
                 }
                 // Insert the resume into the database
                 assert(resume != null);
                 dataManager.insertResume(resume);
                 // Review it and add a rating
                 dataManager.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());
-
-                // Go back to stack view
-                Intent i = new Intent(EditActivity.this, StackActivity.class);
-                startActivity(i);
+                dataManager.uploadFile(DataManager.getResumeImgKey(resume), new File(resumeImgPath),
+                        new Consumer() {
+                            @Override
+                            public void accept(Object o) {
+                                // file uploaded, return to stack activity
+                                Intent i = new Intent(EditActivity.this, StackActivity.class);
+                                startActivity(i);
+                            }
+                        });
             }
         });
         alertBox = alertBuilder.create();
     }
-
-    private String generateResumeKey(Resume resume) {
-        return Long.toString(resume.getId()) + resume.getCandidateName();
-    }
-
 }
 

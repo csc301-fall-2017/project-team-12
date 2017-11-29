@@ -4,9 +4,6 @@ package com.stackd.stackd.views;
  * Created by angeloaustria on 2017-11-23.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -15,7 +12,9 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // Source: https://stackoverflow.com/questions/36812567/android-draw-text-on-imageview-with-finger-touch
 public class DrawView extends android.support.v7.widget.AppCompatImageView {

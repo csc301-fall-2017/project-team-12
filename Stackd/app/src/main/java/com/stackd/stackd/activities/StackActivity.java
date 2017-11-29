@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
+import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,7 +33,6 @@ import com.stackd.stackd.adapters.ResumeImageAdapter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 
 
@@ -62,9 +61,8 @@ public class StackActivity extends AppCompatActivity {
                                     int position, long id) {
                 // dummy result, should open the review activity for the given resume
                 Intent i = new Intent(StackActivity.this, EditActivity.class);
-                String imgPath = adapter.getImagePath(position);
-                if (imgPath != null && imgPath.length() > 0)
-                    i.putExtra(EditActivity.IMAGE_URI_KEY, imgPath);
+                String imgPath = adapter.getImgPath(position);
+                i.putExtra(EditActivity.IMAGE_PATH_KEY, imgPath);
                 long resumeId = ((Resume) adapter.getItem(position)).getId();
                 i.putExtra(RESUME_ID_KEY, resumeId);
                 startActivity(i);
@@ -231,18 +229,12 @@ public class StackActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-
-                Intent i = new Intent(StackActivity.this, EditActivity.class);
-                i.putExtra(EditActivity.IMAGE_URI_KEY, uri);
-                i.putExtra(RESUME_ID_KEY, RESUME_ID_NEW);
-                startActivity(i);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // transform uri to file
+            String imgPath = getRealPathFromUri(this, uri);
+            Intent i = new Intent(StackActivity.this, EditActivity.class);
+            i.putExtra(EditActivity.IMAGE_PATH_KEY, imgPath);
+            i.putExtra(RESUME_ID_KEY, RESUME_ID_NEW);
+            startActivity(i);
         }
     }
 
@@ -253,6 +245,12 @@ public class StackActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Filters resumes by rating, showing only resumes with a selected rating.
+     * For example, pressing "yes" will only show resumes with rating 2.
+     * Pressing the same button again will unset the filter.
+     * @param v button pressed
+     */
     public void filterByRating(View v) {
         Button yesBtn = (Button) findViewById(R.id.yes_button);
         Button maybeBtn = (Button) findViewById(R.id.maybe_button);
@@ -313,6 +311,27 @@ public class StackActivity extends AppCompatActivity {
         }
         adapter.setRatingConstraint(activeRatingConstraint);
         adapter.getFilter().filter(null);
+    }
+
+    /**
+     * Extracts a real path from uri. Needed for getting a real path from uri returned by ScanActivity
+     * @param context current context
+     * @param contentUri uri from which path should be extracted
+     * @return string path
+     */
+    private String getRealPathFromUri(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 }
 
