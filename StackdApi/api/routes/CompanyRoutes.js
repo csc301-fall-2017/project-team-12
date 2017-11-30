@@ -7,5 +7,6 @@ module.exports = function(app) {
 	
 
 	app.route('/companies/:companyId')
-		.delete(rc.removeCompany);
+		.delete(rc.removeCompany)
+		.put(rc.addRecruiterToCompany);
 	}

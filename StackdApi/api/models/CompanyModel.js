@@ -7,7 +7,11 @@ var CompanySchema = new Schema({
 		type: String, 
 		required: true, 
 		unique: true
-	}
+	},
+	recruiters: [{
+		type: Schema.ObjectId, 
+		ref: 'Recruiter'
+	}]
 });
 
 module.export = mongoose.model('Company', CompanySchema);
