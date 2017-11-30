@@ -11,3 +11,6 @@ var CompanySchema = new Schema({
 });
 
 module.export = mongoose.model('Company', CompanySchema);
+
+// comID: 5a1f4d4d45d19a0bc352f319
+// recID: 5a1f4e0d45d19a0bc352f31a

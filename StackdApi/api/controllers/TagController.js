@@ -8,7 +8,7 @@ exports.getAllTags = function(req, res) {
 	Tag.find({}, function(err, task) {
 		if(err) 
 			res.send(err);
-		res.json(task);
+		res.json({tags: task});
 	});
 };
 

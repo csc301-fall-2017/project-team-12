@@ -4,22 +4,22 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ResumeSchema = new Schema({
 	/* recruiter who collect the resume */
-	// rId: {
-	// 	type: Schema.ObjectId, 
-	// 	ref: 'Recruiter',
-	// 	required: true
-	// },
-	url: {
-		type: String, 
-		default: ""
+	rId: {
+		type: Schema.ObjectId, 
+		ref: 'Recruiter',
+		required: true
 	}, 
 	candidateName: {
 		type: String, 
 		required: true
 	},
 	collectionDate: {
-		type: Date, 
-		default: Date.now
+		type: String, 
+		default: new Date().toLocaleDateString()
+	}, 
+	collectionTime: {
+		type: String, 
+		default: new Date().toLocaleTimeString()
 	}, 
 	recruiterComments: {
 		type: String, 

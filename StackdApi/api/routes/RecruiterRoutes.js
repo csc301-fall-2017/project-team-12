@@ -5,7 +5,4 @@ module.exports = function(app){
 		.get(rc.getAllRecruiters)
 		.post(rc.addRecruiter);
 	
-
-	app.route('/recruiters/:email')
-		.delete(rc.deleteRecruiter);
 	}
