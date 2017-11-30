@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +26,9 @@ import com.stackd.stackd.db.entities.Tag;
 import com.stackd.stackd.helpers.Consumer;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +49,7 @@ public class EditActivity extends AppCompatActivity {
     private ImageView resumeView;
     private ImageView resumeViewShadow;
     private String resumeImgPath;
+    File imgFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +66,13 @@ public class EditActivity extends AppCompatActivity {
         resumeView = (ImageView)findViewById(R.id.current_resume);
         resumeViewShadow = (ImageView)findViewById(R.id.current_resume_shadow);
 
+
         assert(resumeImgPath != null);
-        File imgFile = new File(resumeImgPath);
+        imgFile = new File(resumeImgPath);
         resumeView.setImageURI(Uri.fromFile(imgFile));
         resumeViewShadow.setImageURI(Uri.fromFile(imgFile));
-
+        Bitmap bitmap = load();
+        resumeView.setImageBitmap(bitmap);
 
         long resumeId = extras.getLong(StackActivity.RESUME_ID_KEY);
         if(resumeId == StackActivity.RESUME_ID_NEW) {
@@ -89,6 +97,7 @@ public class EditActivity extends AppCompatActivity {
             EditText editText = ((EditText)findViewById(R.id.comment_field));
             editText.setTextColor(getResources().getColor(R.color.colorPrimary));
             editText.setEnabled(false);
+            resumeView.setEnabled(false);
             // load an existing resume
             for(Resume r : dataManager.getResumes())
                 if(r.getId() == resumeId) {
@@ -136,6 +145,9 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void onDoneBtnClick(View v) {
+        resumeView.buildDrawingCache();
+        Bitmap bitmap = resumeView.getDrawingCache();
+        save(bitmap);
         // add comments and selected tags to the resume
         final EditText commentField = (EditText) findViewById(R.id.comment_field);
         String comments = commentField.getText().toString();
@@ -202,6 +214,42 @@ public class EditActivity extends AppCompatActivity {
             }
         });
         alertBox = alertBuilder.create();
+    }
+
+    public void save(Bitmap bitmapImage) {
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(imgFile);
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public Bitmap load() {
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(imgFile);
+            return BitmapFactory.decodeStream(inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
 
