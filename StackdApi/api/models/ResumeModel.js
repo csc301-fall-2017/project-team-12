@@ -2,13 +2,7 @@
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
-var ResumeSchema = new Schema({
-	/* recruiter who collect the resume */
-	rId: {
-		type: Schema.ObjectId, 
-		ref: 'Recruiter',
-		required: true
-	}, 
+var ResumeSchema = new Schema({ 
 	candidateName: {
 		type: String, 
 		required: true

@@ -12,7 +12,7 @@ var RecruiterSchema = new mongoose.Schema({
 	}, 
 	lastName  : {
 		type: String, 
-		default: ""
+		default: true
 	},
 	email : {
 		type: String,
@@ -26,3 +26,7 @@ var RecruiterSchema = new mongoose.Schema({
 });
 
 module.export = mongoose.model('Recruiter', RecruiterSchema);
+
+// resumeID: 5a1f6151be7e3d0d0c5dd080
+// tagID: 5a1f60ffbe7e3d0d0c5dd07f
+// 
