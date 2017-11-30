@@ -203,7 +203,7 @@ public class StackActivity extends AppCompatActivity {
                     }
 
                     if (isExternalStorageWritable()){
-                        File dir = getAlbumStorageDir(getApplicationContext(),"test" );
+                        File dir = getAlbumStorageDir("test" );
                         writeResume(dir);
                     }
 
@@ -365,33 +365,23 @@ public class StackActivity extends AppCompatActivity {
     }
 
 
-    public File getAlbumStorageDir(Context context, String fileName) {
+    public File getAlbumStorageDir(String fileName) {
         // Get the directory for the app's private pictures directory.
         // Find the SD Card path
 
         // Create a new folder in SD Card
-        File dir = new File(context.getExternalFilesDir(
+        File dir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOCUMENTS), fileName);
-
-        // Find the SD Card path
-        /*File filepath = Environment.getExternalStorageDirectory();
-*/
-        // Create a new folder in SD Card
-        /*File dir = new File(filepath.getAbsolutePath()
-                + "test");*/
-
-       // File dir = new File ("/storage/emulated/0/Documents/test");
 
         if (!dir.mkdirs() && !dir.exists()) {
             // Show a toast message on successful save
-            System.out.println("Failed to create dir");
             Toast.makeText(StackActivity.this,"FAILED DIR",
                     Toast.LENGTH_SHORT).show();
-            System.out.println("DIR: FAILED" + dir.getAbsolutePath());
             return null;
 
+        } else {
+            System.out.println("DIR: SUCCESS " + dir.getAbsolutePath());
         }
-        System.out.println("DIR: SUCCESS" + dir.getAbsolutePath());
         return dir;
     }
 
@@ -410,14 +400,13 @@ public class StackActivity extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     public void writeResume(File dir) {
         // Get resume as well
         //File file = new File( getApplicationContext().getExternalFilesDir(
                 //Environment.DIRECTORY_DOWNLOADS) ,"testResume");
-        File file = new File( dir ,"testResume");
+        File file = new File( dir,"testResume");
 
         if (dir.exists()) {
             Toast.makeText(StackActivity.this, "Directory Exists", Toast.LENGTH_SHORT).show();
@@ -439,7 +428,7 @@ public class StackActivity extends AppCompatActivity {
         try {
             output = new FileOutputStream(file);
             // Compress into png format image from 0% - 100%
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
             output.flush();
             output.close();
         } catch (Exception e) {
