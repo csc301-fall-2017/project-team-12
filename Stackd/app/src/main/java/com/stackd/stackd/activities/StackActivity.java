@@ -428,7 +428,7 @@ public class StackActivity extends AppCompatActivity {
         try {
             output = new FileOutputStream(file);
             // Compress into png format image from 0% - 100%
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
             output.flush();
             output.close();
         } catch (Exception e) {
