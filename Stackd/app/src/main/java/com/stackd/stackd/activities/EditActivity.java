@@ -98,7 +98,12 @@ public class EditActivity extends AppCompatActivity {
             EditText editText = ((EditText)findViewById(R.id.comment_field));
             editText.setTextColor(getResources().getColor(R.color.colorPrimary));
             editText.setEnabled(false);
-            resumeView.setOnTouchListener(null);
+            resumeView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });
             // load an existing resume
             for(Resume r : dataManager.getResumes())
                 if(r.getId() == resumeId) {
