@@ -13,7 +13,7 @@ var app = express();
 var port = process.env.PORT || 3000;
 
 /* Open the db connection */
-var url = 'mongodb://localhost:27017/StackdDb';
+var url = 'mongodb://stackd:password@ds031407.mlab.com:31407/stackd';
 mongoose.connect(url, {
 	useMongoClient: true,
 	autoReconnect: true, 

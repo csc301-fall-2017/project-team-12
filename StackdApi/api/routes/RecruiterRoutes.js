@@ -5,7 +5,6 @@ module.exports = function(app) {
 		.get(rc.getAllRecruiters)
 		.post(rc.addRecruiter);
 
-	console.log("HEHEHEH");
 	app.route('/recruiters/:recruiterId')
 		.put(rc.addToCollectedResumes);
 }

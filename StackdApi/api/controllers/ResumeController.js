@@ -19,5 +19,3 @@ exports.insertResume = function(req, res) {
 		res.json(task);
 	});
 };
-
-// 5a1f60ffbe7e3d0d0c5d
