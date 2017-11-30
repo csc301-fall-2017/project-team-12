@@ -168,15 +168,14 @@ public class EditActivity extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.set_candidate_email_dialog, null);
         alertBuilder.setView(dialogView);
 
-        final EditText name = (EditText) dialogView.findViewById(R.id.set_candidate_name);
         final EditText email = (EditText) dialogView.findViewById(R.id.set_candidate_email);
-        alertBuilder.setTitle("Candidate Name");
-        alertBuilder.setMessage("Enter name and email:");
+        alertBuilder.setTitle("Candidate Email");
+        alertBuilder.setMessage("Enter email:");
 
         alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                if (name != null)
-                    resume.setCandidateName(name.getText().toString());
+                if (email != null)
+                    resume.setCandidateName(email.getText().toString());
             }
         });
         setCandidateEmailAlertBox = alertBuilder.create();
