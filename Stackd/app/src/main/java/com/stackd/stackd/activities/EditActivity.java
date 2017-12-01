@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,7 +35,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EditActivity extends AppCompatActivity {
     public static final String IMAGE_PATH_KEY = "imagePath";
@@ -46,6 +50,7 @@ public class EditActivity extends AppCompatActivity {
     private AlertDialog alertBox = null;
     private AlertDialog setCandidateEmailAlertBox = null;
     private List<Tag> resumeTags;
+    private Map<Button, Tag> tagButtonMap = new HashMap<>();
 
     private ImageView resumeView;
     private ImageView resumeViewShadow;
@@ -121,25 +126,56 @@ public class EditActivity extends AppCompatActivity {
         // Add checkboxes dynamically
         tagListLayout = (LinearLayout) findViewById(R.id.tagListLayout);
 
-        // The company's tags
-        final List<Tag> tagList = dataManager.getCompanyTags();
-        for (final Tag tag: tagList) {
-            final CheckBox cb = new CheckBox(this);
-            cb.setId(tagList.indexOf(tag));
-            cb.setText(tag.getName());
-            cb.setTextColor(Color.WHITE);
-            cb.setOnClickListener(new View.OnClickListener() {
+        LinearLayout tagsList = (LinearLayout)findViewById(R.id.tagListLayout);
+        List<Tag> tags = dataManager.getCompanyTags();
+        for(Tag tag : tags) {
+            String tagName = tag.getName();
+            final Button btn = new Button(getApplicationContext());
+            tagButtonMap.put(btn, tag);
+            if(resumeId != StackActivity.RESUME_ID_NEW) {
+                btn.setEnabled(false);
+            }
+            int backgroundColor =
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+            int textColor = ContextCompat.getColor(getApplicationContext(), R.color.colorWhite);
+            btn.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
+            btn.setTextColor(textColor);
+            btn.setText(tagName);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View v) {
-                    resumeTags.add(tag);
+                    if (!resumeTags.contains(tagButtonMap.get(v))) {
+                        // set tag
+                        int backgroundColor =
+                                ContextCompat.getColor(getApplicationContext(),
+                                        R.color.colorPrimary);
+                        btn.getBackground().setColorFilter(backgroundColor,
+                                PorterDuff.Mode.MULTIPLY);
+                        resumeTags.add(tagButtonMap.get(v));
+                    }
+                    else {
+                        // unset the tag, show resumes even without this tag
+                        int backgroundColor =
+                                ContextCompat.getColor(getApplicationContext(),
+                                        R.color.colorAccent);
+                        btn.getBackground().setColorFilter(backgroundColor,
+                                PorterDuff.Mode.MULTIPLY);
+                        resumeTags.remove(tagButtonMap.get(v));
+                    }
                 }
             });
-            if(resumeId != -1) {
-                // make checkbox inactive and checked
-                cb.setEnabled(false);
-                if(resume.getTagList().contains(tag))
-                    cb.setChecked(true);
+            tagsList.addView(btn);
+        }
+        // set tags and make them non-clickable.
+        for(Button btn : tagButtonMap.keySet()) {
+            if(resume.getTagList().contains(tagButtonMap.get(btn))) {
+                // set tag
+                int backgroundColor =
+                        ContextCompat.getColor(getApplicationContext(),
+                                R.color.colorPrimary);
+                btn.getBackground().setColorFilter(backgroundColor,
+                        PorterDuff.Mode.MULTIPLY);
             }
-            tagListLayout.addView(cb);
         }
     }
 
