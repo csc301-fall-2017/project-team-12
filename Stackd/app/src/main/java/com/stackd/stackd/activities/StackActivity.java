@@ -197,7 +197,8 @@ public class StackActivity extends AppCompatActivity {
                     }
 
                     if (isExternalStorageWritable()){
-                        File dir = getAlbumStorageDir(new SimpleDateFormat("yyyyMMddhh").format(new Date()) );
+                        File dir = getAlbumStorageDir(new SimpleDateFormat("yyyy_MM_dd_" +
+                                "hh_mm").format(new Date()) );
                         writeResume(dir);
                     }
 
@@ -391,8 +392,6 @@ public class StackActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return null;
 
-        } else {
-            System.out.println("DIR: SUCCESS " + dir.getAbsolutePath());
         }
         return dir;
     }
@@ -408,7 +407,9 @@ public class StackActivity extends AppCompatActivity {
                     // pass
                 } else
                 {
-                    Toast.makeText(StackActivity.this, "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StackActivity.this, "The app was not allowed to" +
+                            " write to your storage. Hence, it cannot function properly. Please" +
+                            " consider granting it this permission", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -420,11 +421,10 @@ public class StackActivity extends AppCompatActivity {
         Map<Resume, File> resumeToFile = adapter.get_resumesToFiles();
 
         for (Resume r : resumeExport) {
-
+            System.out.println(r.getCandidateName());
             // Write resume to file
             try {
                 File newFile = new File(dir, resumeToFile.get(r).getName());
-
                 if (!newFile.exists()) {
                     newFile.createNewFile();
                 }
@@ -450,7 +450,7 @@ public class StackActivity extends AppCompatActivity {
         writeToCsv(dir);
 
         // Show a toast message on successful save
-        Toast.makeText(StackActivity.this, "Resumes exported successfully"   ,
+        Toast.makeText(StackActivity.this, "Resumes exported to " + dir.getPath()   ,
                 Toast.LENGTH_SHORT).show();
 
     }
@@ -498,25 +498,6 @@ public class StackActivity extends AppCompatActivity {
 
         pw.write(sb.toString());
         pw.close();
-
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            while ((line = br.readLine()) != null) {
-                String[] rList = line.split(cvsSplitBy);
-                for (String s : rList) {
-                    System.out.print(s + "\t\t");
-                }
-                System.out.print("\n");
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
     }
