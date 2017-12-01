@@ -25,7 +25,7 @@ public class EditViewUnitTest {
 
     @Test
     public void BuildResumeTest() throws Exception {
-        DataManager dm = DataManager.getDataManager(Long.valueOf(1), Long.valueOf(21));
+        DataManager dm = DataManager.getDataManager(Long.valueOf(1), Long.valueOf(21), null);
         List<Resume> originalResumes = dm.getResumes();
 //        Resume newResume = new Resume.Builder()
 //                .id(new Long(1))

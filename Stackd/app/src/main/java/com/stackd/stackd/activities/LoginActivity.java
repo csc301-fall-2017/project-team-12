@@ -32,6 +32,8 @@ import com.stackd.stackd.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
@@ -206,14 +208,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return true;
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
+        return matcher.find();
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return true;
+        if (password.length() < 6){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     /**
