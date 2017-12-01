@@ -56,4 +56,8 @@ public class Tag  {
     public boolean equals(Object tag) {
         return tag instanceof Tag && this.id == ((Tag)tag).id && this.getName().equals(((Tag) tag).getName());
     }
+
+    @Override public String toString() {
+        return this.getName();
+    }
 }

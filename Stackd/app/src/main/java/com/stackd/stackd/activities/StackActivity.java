@@ -11,11 +11,13 @@ import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,15 +34,31 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.util.LinkedHashMap;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.util.List;
+
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class StackActivity extends AppCompatActivity {
     public static final String RESUME_ID_KEY = "resumeId";
     public static final long RESUME_ID_NEW = -1;
     private ResumeImageAdapter adapter;
     private int REQUEST_CODE = 99;
+    private static final int REQUEST_WRITE_STORAGE = 112;
     private LinkedHashMap<String, Boolean> activeTags = new LinkedHashMap<>();
     private int activeRatingConstraint = -1; // no rating constraint selected
 
@@ -169,6 +187,20 @@ public class StackActivity extends AppCompatActivity {
             alertBox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
+                    boolean hasPermission = (ContextCompat.checkSelfPermission(StackActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+                    if (!hasPermission) {
+                        ActivityCompat.requestPermissions(StackActivity.this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_WRITE_STORAGE);
+                    }
+
+                    if (isExternalStorageWritable()){
+                        File dir = getAlbumStorageDir(new SimpleDateFormat("yyyy_MM_dd_" +
+                                "hh_mm").format(new Date()) );
+                        writeResume(dir);
+                    }
 
                 }
             });
@@ -332,6 +364,141 @@ public class StackActivity extends AppCompatActivity {
                 cursor.close();
             }
         }
+    }
+
+    /* Checks if external storage is available for read and write
+     * Sourced from Android Dev
+     * */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    public File getAlbumStorageDir(String fileName) {
+        // Get the directory for the app's private pictures directory.
+        // Find the SD Card path
+
+        // Create a new folder in SD Card
+        File dir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS), fileName);
+
+        if (!dir.mkdirs() && !dir.exists()) {
+            // Show a toast message on successful save
+            Toast.makeText(StackActivity.this,"FAILED DIR",
+                    Toast.LENGTH_SHORT).show();
+            return null;
+
+        }
+        return dir;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode)
+        {
+            case REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    // pass
+                } else
+                {
+                    Toast.makeText(StackActivity.this, "The app was not allowed to" +
+                            " write to your storage. Hence, it cannot function properly. Please" +
+                            " consider granting it this permission", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    public void writeResume(File dir) {
+
+        List<Resume> resumeExport = adapter.getFilteredResumes();
+        Map<Resume, File> resumeToFile = adapter.get_resumesToFiles();
+
+        for (Resume r : resumeExport) {
+            // Write resume to file
+            try {
+                File newFile = new File(dir, resumeToFile.get(r).getName());
+                if (!newFile.exists()) {
+                    newFile.createNewFile();
+                }
+
+                FileOutputStream outputStream = new FileOutputStream (newFile);
+                FileInputStream inputStream = new FileInputStream(resumeToFile.get(r));
+
+                byte[] buffer    =   new byte[10*1024];
+
+                for (int length; (length = inputStream.read(buffer)) != -1; ){
+                    outputStream.write(buffer, 0, length);
+                }
+
+            } catch (Exception e) {
+                Log.e("ERROR", "Could not create file");
+                // Show a toast message on successful save
+                Toast.makeText(StackActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
+
+        writeToCsv(dir);
+
+        // Show a toast message on successful save
+        Toast.makeText(StackActivity.this, "Resumes exported to " + dir.getPath()   ,
+                Toast.LENGTH_SHORT).show();
+
+    }
+
+    /* Called when we want to export the resumes to a CSV file
+    *
+    */
+    private void writeToCsv(File dir) {
+        File file = new File(dir, "report.csv");
+        try {
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+
+        }
+        PrintWriter pw = null;
+
+        String line = "";
+        String cvsSplitBy = ",";
+        String rowSplitBy = "\n";
+
+        try {
+            pw = new PrintWriter(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Email");
+        sb.append(cvsSplitBy);
+        sb.append("Date");
+        sb.append(cvsSplitBy);
+        sb.append("Tags");
+        sb.append(cvsSplitBy);
+        sb.append("Comments");
+        sb.append(rowSplitBy);
+        List<Resume> resumes = adapter.getFilteredResumes();
+        for (Resume r : resumes) {
+            sb.append(r.toString());
+        }
+
+        pw.write(sb.toString());
+        pw.close();
+
+
     }
 }
 
