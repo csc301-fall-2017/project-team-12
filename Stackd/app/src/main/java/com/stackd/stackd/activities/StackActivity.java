@@ -421,7 +421,6 @@ public class StackActivity extends AppCompatActivity {
         Map<Resume, File> resumeToFile = adapter.get_resumesToFiles();
 
         for (Resume r : resumeExport) {
-            System.out.println(r.getCandidateName());
             // Write resume to file
             try {
                 File newFile = new File(dir, resumeToFile.get(r).getName());
