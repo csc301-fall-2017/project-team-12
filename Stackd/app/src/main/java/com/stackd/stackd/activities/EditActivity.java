@@ -137,7 +137,7 @@ public class EditActivity extends AppCompatActivity {
                 btn.setEnabled(false);
             }
             int backgroundColor =
-                    ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorGrey);
             int textColor = ContextCompat.getColor(getApplicationContext(), R.color.colorWhite);
             btn.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
             btn.setTextColor(textColor);
@@ -149,7 +149,7 @@ public class EditActivity extends AppCompatActivity {
                         // set tag
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
-                                        R.color.colorPrimary);
+                                        R.color.colorAccent);
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         resumeTags.add(tagButtonMap.get(v));
@@ -158,7 +158,7 @@ public class EditActivity extends AppCompatActivity {
                         // unset the tag, show resumes even without this tag
                         int backgroundColor =
                                 ContextCompat.getColor(getApplicationContext(),
-                                        R.color.colorAccent);
+                                        R.color.colorGrey);
                         btn.getBackground().setColorFilter(backgroundColor,
                                 PorterDuff.Mode.MULTIPLY);
                         resumeTags.remove(tagButtonMap.get(v));
@@ -175,7 +175,7 @@ public class EditActivity extends AppCompatActivity {
                 // set tag
                 int backgroundColor =
                         ContextCompat.getColor(getApplicationContext(),
-                                R.color.colorPrimary);
+                                R.color.colorAccent);
                 btn.getBackground().setColorFilter(backgroundColor,
                         PorterDuff.Mode.MULTIPLY);
             }
