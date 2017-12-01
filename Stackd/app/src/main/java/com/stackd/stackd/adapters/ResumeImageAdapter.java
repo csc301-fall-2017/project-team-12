@@ -246,6 +246,18 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
         }
     }
 
+    /**
+     * Return a list of filtered resumes for the export
+     * @return
+     */
+    public List<Resume> getFilteredResumes() {
+        return this.filteredResumes;
+    }
+
+    public Map<Resume, File> get_resumesToFiles() {
+        return resumeImages;
+    }
+
     private void downloadResumeImages() {
         for(final Resume r: resumes) {
             String imgKey = DataManager.getResumeImgKey(r);

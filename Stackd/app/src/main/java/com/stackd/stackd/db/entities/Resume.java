@@ -153,4 +153,19 @@ public class Resume {
     public void setTagList(List<Tag> tagList) {
         this.tagList = tagList;
     }
+
+    @Override public String toString() {
+        StringBuilder sb = new StringBuilder();
+        String cvsSplitBy = ",";
+        sb.append(this.getCandidateName());
+        sb.append(cvsSplitBy);
+        sb.append(this.getCollectionDate());
+        sb.append(cvsSplitBy);
+        sb.append(this.getTagList());
+        sb.append(cvsSplitBy);
+        sb.append(this.getRecruiterComments());
+        sb.append("\n");
+        return sb.toString();
+
+    }
 }
