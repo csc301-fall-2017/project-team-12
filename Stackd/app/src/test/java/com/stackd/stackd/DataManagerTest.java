@@ -24,7 +24,7 @@ public class DataManagerTest {
 
     @Before
     public void setup() {
-        this.dm = DataManager.getDataManager(Long.valueOf(1), Long.valueOf(21));
+        this.dm = DataManager.getDataManager(Long.valueOf(1), Long.valueOf(21), null);
     }
 
     @After

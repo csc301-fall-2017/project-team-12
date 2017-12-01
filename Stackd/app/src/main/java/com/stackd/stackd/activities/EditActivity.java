@@ -88,6 +88,7 @@ public class EditActivity extends AppCompatActivity {
                     .id(DataManager.getNextResumeId())
                     .rid(dataManager.getRecruiter().getRecId())
                     .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
+                    .tagList(new ArrayList<Tag>())
                     .build();
             resumeTags = new ArrayList<>();
             setCandidateEmailAlertBox.show();
@@ -168,7 +169,9 @@ public class EditActivity extends AppCompatActivity {
         }
         // set tags and make them non-clickable.
         for(Button btn : tagButtonMap.keySet()) {
-            if(resume.getTagList().contains(tagButtonMap.get(btn))) {
+            if (btn == null || tagButtonMap.get(btn) == null) {
+                continue;
+            } else if(resume.getTagList().contains(tagButtonMap.get(btn))) {
                 // set tag
                 int backgroundColor =
                         ContextCompat.getColor(getApplicationContext(),
