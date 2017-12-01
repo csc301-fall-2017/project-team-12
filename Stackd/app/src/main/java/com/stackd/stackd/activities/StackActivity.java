@@ -332,7 +332,7 @@ public class StackActivity extends AppCompatActivity {
         }
         else {
             int standardColor =
-                    ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorGrey);
             int textColor = ContextCompat.getColor(getApplicationContext(), R.color.colorWhite);
             yesBtn.getBackground().setColorFilter(standardColor, PorterDuff.Mode.MULTIPLY);
             maybeBtn.getBackground().setColorFilter(standardColor, PorterDuff.Mode.MULTIPLY);
