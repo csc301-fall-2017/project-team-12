@@ -1,0 +1,36 @@
+{
+  "name": "stackd-api",
+  "version": "1.0.0",
+  "description": "Rest api for Stackd, a mobile/tablet application that facilitates the resume-collection and categorization process for recruiters through digitizing and annotating paper resumes on-site and storing them in a categorized database.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csc301-fall-2017/project-team-12.git"
+  },
+  "keywords": [
+    "Stackd",
+    "RESTful"
+  ],
+  "authors": [
+    "Tanveer Gill",
+    "Justine Chen",
+    "Dmitry Ten"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/csc301-fall-2017/project-team-12/issues"
+  },
+  "homepage": "https://github.com/csc301-fall-2017/project-team-12#readme",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.4"
+  }
+}
