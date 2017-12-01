@@ -166,17 +166,7 @@ public class EditActivity extends AppCompatActivity {
             });
             tagsList.addView(btn);
         }
-        // set tags and make them non-clickable.
-        for(Button btn : tagButtonMap.keySet()) {
-            if(resume.getTagList().contains(tagButtonMap.get(btn))) {
-                // set tag
-                int backgroundColor =
-                        ContextCompat.getColor(getApplicationContext(),
-                                R.color.colorPrimary);
-                btn.getBackground().setColorFilter(backgroundColor,
-                        PorterDuff.Mode.MULTIPLY);
-            }
-        }
+        
     }
 
     public void onHighlightBtnClick(View v) {
