@@ -102,7 +102,7 @@ TA’s advice:
     
 	
 ### Final Video:
-	https://youtu.be/77kuhSEkY50
+	[https://youtu.be/77kuhSEkY50](https://youtu.be/77kuhSEkY50)
 
 
 
