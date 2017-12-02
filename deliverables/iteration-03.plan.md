@@ -94,7 +94,11 @@ To implement these user stories we will complete the following tasks:
 
 #### Artifacts
 Adam’s advice: 
-	Exporting the resumes to an SD card instead of email was great advice to our team because emailing would have taken too much time. 
+	Exporting the resumes to an SD card instead of email was great advice to our team because emailing would have taken too much time.
+	
+Final Video:
+	https://youtu.be/77kuhSEkY50
+
 
 
 
