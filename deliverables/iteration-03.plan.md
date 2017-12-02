@@ -32,7 +32,7 @@ The past iteration was interesting because our teamwork, communication, and dedi
 
 #### Events
 
-1. BA2135 - Wednesday November 22nd
+1. General Team Meeting: @BA2135 - Wednesday November 22nd
     * Purpose: Planning meeting
 
 2. General Team meeting: @BA3200 [November 25th](https://docs.google.com/document/d/1zpxJw_5Rh-sNkZpV7aS_lyUibgVlktk2ZC9Gcx4qyIg/edit?usp=sharing )
