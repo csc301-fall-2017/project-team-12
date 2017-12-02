@@ -26,7 +26,7 @@ The application has many different components and sections, so during the last i
  
 We are not going to have 3 meetings next week because there is no time left for that. Overall, there is no time left to change anything, as this is the last iteration, and we only have a few days before the final presentation.
 
-## Product - Review
+## Product - Review 
 
 #### Goals and/or tasks that were met/completed:
 
@@ -37,8 +37,8 @@ We are not going to have 3 meetings next week because there is no time left for 
  
 #### Goals and/or tasks that were planned but not met/completed:
     
-* We decided not to export to XML file. Instead, we export images and emails to phone's SD card. This is easier to implement given time constraints, while still providing users with the ability to export their data somewhere for use outside of the app. 
-* We realized that analytics is not an essential feature for our MVP, so due to time constraints we decided not to implement it. 
+* We decided not to export to an XML or email format. Instead, we're exporting images to the tablet's storage and a report.csv with the candidate's email, comments, and tags. This is easier to implement given time constraints, while still providing users with the ability to export their data somewhere for use outside of the app. 
+* We realized that analytics are not an essential feature for our MVP, so due to time constraints we decided not to implement it. 
 
 ## Meeting Highlights
 
