@@ -197,7 +197,7 @@ public class StackActivity extends AppCompatActivity {
                     }
 
                     if (isExternalStorageWritable()){
-                        File dir = getAlbumStorageDir(new SimpleDateFormat("yyyy_MM_dd_" +
+                        File dir = getAlbumStorageDir("Stackd_" + new SimpleDateFormat("yyyy_MM_dd_" +
                                 "hh_mm").format(new Date()) );
                         writeResume(dir);
                     }
@@ -449,7 +449,7 @@ public class StackActivity extends AppCompatActivity {
         writeToCsv(dir);
 
         // Show a toast message on successful save
-        Toast.makeText(StackActivity.this, "Resumes exported to " + dir.getPath()   ,
+        Toast.makeText(StackActivity.this, "Resumes exported successfully"   ,
                 Toast.LENGTH_SHORT).show();
 
     }

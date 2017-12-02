@@ -192,7 +192,7 @@ public class EditActivity extends AppCompatActivity {
     public void onDoneBtnClick(View v) {
         resumeView.buildDrawingCache();
         Bitmap bitmap = resumeView.getDrawingCache();
-        save(bitmap);
+        //save(bitmap);
         // add comments and selected tags to the resume
         final EditText commentField = (EditText) findViewById(R.id.comment_field);
         String comments = commentField.getText().toString();

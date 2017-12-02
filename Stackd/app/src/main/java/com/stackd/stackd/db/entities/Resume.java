@@ -161,7 +161,11 @@ public class Resume {
         sb.append(cvsSplitBy);
         sb.append(this.getCollectionDate());
         sb.append(cvsSplitBy);
-        sb.append(this.getTagList());
+        for (Tag t: tagList) {
+            sb.append(t);
+            sb.append(" ");
+        }
+
         sb.append(cvsSplitBy);
         sb.append(this.getRecruiterComments());
         sb.append("\n");
