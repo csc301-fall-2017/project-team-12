@@ -21,10 +21,16 @@ import com.stackd.stackd.helpers.ResponseParser;
 import com.stackd.stackd.temp.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * A global class for the whole dataManager resposible for getting the required data
@@ -109,7 +115,8 @@ public class DataManager {
      **/
     private Company getCompany(Long cId) {
         // "cId" is unused for the demo but will be used when making calls to the api
-        String companyAsJsonString = Utils.getCompanyResponse();
+        //String companyAsJsonString = Utils.getCompanyResponse();
+        String companyAsJsonString = request(("http://10.0.2.2:3000/companies"));
         List<Company> result = ResponseParser.parseCompanyResponse(companyAsJsonString);
         return result != null ? result.get(0): null;
     }
@@ -119,7 +126,7 @@ public class DataManager {
      **/
     private Recruiter getRecruiter(Long rId) {
         // "rId" is unused for the demo but will be used when making calls to the api
-        String recruiterAsJsonString = Utils.getRecruiterResponse();
+        String recruiterAsJsonString =request(("http://10.0.2.2:3000/recruiters"));// Utils.getRecruiterResponse();
         List<Recruiter> result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString);
 
         return result != null ? result.get(0): null;
@@ -128,7 +135,7 @@ public class DataManager {
     /* Return the list of resumes the json response is valid, null otherwise.
      **/
     public List<Resume> getResumes() {
-        String resumesAsJsonString = Utils.getResumeResponse();
+        String resumesAsJsonString = request(("http://10.0.2.2:3000/resumes"));//Utils.getResumeResponse();
         //TODO: replace this with the commented line
         List<Resume> result = ResponseParser.parseResumeResponse(resumesAsJsonString);
         if (this.company.getResumes() != null){
@@ -236,5 +243,27 @@ public class DataManager {
 
     public static String getResumeImgKey(Resume resume) {
         return Long.toString(resume.getId()) + "-" +Long.toString(resume.getRid()) + ".jpg";
+    }
+
+    private String request(final String url) {
+        String responseStr = "";
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
+            Call call = client.newCall(request);
+            Response response = call.execute();
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+            responseStr = response.body().string();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return responseStr;
     }
 }
