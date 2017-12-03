@@ -118,6 +118,8 @@ public class DataManager {
         //String companyAsJsonString = Utils.getCompanyResponse();
         String companyAsJsonString = request(("http://10.0.2.2:3000/companies"));
         List<Company> result = ResponseParser.parseCompanyResponse(companyAsJsonString);
+        Log.d("Company", companyAsJsonString);
+        Log.d("Result", result.toString());
         return result != null ? result.get(0): null;
     }
 
