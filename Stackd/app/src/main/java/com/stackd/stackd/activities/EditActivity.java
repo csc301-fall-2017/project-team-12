@@ -67,13 +67,14 @@ public class EditActivity extends AppCompatActivity {
         resumeView = (ImageView)findViewById(R.id.current_resume);
         resumeViewShadow = (ImageView)findViewById(R.id.current_resume_shadow);
 
-
-        assert(resumeImgPath != null);
-        imgFile = new File(resumeImgPath);
-        resumeView.setImageURI(Uri.fromFile(imgFile));
-        resumeViewShadow.setImageURI(Uri.fromFile(imgFile));
-        Bitmap bitmap = load();
-        resumeView.setImageBitmap(bitmap);
+        // if for some reason, image does not exist, just display comments and tags
+        if(resumeImgPath != null) {
+            imgFile = new File(resumeImgPath);
+            resumeView.setImageURI(Uri.fromFile(imgFile));
+            resumeViewShadow.setImageURI(Uri.fromFile(imgFile));
+            Bitmap bitmap = load();
+            resumeView.setImageBitmap(bitmap);
+        }
 
         String resumeId = extras.getString(StackActivity.RESUME_ID_KEY);
         if(resumeId.equals(StackActivity.RESUME_ID_NEW)) {

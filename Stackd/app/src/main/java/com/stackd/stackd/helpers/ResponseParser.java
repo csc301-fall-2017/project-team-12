@@ -30,9 +30,9 @@ public class ResponseParser {
             JSONObject jo = new JSONObject(response);
             JSONArray ja = jo.getJSONArray("tags");
 
-            List<Tag> tags = new ArrayList<Tag>();
+            List<Tag> tags = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
-                JSONObject jsonTag = (JSONObject) ja.get(i);
+                JSONObject jsonTag = ja.getJSONObject(i);
 
                 /* Parse the id and name of the tag and create the tag object */
                 String tagId = jsonTag.getString("_id");
@@ -191,13 +191,13 @@ public class ResponseParser {
             jsonResume.put("rating", resume.getRating());
             jsonResume.put("collectionDate", resume.getCollectionDate());
             jsonResume.put("recruiterComments", resume.getRecruiterComments());
-            /*JSONArray tagArray = new JSONArray();
+            JSONArray tagArray = new JSONArray();
             for(Tag t : resume.getTagList()) {
                 JSONObject tagObject = new JSONObject();
-                tagObject.put("$oid", t.getId());
+                tagObject.put("_id", t.getId());
                 tagArray.put(tagObject);
             }
-            jsonResume.put("tags", tagArray);*/
+            jsonResume.put("tags", tagArray);
             return jsonResume;
         }
         catch(JSONException e) {
