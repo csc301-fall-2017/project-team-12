@@ -1,7 +1,5 @@
 package com.stackd.stackd.db.entities;
 
-import com.stackd.stackd.helpers.ResponseParser;
-
 import java.util.List;
 
 /**
@@ -11,13 +9,13 @@ import java.util.List;
 public class Company {
     /* Builder to populate the fields of a Company object */
     public static class Builder {
-        private long id;
+        private String id;
         private String name;
         private List<Tag> tags;
         private List<Recruiter> recruiters;
         private List<Resume> resumes;
 
-        public Builder id(long id) {
+        public Builder id(String id) {
             this.id = id;
             return this;
         }
@@ -47,7 +45,7 @@ public class Company {
         }
     }
 
-    private long id;
+    private String id;
     private String name;
     private List<Tag> tags;
     private List<Recruiter> recruiters;
@@ -64,7 +62,7 @@ public class Company {
     public Company() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -84,7 +82,7 @@ public class Company {
         return resumes;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

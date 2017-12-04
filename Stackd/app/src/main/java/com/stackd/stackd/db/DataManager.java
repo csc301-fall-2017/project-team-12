@@ -18,7 +18,8 @@ import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
 import com.stackd.stackd.helpers.Consumer;
 import com.stackd.stackd.helpers.ResponseParser;
-import com.stackd.stackd.temp.Utils;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +29,11 @@ import java.util.List;
 import java.util.Locale;
 
 import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -52,10 +56,14 @@ public class DataManager {
     private TransferUtility transferUtility;
     private static DataManager dataManager = null;
     private Company company;
-    private Recruiter recruiter;
+    private List<Recruiter> recruiters;
+    private List<Resume> resumes;
 
-    // a variable for producing resume ids locally
-    private static long currentResumeId = 100;
+    // Dummy Values
+    public static final String cId = "5a20c729a9e27a2096d636ba";
+    public static final String rId = "5a20c730a9e27a2096d636bb";
+
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private static String fs = File.separator;
     private static String PROJECT_PATH = new File(".").getPath();
@@ -89,9 +97,10 @@ public class DataManager {
             RESOURCE_FILE);
 
 
-    private DataManager(Long companyID, Long recruiterId, Context appContext) {
-        this.company = getCompany(Long.valueOf(1));
-        this.recruiter = getRecruiter(Long.valueOf(21));
+    private DataManager(String companyID, String recruiterId, Context appContext) {
+        this.company = requestCompany(companyID);
+        this.recruiters = requestRecruiters(companyID);
+        this.company.setResumes(requestResumes(companyID, recruiterId));
 
         // Initialize the Amazon Cognito credentials provider
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -104,7 +113,7 @@ public class DataManager {
         transferUtility = new TransferUtility(s3, appContext);
     }
 
-    public static DataManager getDataManager(Long companyId, Long recruiterId, Context appContext) {
+    public static DataManager getDataManager(String companyId, String recruiterId, Context appContext) {
         if (dataManager == null)
             dataManager = new DataManager(companyId, recruiterId, appContext);
         return dataManager;
@@ -113,57 +122,35 @@ public class DataManager {
     /* Return the Company entity given the company id iff the json response is valid,
      * null otherwise.
      **/
-    private Company getCompany(Long cId) {
-        // "cId" is unused for the demo but will be used when making calls to the api
-        //String companyAsJsonString = Utils.getCompanyResponse();
-        String companyAsJsonString = request(("http://10.0.2.2:3000/companies"));
-        List<Company> result = ResponseParser.parseCompanyResponse(companyAsJsonString);
-        Log.d("Company", companyAsJsonString);
-        Log.d("Result", result.toString());
-        return result != null ? result.get(0): null;
+    private Company getCompany(String cId) {
+        return company;
     }
 
-    /* Return the Recruiter entity given the recruiter id iff the json response is valid,
-     * null otherwise.
-     **/
-    private Recruiter getRecruiter(Long rId) {
-        // "rId" is unused for the demo but will be used when making calls to the api
-        String recruiterAsJsonString =request(("http://10.0.2.2:3000/recruiters"));// Utils.getRecruiterResponse();
-        List<Recruiter> result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString);
-
-        return result != null ? result.get(0): null;
-    }
 
     /* Return the list of resumes the json response is valid, null otherwise.
      **/
-    public List<Resume> getResumes() {
-        String resumesAsJsonString = request(("http://10.0.2.2:3000/resumes"));//Utils.getResumeResponse();
-        //TODO: replace this with the commented line
-        List<Resume> result = ResponseParser.parseResumeResponse(resumesAsJsonString);
-        if (this.company.getResumes() != null){
-            for (Resume resume: this.company.getResumes()) {
-                if (!result.contains(resume)) {
-                    result.add(resume);
-                }
-            }
-        }
-        return result;
-        //return ResponseParser.parseResumeResponse(resumesAsJsonString);
+    private List<Resume> getResumes() {
+        return resumes;
     }
 
     public Company getCompany() {
         return this.company;
     }
 
-    public Recruiter getRecruiter() {
-        return this.recruiter;
+    /* Return the recruiter with a given rid, if it exists, return null otherwise.
+     */
+    public Recruiter getRecruiter(String rId) {
+        for(Recruiter r : recruiters)
+            if(r.getRecId().equals(rId))
+                return r;
+        return null;
     }
 
     public List<Tag> getCompanyTags(){
         return this.company.getTags();
     }
 
-    public void addTag(Long companyId, Tag tag) {
+    public void addTag(String companyId, Tag tag) {
         // To be implemented...
     }
 
@@ -172,14 +159,50 @@ public class DataManager {
         if(this.company.getResumes() == null)
             this.company.setResumes(new ArrayList<Resume>());
         this.company.addResume(resume);
+        postResumeRequest("http://10.0.2.2:3000/resumes", resume);
     }
 
-    public void addReview(Long resId, String date, int rating) {
+    public void addReview(String resId, String date, int rating) {
         // To be implemented...
     }
 
-    public static long getNextResumeId() {
-        return currentResumeId++;
+    private Company requestCompany(String cId) {
+        // "cId" is unused for the demo but will be used when making calls to the api
+        //String companyAsJsonString = Utils.getCompanyResponse();
+        String companyAsJsonString = request(("http://10.0.2.2:3000/companies"));
+        List<Company> companyResult = ResponseParser.parseCompanyResponse(companyAsJsonString);
+        Log.d("Company", companyAsJsonString);
+        Log.d("Result", companyResult.toString());
+
+        for(Company company : companyResult) {
+            if(company.getId().equals(cId)) {
+                this.company = company;
+                // request company tags
+                String tagsAsJsonString = request(("http://10.0.2.2:3000/tags"));
+                List<Tag> tagResult = ResponseParser.parseTagResponse(tagsAsJsonString);
+                if(tagResult != null)
+                    company.setTags(tagResult);
+                return company;
+            }
+        }
+        return null;
+    }
+
+    private List<Recruiter> requestRecruiters(String cId) {
+        String recruiterAsJsonString = request(("http://10.0.2.2:3000/recruiters"));// Utils.getRecruiterResponse();
+        List<Recruiter> result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString);
+        List<Recruiter> companyRecruiters = new ArrayList<>();
+        for(Recruiter r : result)
+            if(r.getCompId().equals(cId))
+                companyRecruiters.add(r);
+        return companyRecruiters;
+    }
+
+    private List<Resume> requestResumes(String cId, String rId) {
+        String resumesAsJsonString = request(("http://10.0.2.2:3000/resumes"));//Utils.getResumeResponse();
+        //TODO: replace this with the commented line
+        List<Resume> result = ResponseParser.parseResumeResponse(resumesAsJsonString);
+        return result;
     }
 
     /**
@@ -243,8 +266,8 @@ public class DataManager {
         });
     }
 
-    public static String getResumeImgKey(Resume resume) {
-        return Long.toString(resume.getId()) + "-" +Long.toString(resume.getRid()) + ".jpg";
+    public static String getResumeImgKey(Resume resume, Recruiter recruiter) {
+        return resume.getId() + "-" + recruiter.getRecId() + ".jpg";
     }
 
     private String request(final String url) {
@@ -267,5 +290,28 @@ public class DataManager {
         }
 
         return responseStr;
+    }
+
+    private void postResumeRequest(final String url, Resume resume) {
+        JSONObject jsonResume = ResponseParser.serializeResume(resume);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, jsonResume.toString());
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("POST", response.body().toString());
+            }
+        });
+
     }
 }

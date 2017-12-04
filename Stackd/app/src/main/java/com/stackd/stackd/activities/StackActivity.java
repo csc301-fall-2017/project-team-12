@@ -34,28 +34,21 @@ import com.stackd.stackd.R;
 import com.stackd.stackd.adapters.ResumeImageAdapter;
 import com.stackd.stackd.db.entities.Resume;
 import com.stackd.stackd.db.entities.Tag;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import java.util.LinkedHashMap;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.BufferedReader;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
-
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class StackActivity extends AppCompatActivity {
     public static final String RESUME_ID_KEY = "resumeId";
-    public static final long RESUME_ID_NEW = -1;
+    public static final String RESUME_ID_NEW = "-1";
     private ResumeImageAdapter adapter;
     private int REQUEST_CODE = 99;
     private static final int REQUEST_WRITE_STORAGE = 112;
@@ -81,7 +74,7 @@ public class StackActivity extends AppCompatActivity {
                 Intent i = new Intent(StackActivity.this, EditActivity.class);
                 String imgPath = adapter.getImgPath(position);
                 i.putExtra(EditActivity.IMAGE_PATH_KEY, imgPath);
-                long resumeId = ((Resume) adapter.getItem(position)).getId();
+                String resumeId = ((Resume) adapter.getItem(position)).getId();
                 i.putExtra(RESUME_ID_KEY, resumeId);
                 startActivity(i);
             }

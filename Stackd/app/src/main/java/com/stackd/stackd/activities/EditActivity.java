@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,9 +41,6 @@ public class EditActivity extends AppCompatActivity {
     public static final String IMAGE_PATH_KEY = "imagePath";
     private LinearLayout tagListLayout;
     private Resume resume;
-    // Dummy Values
-    private final long cId = 1;
-    private final long rId = 21;
     private DataManager dataManager;
     private AlertDialog alertBox = null;
     private AlertDialog setCandidateEmailAlertBox = null;
@@ -64,7 +59,7 @@ public class EditActivity extends AppCompatActivity {
         setUpAlertBox(this);
         setUpCandidateEmail(this);
 
-        dataManager = DataManager.getDataManager(cId, rId, getApplicationContext());
+        dataManager = DataManager.getDataManager(DataManager.cId, DataManager.rId, getApplicationContext());
         // Fields needed from other screens
         Bundle extras = getIntent().getExtras();
         resumeImgPath = extras.getString(IMAGE_PATH_KEY);
@@ -80,13 +75,12 @@ public class EditActivity extends AppCompatActivity {
         Bitmap bitmap = load();
         resumeView.setImageBitmap(bitmap);
 
-        long resumeId = extras.getLong(StackActivity.RESUME_ID_KEY);
-        if(resumeId == StackActivity.RESUME_ID_NEW) {
+        String resumeId = extras.getString(StackActivity.RESUME_ID_KEY);
+        if(resumeId.equals(StackActivity.RESUME_ID_NEW)) {
             // Initialize a new resume
             // NOTE: as of right now, we are not using url field at all
             resume = new Resume.Builder()
-                    .id(DataManager.getNextResumeId())
-                    .rid(dataManager.getRecruiter().getRecId())
+                    .rid(DataManager.rId)
                     .collectionDate(new SimpleDateFormat("DD-MM-yyyy").format(new Date()))
                     .tagList(new ArrayList<Tag>())
                     .build();
@@ -111,8 +105,8 @@ public class EditActivity extends AppCompatActivity {
                 }
             });
             // load an existing resume
-            for(Resume r : dataManager.getResumes())
-                if(r.getId() == resumeId) {
+            for(Resume r : dataManager.getCompany().getResumes())
+                if(r.getId().equals(resumeId)) {
                     resume = r;
                     editText.setText(resume.getRecruiterComments());
                     if(resume.getTagList() != null)
@@ -133,7 +127,7 @@ public class EditActivity extends AppCompatActivity {
             String tagName = tag.getName();
             final Button btn = new Button(getApplicationContext());
             tagButtonMap.put(btn, tag);
-            if(resumeId != StackActivity.RESUME_ID_NEW) {
+            if(!resumeId.equals(StackActivity.RESUME_ID_NEW)) {
                 btn.setEnabled(false);
             }
             int backgroundColor =
@@ -195,7 +189,6 @@ public class EditActivity extends AppCompatActivity {
         //save(bitmap);
         // add comments and selected tags to the resume
         final EditText commentField = (EditText) findViewById(R.id.comment_field);
-        String comments = commentField.getText().toString();
         resume.setRecruiterComments(commentField.getText().toString());
         resume.setTagList(resumeTags);
         alertBox.show();
@@ -243,10 +236,10 @@ public class EditActivity extends AppCompatActivity {
                 }
                 // Insert the resume into the database
                 assert(resume != null);
-                dataManager.insertResume(resume);
                 // Review it and add a rating
                 dataManager.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());
-                dataManager.uploadFile(DataManager.getResumeImgKey(resume), new File(resumeImgPath),
+                dataManager.insertResume(resume);
+                dataManager.uploadFile(DataManager.getResumeImgKey(resume, dataManager.getRecruiter(DataManager.rId)), new File(resumeImgPath),
                         new Consumer() {
                             @Override
                             public void accept(Object o) {
