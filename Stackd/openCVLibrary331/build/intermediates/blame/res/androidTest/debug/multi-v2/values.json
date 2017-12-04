@@ -1,43 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\D:\\Users\\angeloaustria\\Desktop\\301\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\D:\\home\\sonata\\2camview\\project-team-12\\Stackd\\D:\\Users\\angeloaustria\\Desktop\\301\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\D:\\home\\sonata\\2camview\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\D:\\Users\\angeloaustria\\Desktop\\301_2\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\D:\\home\\sonata\\2camview\\project-team-12\\Stackd\\D:\\Android projects\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\D:\\home\\sonata\\2camview\\project-team-12\\Stackd\\D:\\Users\\lana\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\sonata\\Desktop\\301\\test\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\D:\\Android projects\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-            "map": []
-        },
-        {
-            "outputFile": "C:\\Users\\angeloaustria\\Desktop\\301_2\\s3-integration\\project-team-12\\Stackd\\D:\\home\\sonata\\2camview\\project-team-12\\Stackd\\D:\\Users\\lana\\project-team-12\\Stackd\\D:\\Android projects\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+            "outputFile": "D:\\Android projects\\project-team-12\\Stackd\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
             "map": []
         }
     ]

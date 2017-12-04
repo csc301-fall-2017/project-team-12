@@ -1,17 +1,12 @@
 package com.stackd.stackd.db.entities;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-
-/**
- * Created by lana on 11/8/17.
- */
 
 public class Resume {
     /* Builder to set the fields of the Resume */
     public static class Builder {
-        private long id;
-        private long rid;
+        private String id;
+        private String rid;
         private int rating;
         private String url;
         private String candidateName;
@@ -19,12 +14,12 @@ public class Resume {
         private String recruiterComments;
         private List<Tag> tagList;
 
-        public Builder id(long id) {
+        public Builder id(String id) {
             this.id = id;
             return this;
         }
 
-        public Builder rid(long rid) {
+        public Builder rid(String rid) {
             this.rid = rid;
             return this;
         }
@@ -66,8 +61,8 @@ public class Resume {
 
     }
 
-    private long id;
-    private long rid;
+    private String id;
+    private String rid;
     private String url;
     private String candidateName;
     private String recruiterComments;
@@ -90,11 +85,11 @@ public class Resume {
     public Resume() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public long getRid() {
+    public String getRid() {
         return rid;
     }
 
@@ -122,11 +117,11 @@ public class Resume {
         return tagList;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setRid(long rid) {
+    public void setRid(String rid) {
         this.rid = rid;
     }
 
@@ -161,7 +156,11 @@ public class Resume {
         sb.append(cvsSplitBy);
         sb.append(this.getCollectionDate());
         sb.append(cvsSplitBy);
-        sb.append(this.getTagList());
+        for (Tag t: tagList) {
+            sb.append(t);
+            sb.append(" ");
+        }
+
         sb.append(cvsSplitBy);
         sb.append(this.getRecruiterComments());
         sb.append("\n");

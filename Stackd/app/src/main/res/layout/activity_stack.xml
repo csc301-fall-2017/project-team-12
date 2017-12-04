@@ -27,7 +27,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rating_yes"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:backgroundTint="@color/colorGrey"
                     android:textColor="@color/colorWhite"
                     android:onClick="filterByRating"/>
                 <Button
@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rating_maybe"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:backgroundTint="@color/colorGrey"
                     android:textColor="@color/colorWhite"
                     android:onClick="filterByRating"/>
                 <Button
@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rating_no"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:backgroundTint="@color/colorGrey"
                     android:textColor="@color/colorWhite"
                     android:onClick="filterByRating"/>
             </LinearLayout>
