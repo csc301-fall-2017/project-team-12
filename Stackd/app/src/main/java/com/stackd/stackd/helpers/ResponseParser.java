@@ -191,6 +191,13 @@ public class ResponseParser {
             jsonResume.put("rating", resume.getRating());
             jsonResume.put("collectionDate", resume.getCollectionDate());
             jsonResume.put("recruiterComments", resume.getRecruiterComments());
+            /*JSONArray tagArray = new JSONArray();
+            for(Tag t : resume.getTagList()) {
+                JSONObject tagObject = new JSONObject();
+                tagObject.put("$oid", t.getId());
+                tagArray.put(tagObject);
+            }
+            jsonResume.put("tags", tagArray);*/
             return jsonResume;
         }
         catch(JSONException e) {

@@ -294,7 +294,7 @@ public class DataManager {
         return responseStr;
     }
 
-    private void postResumeRequest(final String url, Resume resume, final Consumer consumer) {
+    private void postResumeRequest(final String url, final Resume resume, final Consumer consumer) {
         JSONObject jsonResume = ResponseParser.serializeResume(resume);
 
         OkHttpClient client = new OkHttpClient();
@@ -306,13 +306,16 @@ public class DataManager {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                Log.d("HTTP", e.getMessage());
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 // get the resume from response and pass it to the consumer
-                Resume resume = ResponseParser.parseResumeResponse(response.body().string());
+                Resume responseResume = ResponseParser.parseResumeResponse(response.body().string());
+                resume.setId(responseResume.getId());
                 consumer.accept(resume);
             }
         });
