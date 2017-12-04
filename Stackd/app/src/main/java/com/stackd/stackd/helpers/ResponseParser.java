@@ -49,7 +49,7 @@ public class ResponseParser {
 
     }
 
-    public static List<Resume> parseResumeResponse(String response)
+    public static List<Resume> parseResumesResponse(String response)
             throws NullPointerException {
         if (response == null) throw new NullPointerException();
         try {
@@ -73,6 +73,30 @@ public class ResponseParser {
                         .tagList(ResponseParser.parseTagResponse(jsonResume.toString()))
                         .build());
             }
+            return resume;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    public static Resume parseResumeResponse(String response)
+            throws NullPointerException {
+        if (response == null) throw new NullPointerException();
+        try {
+            JSONObject jsonResume = new JSONObject(response);
+
+            /* Parse the resume date from the json and construct the resume object */
+
+            Resume resume = new Resume.Builder()
+                    .id(jsonResume.getString("_id"))
+                    .candidateName(jsonResume.getString("candidateName"))
+                    //.rid(jsonResume.getString("rid"))
+                    .rating(jsonResume.getInt("rating"))
+                    //.url(jsonResume.getString("url"))
+                    .collectionDate(jsonResume.getString("collectionDate"))
+                    .recruiterComments(jsonResume.getString("recruiterComments"))
+                    .tagList(ResponseParser.parseTagResponse(jsonResume.toString()))
+                    .build();
             return resume;
         } catch (JSONException e) {
             return null;
@@ -121,7 +145,7 @@ public class ResponseParser {
                         .name(jsonCompany.getString("name"))
                         //.tags(ResponseParser.parseTagResponse(company))
                         //.recruiters(ResponseParser.parseRecruiterResponse(company))
-                        //.resumes(ResponseParser.parseResumeResponse(company))
+                        //.resumes(ResponseParser.parseResumesResponse(company))
                         .build());
             }
             return companies;

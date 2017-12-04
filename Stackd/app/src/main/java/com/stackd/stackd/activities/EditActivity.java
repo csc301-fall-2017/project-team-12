@@ -238,16 +238,23 @@ public class EditActivity extends AppCompatActivity {
                 assert(resume != null);
                 // Review it and add a rating
                 dataManager.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());
-                dataManager.insertResume(resume);
-                dataManager.uploadFile(DataManager.getResumeImgKey(resume, dataManager.getRecruiter(DataManager.rId)), new File(resumeImgPath),
-                        new Consumer() {
-                            @Override
-                            public void accept(Object o) {
-                                // file uploaded, return to stack activity
-                                Intent i = new Intent(EditActivity.this, StackActivity.class);
-                                startActivity(i);
-                            }
-                        });
+                // insert the resume into the database, wait for response, upload it to AWS with the
+                // appropriate key
+                dataManager.insertResume(resume, new Consumer() {
+                    @Override
+                    public void accept(Object o) {
+                        Resume storedResume = (Resume) o;
+                        dataManager.uploadFile(DataManager.getResumeImgKey(storedResume, dataManager.getRecruiter(DataManager.rId)), new File(resumeImgPath),
+                                new Consumer() {
+                                    @Override
+                                    public void accept(Object o) {
+                                        // file uploaded, return to stack activity
+                                        Intent i = new Intent(EditActivity.this, StackActivity.class);
+                                        startActivity(i);
+                                    }
+                                });
+                    }
+                });
             }
         });
         alertBox = alertBuilder.create();

@@ -229,8 +229,6 @@ public class StackActivity extends AppCompatActivity {
      * @param v the button that was clicked.
      */
     public void onCameraBtnClick(View v) {
-        // request camera permissions
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             int preference = ScanConstants.OPEN_CAMERA;
@@ -238,6 +236,10 @@ public class StackActivity extends AppCompatActivity {
 
             intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
             startActivityForResult(intent, REQUEST_CODE);
+        }
+        else {
+            // request camera permissions
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);
         }
     }
 

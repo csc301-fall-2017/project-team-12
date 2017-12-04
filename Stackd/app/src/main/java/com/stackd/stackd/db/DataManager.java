@@ -58,7 +58,7 @@ public class DataManager {
     private Company company;
     private List<Recruiter> recruiters;
     private List<Resume> resumes;
-    private String IP = "100.64.187.108"; // EMULATOR= 10.0.2.2
+    private String IP = /*"100.64.187.108";*/ "10.0.2.2";
 
     // Dummy Values
     public static final String cId = "5a20c729a9e27a2096d636ba";
@@ -155,12 +155,12 @@ public class DataManager {
         // To be implemented...
     }
 
-    public void insertResume(Resume resume) {
+    public void insertResume(Resume resume, Consumer consumer) {
         // To be implemented...
         if(this.company.getResumes() == null)
             this.company.setResumes(new ArrayList<Resume>());
         this.company.addResume(resume);
-        postResumeRequest("http://" + IP + ":3000/resumes", resume);
+        postResumeRequest("http://" + IP + ":3000/resumes", resume, consumer);
     }
 
     public void addReview(String resId, String date, int rating) {
@@ -203,7 +203,7 @@ public class DataManager {
     private List<Resume> requestResumes(String cId, String rId) {
         String resumesAsJsonString = request(("http://" + IP + ":3000/resumes"));//Utils.getResumeResponse();
         //TODO: replace this with the commented line
-        List<Resume> result = ResponseParser.parseResumeResponse(resumesAsJsonString);
+        List<Resume> result = ResponseParser.parseResumesResponse(resumesAsJsonString);
         return result;
     }
 
@@ -294,7 +294,7 @@ public class DataManager {
         return responseStr;
     }
 
-    private void postResumeRequest(final String url, Resume resume) {
+    private void postResumeRequest(final String url, Resume resume, final Consumer consumer) {
         JSONObject jsonResume = ResponseParser.serializeResume(resume);
 
         OkHttpClient client = new OkHttpClient();
@@ -311,7 +311,9 @@ public class DataManager {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d("POST", response.body().toString());
+                // get the resume from response and pass it to the consumer
+                Resume resume = ResponseParser.parseResumeResponse(response.body().string());
+                consumer.accept(resume);
             }
         });
 
