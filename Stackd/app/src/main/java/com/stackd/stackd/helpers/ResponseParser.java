@@ -1,5 +1,7 @@
 package com.stackd.stackd.helpers;
 
+import android.util.Log;
+
 import com.stackd.stackd.db.entities.Company;
 import com.stackd.stackd.db.entities.Recruiter;
 import com.stackd.stackd.db.entities.Resume;
@@ -33,7 +35,7 @@ public class ResponseParser {
                 JSONObject jsonTag = (JSONObject) ja.get(i);
 
                 /* Parse the id and name of the tag and create the tag object */
-                Long tagId = jsonTag.getLong("_id");
+                String tagId = jsonTag.getString("_id");
                 String tagName = jsonTag.getString("name");
                 tags.add(new Tag.Builder()
                         .id(tagId)
@@ -47,7 +49,7 @@ public class ResponseParser {
 
     }
 
-    public static List<Resume> parseResumeResponse(String response)
+    public static List<Resume> parseResumesResponse(String response)
             throws NullPointerException {
         if (response == null) throw new NullPointerException();
         try {
@@ -59,22 +61,42 @@ public class ResponseParser {
                 JSONObject jsonResume = (JSONObject) ja.get(i);
 
                 /* Parse the resume date from the json and construct the resume object */
-                JSONObject jsonName = jsonResume.getJSONObject("candidateName");
-                String candidateName = String.format("%s %s",
-                        jsonName.getString("firstName"),
-                        jsonName.getString("lastName"));
 
                 resume.add(new Resume.Builder()
-                        .id(jsonResume.getLong("_id"))
-                        .rid(jsonResume.getLong("rid"))
+                        .id(jsonResume.getString("_id"))
+                        .candidateName(jsonResume.getString("candidateName"))
+                        //.rid(jsonResume.getString("rid"))
                         .rating(jsonResume.getInt("rating"))
-                        .url(jsonResume.getString("url"))
+                        //.url(jsonResume.getString("url"))
                         .collectionDate(jsonResume.getString("collectionDate"))
                         .recruiterComments(jsonResume.getString("recruiterComments"))
                         .tagList(ResponseParser.parseTagResponse(jsonResume.toString()))
-                        .candidateName(candidateName)
                         .build());
             }
+            return resume;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    public static Resume parseResumeResponse(String response)
+            throws NullPointerException {
+        if (response == null) throw new NullPointerException();
+        try {
+            JSONObject jsonResume = new JSONObject(response);
+
+            /* Parse the resume date from the json and construct the resume object */
+
+            Resume resume = new Resume.Builder()
+                    .id(jsonResume.getString("_id"))
+                    .candidateName(jsonResume.getString("candidateName"))
+                    //.rid(jsonResume.getString("rid"))
+                    .rating(jsonResume.getInt("rating"))
+                    //.url(jsonResume.getString("url"))
+                    .collectionDate(jsonResume.getString("collectionDate"))
+                    .recruiterComments(jsonResume.getString("recruiterComments"))
+                    .tagList(ResponseParser.parseTagResponse(jsonResume.toString()))
+                    .build();
             return resume;
         } catch (JSONException e) {
             return null;
@@ -88,14 +110,14 @@ public class ResponseParser {
             JSONObject jo = new JSONObject(response);
             JSONArray ja = jo.getJSONArray("recruiters");
 
-            List<Recruiter> recruiters = new ArrayList<Recruiter>();
+            List<Recruiter> recruiters = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
                 JSONObject jsonResume = (JSONObject) ja.get(i);
 
                 /* Construct the recruiter object and add it to the array of recruiters */
                 recruiters.add(new Recruiter.Builder()
-                        .recId(jsonResume.getLong("_id"))
-                        .compId(jsonResume.getLong("cId"))
+                        .recId(jsonResume.getString("_id"))
+                        .compId(jsonResume.getString("cId"))
                         .firstName(jsonResume.getString("firstName"))
                         .lastName(jsonResume.getString("lastName"))
                         .email(jsonResume.getString("email"))
@@ -114,22 +136,85 @@ public class ResponseParser {
             JSONObject jo = new JSONObject(response);
             JSONArray ja = jo.getJSONArray("companies");
 
-            List<Company> companies = new ArrayList<Company>();
+            List<Company> companies = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
                 JSONObject jsonCompany = (JSONObject) ja.get(i);
-                String company = jsonCompany.toString();
-
                 /* Construct the company object and add it to the array of companies */
                 companies.add(new Company.Builder()
-                        .id(jsonCompany.getLong("_id"))
+                        .id(jsonCompany.getString("_id"))
                         .name(jsonCompany.getString("name"))
-                        .tags(ResponseParser.parseTagResponse(company))
-                        .recruiters(ResponseParser.parseRecruiterResponse(company))
-                        .resumes(ResponseParser.parseResumeResponse(company))
+                        //.tags(ResponseParser.parseTagResponse(company))
+                        //.recruiters(ResponseParser.parseRecruiterResponse(company))
+                        //.resumes(ResponseParser.parseResumesResponse(company))
                         .build());
             }
             return companies;
         } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    public static JSONObject serializeCompany(Company company) {
+        JSONObject jsonCompany = new JSONObject();
+        try {
+            // jsonCompany.put("_id", company.getId());
+            jsonCompany.put("name", company.getName());
+            return jsonCompany;
+        }
+        catch(JSONException e) {
+            Log.d("DataManager", e.getMessage());
+            return null;
+        }
+    }
+
+    public static JSONObject serializeRecruiter(Recruiter recruiter) {
+        JSONObject jsonRecruiter = new JSONObject();
+        try {
+            // jsonRecruiter.put("_id", recruiter.getRecId());
+            jsonRecruiter.put("cId", recruiter.getCompId());
+            jsonRecruiter.put("firstName", recruiter.getFirstName());
+            jsonRecruiter.put("lastName", recruiter.getLastName());
+            jsonRecruiter.put("email", recruiter.getEmail());
+            return jsonRecruiter;
+        }
+        catch(JSONException e) {
+            Log.d("DataManager", e.getMessage());
+            return null;
+        }
+    }
+
+    public static JSONObject serializeResume(Resume resume) {
+        JSONObject jsonResume = new JSONObject();
+        try {
+            // jsonResume.put("_id", resume.getId());
+            jsonResume.put("candidateName", resume.getCandidateName());
+            jsonResume.put("rating", resume.getRating());
+            jsonResume.put("collectionDate", resume.getCollectionDate());
+            jsonResume.put("recruiterComments", resume.getRecruiterComments());
+            /*JSONArray tagArray = new JSONArray();
+            for(Tag t : resume.getTagList()) {
+                JSONObject tagObject = new JSONObject();
+                tagObject.put("$oid", t.getId());
+                tagArray.put(tagObject);
+            }
+            jsonResume.put("tags", tagArray);*/
+            return jsonResume;
+        }
+        catch(JSONException e) {
+            Log.d("DataManager", e.getMessage());
+            return null;
+        }
+    }
+
+    public static JSONObject serializeTag(Tag tag) {
+        JSONObject jsonTag = new JSONObject();
+        try {
+            // jsonTag.put("_id", tag.getId());
+            jsonTag.put("name", tag.getName());
+            return jsonTag;
+        }
+        catch(JSONException e) {
+            Log.d("DataManager", e.getMessage());
             return null;
         }
     }

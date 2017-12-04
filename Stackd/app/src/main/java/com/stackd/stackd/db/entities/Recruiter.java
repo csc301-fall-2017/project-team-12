@@ -1,24 +1,20 @@
 package com.stackd.stackd.db.entities;
 
-/**
- * Created by user on 11/6/2017.
- */
-
 public class Recruiter  {
     /* Builder to populate the fields of a Recruiter object */
     public static class Builder {
-        private long recId;
-        private long compId;
+        private String recId;
+        private String compId;
         private String firstName;
         private String lastName;
         private String email;
 
-        public Builder recId(long recId) {
+        public Builder recId(String recId) {
             this.recId = recId;
             return this;
         }
 
-        public Builder compId(long compId) {
+        public Builder compId(String compId) {
             this.compId = compId;
             return this;
         }
@@ -43,8 +39,8 @@ public class Recruiter  {
         }
     }
 
-    private long recId;
-    private long compId;
+    private String recId;
+    private String compId;
     private String firstName;
     private String lastName;
     private String email;
@@ -60,11 +56,11 @@ public class Recruiter  {
     public Recruiter() {
     }
 
-    public void setCompId(long compId) {
+    public void setCompId(String compId) {
         this.compId = compId;
     }
 
-    public void setRecId(long recId) {
+    public void setRecId(String recId) {
         this.recId = recId;
     }
 
@@ -80,11 +76,11 @@ public class Recruiter  {
         this.email = email;
     }
 
-    public long getRecId() {
+    public String getRecId() {
         return recId;
     }
 
-    public long getCompId() {
+    public String getCompId() {
         return compId;
     }
 

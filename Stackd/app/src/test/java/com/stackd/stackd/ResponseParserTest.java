@@ -36,7 +36,7 @@ public class ResponseParserTest {
 
     @Test
     public void parseResumeTest() throws NullPointerException {
-        List<Resume> actual = ResponseParser.parseResumeResponse(Utils.getResumeResponse());
+        List<Resume> actual = ResponseParser.parseResumesResponse(Utils.getResumeResponse());
 
         /* The expected result */
         List<Resume> expected = new ArrayList<>();

@@ -1,16 +1,12 @@
 package com.stackd.stackd.db.entities;
 
-/**
- * Created by lana on 11/6/17.
- */
-
 public class Tag  {
     /* Builder to set the fields of the Tag */
     public static class Builder {
-        private long id;
+        private String id;
         private String name;
 
-        public Builder id(long id) {
+        public Builder id(String id) {
             this.id = id;
             return this;
         }
@@ -25,7 +21,7 @@ public class Tag  {
         }
     }
 
-    private long id;
+    private String id;
     private String name;
 
     private Tag(Builder builder) {
@@ -36,7 +32,7 @@ public class Tag  {
     public Tag() {
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -44,7 +40,7 @@ public class Tag  {
         this.name = name;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -54,7 +50,7 @@ public class Tag  {
 
     @Override
     public boolean equals(Object tag) {
-        return tag instanceof Tag && this.id == ((Tag)tag).id && this.getName().equals(((Tag) tag).getName());
+        return tag instanceof Tag && this.id.equals(((Tag)tag).id) && this.getName().equals(((Tag) tag).getName());
     }
 
     @Override public String toString() {

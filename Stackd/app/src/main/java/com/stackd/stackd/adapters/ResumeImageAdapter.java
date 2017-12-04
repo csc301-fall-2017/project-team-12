@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.stackd.stackd.db.DataManager.cId;
+import static com.stackd.stackd.db.DataManager.rId;
+
 /**
  * Adapter for GridView of resumes.
  */
@@ -41,12 +44,9 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
 
     public ResumeImageAdapter(Context c) {
         mContext = c;
-        // Dummy Values
-        long cId = 1;
-        long rId = 21;
         // get data manager and get all data required for this activity (resumes and tags)
         manager = DataManager.getDataManager(cId, rId, mContext.getApplicationContext());
-        resumes = manager.getResumes();
+        resumes = manager.getCompany().getResumes();
         tags = manager.getCompanyTags();
         filteredResumes = new ArrayList<>(resumes);
         // download resume images
@@ -260,7 +260,7 @@ public class ResumeImageAdapter extends BaseAdapter implements Filterable {
 
     private void downloadResumeImages() {
         for(final Resume r: resumes) {
-            String imgKey = DataManager.getResumeImgKey(r);
+            String imgKey = DataManager.getResumeImgKey(r, manager.getRecruiter(DataManager.rId));
             manager.downloadFile(imgKey, new Consumer<File>() {
                 @Override
                 public void accept(File file) {
