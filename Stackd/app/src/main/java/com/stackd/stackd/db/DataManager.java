@@ -24,9 +24,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -57,46 +55,13 @@ public class DataManager {
     private static DataManager dataManager = null;
     private Company company;
     private List<Recruiter> recruiters;
-    private List<Resume> resumes;
-    private String IP = /*"100.64.187.108";*/ "10.0.2.2";
+    private String SERVER_ADDR = "https://csc301-stackd.herokuapp.com/";
 
     // Dummy Values
     public static final String cId = "5a20c729a9e27a2096d636ba";
     public static final String rId = "5a20c730a9e27a2096d636bb";
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-    private static String fs = File.separator;
-    private static String PROJECT_PATH = new File(".").getPath();
-    private static String RESOURCE_FILE = new Formatter(new StringBuilder(), Locale.CANADA)
-            .format("%1$1s%2$1sapp" +
-                            "%2$1ssrc" +
-                            "%2$1stest" +
-                            "%2$1sjava" +
-                            "%2$1scom" +
-                            "%2$1sstackd" +
-                            "%2$1sstackd" +
-                            "%2$1sresources" +
-                            "%2$1s",
-                    PROJECT_PATH, fs).toString();
-
-    /* Path of the json files containing a dummy response from the api */
-    private static String TAG_RESPONSE_FILE = String.format(
-            "%stag_response.json",
-            RESOURCE_FILE);
-
-    public static String COMPANY_RESPONSE_FILE = String.format(
-            "%scompany_response.json",
-            RESOURCE_FILE);
-
-    public static String RECRUITER_RESPONSE_FILE = String.format(
-            "%srecruiter_response.json",
-            RESOURCE_FILE);
-
-    public static String RESUME_RESPONSE_FILE = String.format(
-            "%sresume_response.json",
-            RESOURCE_FILE);
-
 
     private DataManager(String companyID, String recruiterId, Context appContext) {
         this.company = requestCompany(companyID);
@@ -127,13 +92,6 @@ public class DataManager {
         return company;
     }
 
-
-    /* Return the list of resumes the json response is valid, null otherwise.
-     **/
-    private List<Resume> getResumes() {
-        return resumes;
-    }
-
     public Company getCompany() {
         return this.company;
     }
@@ -155,22 +113,24 @@ public class DataManager {
         // To be implemented...
     }
 
+    /*
+    Inserts the resume into the resume list locally, and sends a request to the server
+    to insert the resume into the database as well.
+     */
     public void insertResume(Resume resume, Consumer consumer) {
-        // To be implemented...
         if(this.company.getResumes() == null)
             this.company.setResumes(new ArrayList<Resume>());
         this.company.addResume(resume);
-        postResumeRequest("http://" + IP + ":3000/resumes", resume, consumer);
+        postResumeRequest(SERVER_ADDR + "resumes", resume, consumer);
     }
 
-    public void addReview(String resId, String date, int rating) {
-        // To be implemented...
-    }
-
+    /*
+    Requests the company with a given id from the database.
+     */
     private Company requestCompany(String cId) {
         // "cId" is unused for the demo but will be used when making calls to the api
         //String companyAsJsonString = Utils.getCompanyResponse();
-        String companyAsJsonString = request(("http://" + IP +":3000/companies"));
+        String companyAsJsonString = request((SERVER_ADDR + "companies"));
         List<Company> companyResult = ResponseParser.parseCompanyResponse(companyAsJsonString);
         Log.d("Company", companyAsJsonString);
         Log.d("Result", companyResult.toString());
@@ -179,7 +139,7 @@ public class DataManager {
             if(company.getId().equals(cId)) {
                 this.company = company;
                 // request company tags
-                String tagsAsJsonString = request(("http://" + IP + ":3000/tags"));
+                String tagsAsJsonString = request((SERVER_ADDR + "tags"));
                 List<Tag> tagResult = ResponseParser.parseTagResponse(tagsAsJsonString);
                 if(tagResult != null)
                     company.setTags(tagResult);
@@ -190,8 +150,10 @@ public class DataManager {
         return null;
     }
 
+    /* Requests all recruiters that work at the company with the given from the database.
+     */
     private List<Recruiter> requestRecruiters(String cId) {
-        String recruiterAsJsonString = request(("http://" + IP + ":3000/recruiters"));// Utils.getRecruiterResponse();
+        String recruiterAsJsonString = request((SERVER_ADDR + "recruiters"));
         List<Recruiter> result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString);
         List<Recruiter> companyRecruiters = new ArrayList<>();
         for(Recruiter r : result)
@@ -200,9 +162,10 @@ public class DataManager {
         return companyRecruiters;
     }
 
+    /* Requests all resumes from the database.
+     */
     private List<Resume> requestResumes(String cId, String rId) {
-        String resumesAsJsonString = request(("http://" + IP + ":3000/resumes"));//Utils.getResumeResponse();
-        //TODO: replace this with the commented line
+        String resumesAsJsonString = request((SERVER_ADDR + "resumes"));
         List<Resume> result = ResponseParser.parseResumesResponse(resumesAsJsonString);
         return result;
     }
@@ -268,10 +231,22 @@ public class DataManager {
         });
     }
 
+    /**
+     * Generates the key for the resume image, that wil be used as an S3 key.
+     * Key always has the following format: "resumdId-recruiterId.jpg"
+     * @param resume the resume for which a key will be generated
+     * @param recruiter the recruiter to whom the resume belongs to
+     * @return generated key
+     */
     public static String getResumeImgKey(Resume resume, Recruiter recruiter) {
         return resume.getId() + "-" + recruiter.getRecId() + ".jpg";
     }
 
+    /**
+     * Makes a GET request to the server at the provided url.
+     * @param url address of the request
+     * @return the response body as a string
+     */
     private String request(final String url) {
         String responseStr = "";
         try {
@@ -294,6 +269,11 @@ public class DataManager {
         return responseStr;
     }
 
+    /*
+        Makes a post request to the server, requesting to add a resume to the database.
+        When a response is received, invokes the Consumer callback, passing it the
+        resume with its ID assigned.
+     */
     private void postResumeRequest(final String url, final Resume resume, final Consumer consumer) {
         JSONObject jsonResume = ResponseParser.serializeResume(resume);
 
@@ -313,6 +293,7 @@ public class DataManager {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                // NOTE: can only call response.body().string() once!!! Second call is invalid
                 // get the resume from response and pass it to the consumer
                 Resume responseResume = ResponseParser.parseResumeResponse(response.body().string());
                 resume.setId(responseResume.getId());

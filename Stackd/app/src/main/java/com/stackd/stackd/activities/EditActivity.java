@@ -214,15 +214,9 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void setUpAlertBox(Context context) {
-
-        // The button icons
-        //ImageView no = new ImageView(this);
-        //no.setImageResource(R.drawable.splattered);
-
         // setup the alert builder
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setTitle("Candidate Status");
-        //alertBuilder.setView(no);
         // add a list
         String[] ratings = {"Yes", "No", "Maybe"};
 
@@ -237,7 +231,6 @@ public class EditActivity extends AppCompatActivity {
                 // Insert the resume into the database
                 assert(resume != null);
                 // Review it and add a rating
-                dataManager.addReview(resume.getId(), resume.getCollectionDate(), resume.getRating());
                 // insert the resume into the database, wait for response, upload it to AWS with the
                 // appropriate key
                 dataManager.insertResume(resume, new Consumer() {
