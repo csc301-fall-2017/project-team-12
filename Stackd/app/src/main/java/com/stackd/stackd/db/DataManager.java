@@ -58,6 +58,7 @@ public class DataManager {
     private Company company;
     private List<Recruiter> recruiters;
     private List<Resume> resumes;
+    private String IP = "100.64.187.108"; // EMULATOR= 10.0.2.2
 
     // Dummy Values
     public static final String cId = "5a20c729a9e27a2096d636ba";
@@ -159,7 +160,7 @@ public class DataManager {
         if(this.company.getResumes() == null)
             this.company.setResumes(new ArrayList<Resume>());
         this.company.addResume(resume);
-        postResumeRequest("http://10.0.2.2:3000/resumes", resume);
+        postResumeRequest("http://" + IP + ":3000/resumes", resume);
     }
 
     public void addReview(String resId, String date, int rating) {
@@ -169,7 +170,7 @@ public class DataManager {
     private Company requestCompany(String cId) {
         // "cId" is unused for the demo but will be used when making calls to the api
         //String companyAsJsonString = Utils.getCompanyResponse();
-        String companyAsJsonString = request(("http://10.0.2.2:3000/companies"));
+        String companyAsJsonString = request(("http://" + IP +":3000/companies"));
         List<Company> companyResult = ResponseParser.parseCompanyResponse(companyAsJsonString);
         Log.d("Company", companyAsJsonString);
         Log.d("Result", companyResult.toString());
@@ -178,10 +179,11 @@ public class DataManager {
             if(company.getId().equals(cId)) {
                 this.company = company;
                 // request company tags
-                String tagsAsJsonString = request(("http://10.0.2.2:3000/tags"));
+                String tagsAsJsonString = request(("http://" + IP + ":3000/tags"));
                 List<Tag> tagResult = ResponseParser.parseTagResponse(tagsAsJsonString);
                 if(tagResult != null)
                     company.setTags(tagResult);
+
                 return company;
             }
         }
@@ -189,7 +191,7 @@ public class DataManager {
     }
 
     private List<Recruiter> requestRecruiters(String cId) {
-        String recruiterAsJsonString = request(("http://10.0.2.2:3000/recruiters"));// Utils.getRecruiterResponse();
+        String recruiterAsJsonString = request(("http://" + IP + ":3000/recruiters"));// Utils.getRecruiterResponse();
         List<Recruiter> result = ResponseParser.parseRecruiterResponse(recruiterAsJsonString);
         List<Recruiter> companyRecruiters = new ArrayList<>();
         for(Recruiter r : result)
@@ -199,7 +201,7 @@ public class DataManager {
     }
 
     private List<Resume> requestResumes(String cId, String rId) {
-        String resumesAsJsonString = request(("http://10.0.2.2:3000/resumes"));//Utils.getResumeResponse();
+        String resumesAsJsonString = request(("http://" + IP + ":3000/resumes"));//Utils.getResumeResponse();
         //TODO: replace this with the commented line
         List<Resume> result = ResponseParser.parseResumeResponse(resumesAsJsonString);
         return result;
