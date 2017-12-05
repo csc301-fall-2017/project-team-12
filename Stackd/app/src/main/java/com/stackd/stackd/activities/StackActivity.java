@@ -483,6 +483,8 @@ public class StackActivity extends AppCompatActivity {
         sb.append(cvsSplitBy);
         sb.append("Tags");
         sb.append(cvsSplitBy);
+        sb.append("Ratings");
+        sb.append(cvsSplitBy);
         sb.append("Comments");
         sb.append(rowSplitBy);
         List<Resume> resumes = adapter.getFilteredResumes();

@@ -160,9 +160,15 @@ public class Resume {
             sb.append(t);
             sb.append(" ");
         }
-
         sb.append(cvsSplitBy);
-        sb.append(this.getRecruiterComments());
+        switch (this.rating) {
+            case 2: sb.append("Yes"); break;// yes
+            case 0: sb.append("No"); break;// no
+            case 1: sb.append("Maybe"); break;// maybe
+        }
+        sb.append(cvsSplitBy);
+        sb.append("\"" + this.getRecruiterComments() + "\"");
+
         sb.append("\n");
         return sb.toString();
 
