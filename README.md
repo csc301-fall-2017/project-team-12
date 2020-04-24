@@ -17,13 +17,14 @@ These instructions will get you a copy of the project up and running on your loc
 
 You can build project by opening it, building a gradle version, then running it on your choice of device/emulator.
 
-
 ## Built With
 
 * [Android Studio](https://developer.android.com/studio/index.html) - The tools used for building the app on Android devices.
 * [ScanLibrary](https://github.com/jhansireddy/AndroidScannerDemo) - An android document scanning library built on top of OpenCV
 * [CodePath](https://guides.codepath.com/android/Basic-Painting-with-Views) - Used to implement highlighting 
 
+## Demo 
+The demonstartion video can be installed [here](https://github.com/csc301-fall-2017/project-team-12/blob/master/device-2017-11-18-002252.mp4).
 ## Contributing
 
 Please read the [deliverables folder](https://github.com/csc301-fall-2017/project-team-12/tree/master/deliverables) for details on our process, and the artifacts saved throughout the project.
@@ -54,7 +55,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 * Adam, our CSC301 TA for guiding us through the process.
 * Career fairs.
 * Peaches! :peach:
-
-
-
-
