@@ -7,14 +7,11 @@ A mobile/tablet application that facilitates the resume-collection and categoriz
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
+#### Prerequisites and Installation
 
-To run this application, you must have android studio installed on your machine. 
+- To run this application, you must have android studio installed on your machine. 
 
-
-### Installing
-
-You can view a step by step instructional video explaining how to install Android Studio [here](https://gist.github.com/PurpleBooth/b24679402957c63ec426)
+- You can view a step by step instructional video explaining how to install Android Studio [here](https://gist.github.com/PurpleBooth/b24679402957c63ec426)
 
 ## Deployment
 
